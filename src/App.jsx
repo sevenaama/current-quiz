@@ -206,33 +206,35 @@ export default function QuizApp() {
   >
     ☰
   </div>
-
+  {/* MENU */}
+       {showMenu && (
+  <div
+    ref={menuRef}
+    style={{
+      position: "absolute",
+      top: "50px",
+      right: "10px",
+      background: "white",
+      color: "black",
+      padding: "8px",
+      fontSize: "12px",
+      borderRadius: "8px",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+      zIndex: 9999
+    }}
+  >
+    <div onClick={()=>{setEditorOpen(true); setShowMenu(false);}}>Edit Questions</div>
+    <div onClick={()=>{alert("Saved"); setShowMenu(false);}}>Save</div>
+    <div onClick={()=>{prompt("Feedback"); setShowMenu(false);}}>Feedback</div>
+    <div onClick={()=>{alert("Contact"); setShowMenu(false);}}>Contact</div>
+    <div onClick={()=>{alert("Rules"); setShowMenu(false);}}>Rules</div>
+    <div onClick={()=>{
+      navigator.clipboard.writeText(window.location.href);
+      setShowMenu(false);
+    }}>Copy Link</div>
+  </div>
+)}
 </div>
-
-      {/* MENU */}
-      {showMenu && (
-       <div
-  ref={menuRef}
-  className="absolute bg-white text-black p-2 text-xs"
-  style={{
-    top: "60px",
-    right: "10px",
-    zIndex: 1000
-  }}
->
-          <div onClick={()=>{setEditorOpen(true); setShowMenu(false);}}>Edit Questions</div>
-          <div onClick={()=>{alert("Saved"); setShowMenu(false);}}>Save</div>
-          <div onClick={()=>{prompt("Feedback"); setShowMenu(false);}}>Feedback</div>
-          <div onClick={()=>{alert("Contact"); setShowMenu(false);}}>Contact</div>
-          <div onClick={()=>{alert("Rules"); setShowMenu(false);}}>Rules</div>
-          <div onClick={()=>{
-            if (typeof window !== "undefined") {
-              navigator.clipboard.writeText(window.location.href);
-            }
-            setShowMenu(false);
-          }}>Copy Link</div>
-        </div>
-      )}
 
       {/* MAIN DASHBOARD GRID */}
       {screen==="home" && (
