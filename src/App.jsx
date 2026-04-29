@@ -262,36 +262,85 @@ export default function QuizApp() {
         </div>
       )}
 
-      {screen==="playing" && (
-        <div className="flex-1 p-3">
-          <div className="flex justify-between items-center">
-            <button onClick={()=>setScreen("home")}>Back</button>
+    {screen==="playing" && (
+  <div style={{
+    flex: 1,
+    padding: "15px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center"
+  }}>
 
-            <div className="text-center">
-              <div>{time}s</div>
-              <div className="text-xs">Q {index+1} / {questions.length}</div>
-            </div>
+    {/* Top bar */}
+    <div style={{
+      display: "flex",
+      justifyContent: "space-between",
+      width: "100%",
+      maxWidth: "400px",
+      marginBottom: "10px"
+    }}>
+      <button onClick={()=>setScreen("home")}>Back</button>
 
-            <button onClick={next}>Skip</button>
-          </div>
-
-          <div className="text-center">{questions[index]?.q.en}</div>
-
-          {questions[index]?.options.map((o,i)=>{
-            let bg = "bg-white text-black";
-            if(selected!==null){
-              if(o===questions[index].a) bg = "bg-green-500 text-white";
-              else if(o===selected) bg = "bg-red-500 text-white";
-            }
-            return (
-              <button key={i} onClick={()=>answer(o)} className={`${bg} block w-full m-1`}>
-                {o}
-              </button>
-            );
-          })}
+      <div style={{ textAlign: "center" }}>
+        <div>{time}s</div>
+        <div style={{ fontSize: "12px" }}>
+          Q {index+1} / {questions.length}
         </div>
-      )}
+      </div>
 
+      <button onClick={next}>Skip</button>
+    </div>
+
+    {/* Question */}
+    <div style={{
+      textAlign: "center",
+      fontSize: "18px",
+      marginBottom: "15px",
+      maxWidth: "90%"
+    }}>
+      {questions[index]?.q.en}
+    </div>
+
+    {/* Options */}
+    {questions[index]?.options.map((o,i)=>{
+      let bg = "#ffffff";
+      let color = "#000";
+
+      if(selected!==null){
+        if(o===questions[index].a){
+          bg = "#22c55e";
+          color = "white";
+        }
+        else if(o===selected){
+          bg = "#ef4444";
+          color = "white";
+        }
+      }
+
+      return (
+        <button
+          key={i}
+          onClick={()=>answer(o)}
+          style={{
+            width: "90%",
+            maxWidth: "400px",
+            margin: "5px auto",
+            padding: "12px",
+            borderRadius: "8px",
+            textAlign: "center",
+            background: bg,
+            color: color,
+            border: "none"
+          }}
+        >
+          {o}
+        </button>
+      );
+    })}
+
+  </div>
+)}
       {screen==="result" && (
         <div className="flex-1 text-center flex flex-col items-center justify-center gap-2">
           <div>Total: {questions.length}</div>
