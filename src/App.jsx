@@ -191,7 +191,13 @@ export default function QuizApp() {
 
       {/* MAIN DASHBOARD GRID */}
       {screen==="home" && (
-        <div className="flex-1 grid grid-cols-5 gap-1 p-1 text-[9px]">
+        <div style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(5, 1fr)",
+    gap: "5px",
+    padding: "5px",
+    width: "100%"
+  }}>
           {defaultGroups.map((m,i)=>{
             const colors = [
               "bg-red-500","bg-blue-500","bg-green-500","bg-yellow-500",
