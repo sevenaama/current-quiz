@@ -166,9 +166,22 @@ export default function QuizApp() {
   return (
     <div className="min-h-screen flex flex-col relative" style={{background:'#1e3a8a', color:'white'}}>
 
-      <div className="flex justify-between items-center p-3 bg-blue-800">
-        <div className="text-xs">Users</div>
-        <div className="font-bold">Current Quiz</div>
+      <div style={{
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  padding: "12px",
+  background: "#1e40af",
+  color: "white"
+}}>
+  <div style={{
+    fontSize: "22px",
+    fontWeight: "bold",
+    textAlign: "center"
+  }}>
+    Current Quiz
+  </div>
+</div>
         <div onClick={(e)=>{e.stopPropagation(); setShowMenu(!showMenu);}} className="cursor-pointer">☰</div>
       </div>
 
