@@ -211,7 +211,15 @@ export default function QuizApp() {
 
       {/* MENU */}
       {showMenu && (
-        <div ref={menuRef} className="absolute top-12 right-3 bg-white text-black p-2 text-xs">
+       <div
+  ref={menuRef}
+  className="absolute bg-white text-black p-2 text-xs"
+  style={{
+    top: "60px",
+    right: "10px",
+    zIndex: 1000
+  }}
+>
           <div onClick={()=>{setEditorOpen(true); setShowMenu(false);}}>Edit Questions</div>
           <div onClick={()=>{alert("Saved"); setShowMenu(false);}}>Save</div>
           <div onClick={()=>{prompt("Feedback"); setShowMenu(false);}}>Feedback</div>
