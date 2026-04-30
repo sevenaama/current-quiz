@@ -164,7 +164,10 @@ export default function QuizApp() {
   },[time,screen]);
 
   return (
-    <div className="min-h-screen flex flex-col relative pb-14"> style={{background:'#1e3a8a', color:'white'}}>
+   <div
+  className="min-h-screen flex flex-col relative pb-14"
+  style={{ background:'#1e3a8a', color:'white' }}
+>
 
      <div style={{
   display: "flex",
