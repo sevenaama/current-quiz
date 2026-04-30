@@ -436,7 +436,6 @@ export default function QuizApp() {
   fontSize: "12px",
   zIndex: 9999
 }}>
-
   {/* LEFT */}
   <div style={{flex:1}}>
     <span
@@ -464,10 +463,7 @@ export default function QuizApp() {
       Share
     </span>
   </div>
-
 </div>
-  </div>
-
 </div>
   );
 }
