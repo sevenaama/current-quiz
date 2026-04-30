@@ -414,12 +414,36 @@ export default function QuizApp() {
         </div>
       )}
 
-      <div className="flex justify-around bg-black p-2 text-xs">
-        <div>Update: {lastUpdate}</div>
-        <div onClick={handleShare}>Share</div>
-        <div onClick={handleInvite}>Invite</div>
-      </div>
+      <div className="flex justify-between items-center bg-black p-2 text-xs mt-auto">
 
+  {/* LEFT: Video */}
+  <div
+    onClick={()=>{
+      const url = prompt("Enter video link (YouTube/Reels)");
+      if(url){
+        window.open(url, "_blank");
+      }
+    }}
+    style={{cursor:"pointer"}}
+  >
+    🎥 Video
+  </div>
+
+  {/* CENTER: Update */}
+  <div style={{textAlign:"center"}}>
+    Update: {lastUpdate}
+  </div>
+
+  {/* RIGHT: Invite → Share */}
+  <div style={{display:"flex", gap:"12px"}}>
+    <div onClick={handleInvite} style={{cursor:"pointer"}}>
+      Invite
     </div>
+    <div onClick={handleShare} style={{cursor:"pointer"}}>
+      Share
+    </div>
+  </div>
+
+</div>
   );
 }
