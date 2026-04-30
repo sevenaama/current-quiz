@@ -416,53 +416,56 @@ export default function QuizApp() {
           </div>
         </div>
       )}
-      <div style={{
+     <div style={{
   position: "fixed",
   bottom: 0,
+
   left: 0,
   right: 0,
-  width: "100%",
+
+  /* 🔥 IMPORTANT: parent constraint bypass */
+  width: "100vw",
+  marginLeft: "calc(50% - 50vw)",
+
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+
   background: "black",
   padding: "10px 12px",
   fontSize: "12px",
-  zIndex: 1000
+  zIndex: 9999
 }}>
 
-  <div style={{
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr",
-    alignItems: "center",
-    width: "100%"
-  }}>
+  {/* LEFT */}
+  <div style={{flex:1}}>
+    <span
+      onClick={()=>{
+        const url = prompt("Enter video link (YouTube/Reels)");
+        if(url) window.open(url, "_blank");
+      }}
+      style={{cursor:"pointer"}}
+    >
+      🎥 Video
+    </span>
+  </div>
 
-    {/* LEFT */}
-    <div style={{textAlign:"left"}}>
-      <span
-        onClick={()=>{
-          const url = prompt("Enter video link (YouTube/Reels)");
-          if(url) window.open(url, "_blank");
-        }}
-        style={{cursor:"pointer"}}
-      >
-        🎥 Video
-      </span>
-    </div>
+  {/* CENTER */}
+  <div style={{flex:1, textAlign:"center"}}>
+    Update: {lastUpdate}
+  </div>
 
-    {/* CENTER */}
-    <div style={{textAlign:"center"}}>
-      Update: {lastUpdate}
-    </div>
+  {/* RIGHT */}
+  <div style={{flex:1, textAlign:"right"}}>
+    <span onClick={handleInvite} style={{cursor:"pointer", marginRight:"12px"}}>
+      Invite
+    </span>
+    <span onClick={handleShare} style={{cursor:"pointer"}}>
+      Share
+    </span>
+  </div>
 
-    {/* RIGHT */}
-    <div style={{textAlign:"right"}}>
-      <span onClick={handleInvite} style={{cursor:"pointer", marginRight:"12px"}}>
-        Invite
-      </span>
-      <span onClick={handleShare} style={{cursor:"pointer"}}>
-        Share
-      </span>
-    </div>
-
+</div>
   </div>
 
 </div>
