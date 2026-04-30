@@ -164,7 +164,7 @@ export default function QuizApp() {
   },[time,screen]);
 
   return (
-    <div className="h-screen flex flex-col relative" style={{background:'#1e3a8a', color:'white'}}>
+    <div className="min-h-screen flex flex-col relative pb-14"> style={{background:'#1e3a8a', color:'white'}}>
 
      <div style={{
   display: "flex",
@@ -414,7 +414,19 @@ export default function QuizApp() {
         </div>
       )}
 
-      <div className="flex justify-between items-center bg-black p-2 text-xs mt-auto">
+      <div style={{
+  position: "fixed",
+  bottom: 0,
+  left: 0,
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  background: "black",
+  padding: "8px",
+  fontSize: "12px",
+  zIndex: 999
+}}>
 
   {/* LEFT: Video */}
   <div
@@ -430,18 +442,14 @@ export default function QuizApp() {
   </div>
 
   {/* CENTER: Update */}
-  <div style={{textAlign:"center"}}>
+  <div>
     Update: {lastUpdate}
   </div>
 
   {/* RIGHT: Invite → Share */}
   <div style={{display:"flex", gap:"12px"}}>
-    <div onClick={handleInvite} style={{cursor:"pointer"}}>
-      Invite
-    </div>
-    <div onClick={handleShare} style={{cursor:"pointer"}}>
-      Share
-    </div>
+    <div onClick={handleInvite} style={{cursor:"pointer"}}>Invite</div>
+    <div onClick={handleShare} style={{cursor:"pointer"}}>Share</div>
   </div>
 
 </div>
