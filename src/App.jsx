@@ -416,41 +416,39 @@ export default function QuizApp() {
           </div>
         </div>
       )}
-
       <div style={{
   position: "fixed",
   bottom: 0,
   left: 0,
   width: "100%",
   display: "flex",
-  justifyContent: "space-between",
   alignItems: "center",
   background: "black",
-  padding: "8px",
+  padding: "10px 12px",
   fontSize: "12px",
-  zIndex: 999
+  zIndex: 1000,
 }}>
 
   {/* LEFT: Video */}
-  <div
-    onClick={()=>{
-      const url = prompt("Enter video link (YouTube/Reels)");
-      if(url){
-        window.open(url, "_blank");
-      }
-    }}
-    style={{cursor:"pointer"}}
-  >
-    🎥 Video
+  <div style={{flex:1}}>
+    <div
+      onClick={()=>{
+        const url = prompt("Enter video link (YouTube/Reels)");
+        if(url) window.open(url, "_blank");
+      }}
+      style={{cursor:"pointer"}}
+    >
+      🎥 Video
+    </div>
   </div>
 
   {/* CENTER: Update */}
-  <div>
+  <div style={{flex:1, textAlign:"center"}}>
     Update: {lastUpdate}
   </div>
 
   {/* RIGHT: Invite → Share */}
-  <div style={{display:"flex", gap:"12px"}}>
+  <div style={{flex:1, display:"flex", justifyContent:"flex-end", gap:"14px"}}>
     <div onClick={handleInvite} style={{cursor:"pointer"}}>Invite</div>
     <div onClick={handleShare} style={{cursor:"pointer"}}>Share</div>
   </div>
