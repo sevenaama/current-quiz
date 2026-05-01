@@ -430,46 +430,45 @@ export default function QuizApp() {
   zIndex: 9999
 }}>
 
+  {/* CENTER VIDEO */}
   <div style={{
-    display: "grid",
-    gridTemplateColumns: "1fr auto auto",
-    alignItems: "center"
+    position: "absolute",
+    left: "50%",
+    transform: "translateX(-50%)"
   }}>
-
-    {/* LEFT */}
-    <div style={{textAlign:"left"}}>
-      Update: {lastUpdate}
-    </div>
-
-    {/* CENTER */}
-    <div style={{textAlign:"center"}}>
-      <span
-        onClick={()=>{
-          const url = prompt("Enter video link (YouTube/Reels)");
-          if(url) window.open(url, "_blank");
-        }}
-        style={{cursor:"pointer"}}
-      >
-        🎥 Video
-      </span>
-    </div>
-
-    {/* RIGHT */}
-    <div style={{
-      display:"flex",
-      gap:"12px",
-      marginLeft:"20px"   // 🔥 यहीले भित्र सार्छ
-    }}>
-      <span onClick={handleInvite} style={{cursor:"pointer"}}>
-        Invite
-      </span>
-      <span onClick={handleShare} style={{cursor:"pointer"}}>
-        Share
-      </span>
-    </div>
-
+    <span
+      onClick={()=>{
+        const url = prompt("Enter video link (YouTube/Reels)");
+        if(url) window.open(url, "_blank");
+      }}
+      style={{cursor:"pointer"}}
+    >
+      🎥 Video
+    </span>
   </div>
 
+  {/* LEFT UPDATE */}
+  <div>
+    Update: {lastUpdate}
+  </div>
+
+  {/* RIGHT BUTTONS */}
+  <div style={{
+    position: "absolute",
+    right: "20px",
+    bottom: "10px",
+    display: "flex",
+    gap: "12px"
+  }}>
+    <span onClick={handleInvite} style={{cursor:"pointer"}}>
+      Invite
+    </span>
+    <span onClick={handleShare} style={{cursor:"pointer"}}>
+      Share
+    </span>
+  </div>
+
+</div>
 </div>
   );
 }
