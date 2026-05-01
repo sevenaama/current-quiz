@@ -470,7 +470,7 @@ export default function QuizApp() {
 <div style={{
   position: "absolute",
   position: "absolute",
-  right: "12%"
+  right: "12%",
    bottom: "10px",
     display: "flex",
     gap: "12px"
