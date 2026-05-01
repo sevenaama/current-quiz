@@ -351,36 +351,34 @@ function handleSelect(group){
       </div>
     )}
 
-    {/* 🔴 EVENT */}
-    {openCategory==="event" && (
-      <div
-         {/* 🟣 MONTH */}
-    {openCategory==="month" && (
-      <div
-         ref={dropdownRef} 
-        style={{
-    position:"absolute",
-    top:"50px",
-    left:"0",
-    width:"200px",
-    maxHeight:"70vh",
-    overflowY:"auto",
-    display:"flex",
-    flexDirection:"column",
-    gap:"6px",
-    padding:"5px",
-    background:"rgba(0,0,0,0.9)",
-    borderRadius:"8px",
-    zIndex:999
-      }}>
-        {eventGroups.map(m=>(
-          <div key={m} onClick={()=>handleSelect(m)}
-            style={{background:"#f87171",padding:"10px",borderRadius:"6px"}}>
-            {m}
-          </div>
-        ))}
+  {/* 🔴 EVENT */}
+{openCategory==="event" && (
+  <div
+    ref={dropdownRef}
+    style={{
+      position:"absolute",
+      top:"50px",
+      left:"0",
+      width:"200px",
+      maxHeight:"70vh",
+      overflowY:"auto",
+      display:"flex",
+      flexDirection:"column",
+      gap:"6px",
+      padding:"5px",
+      background:"rgba(0,0,0,0.9)",
+      borderRadius:"8px",
+      zIndex:999
+    }}
+  >
+    {eventGroups.map(m=>(
+      <div key={m} onClick={()=>handleSelect(m)}
+        style={{background:"#f87171",padding:"10px",borderRadius:"6px"}}>
+        {m}
       </div>
-    )}
+    ))}
+  </div>
+)}
 
     {/* 🟢 OTHER */}
     {openCategory==="other" && (
