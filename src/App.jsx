@@ -167,17 +167,16 @@ useEffect(()=>{
       setShowMenu(false);
     }
 
-    // dropdown
-    if(
-      !e.target.closest(".dropdown") &&
-      !e.target.closest(".dropdown-btn")
-    ){
+    // 🔥 dropdown fix (safe way)
+    const isDropdown = e.target.closest && e.target.closest(".dropdown");
+    const isButton = e.target.closest && e.target.closest(".dropdown-btn");
+
+    if(!isDropdown && !isButton){
       setOpenCategory(null);
     }
 
   }
 
-  // 🔥 change here
   document.addEventListener("mousedown", handleClickOutside);
 
   return ()=>document.removeEventListener("mousedown", handleClickOutside);
