@@ -267,41 +267,49 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
       marginBottom: "10px"
     }}>
       <div
-        onClick={()=>setOpenCategory(openCategory==="month" ? null : "month")}
-        style={{
-          background:"#7c3aed",
-          padding:"8px 12px",
-          borderRadius:"6px",
-          fontSize:"12px",
-          cursor:"pointer"
-        }}>
-        Month
-      </div>
+  onClick={()=>setOpenCategory(openCategory==="month" ? null : "month")}
+  style={{
+    background:"#7c3aed",
+    padding:"8px 12px",
+    borderRadius:"6px",
+    fontSize:"12px",
+    cursor:"pointer",
+    display:"flex",
+    alignItems:"center",
+    gap:"6px"
+  }}>
+  Month {openCategory==="month" ? "▲" : "▼"}
+</div>
 
       <div
-        onClick={()=>setOpenCategory(openCategory==="event" ? null : "event")}
-        style={{
-          background:"#dc2626",
-          padding:"8px 12px",
-          borderRadius:"6px",
-          fontSize:"12px",
-          cursor:"pointer"
-        }}>
-        Event
-      </div>
+  onClick={()=>setOpenCategory(openCategory==="event" ? null : "event")}
+  style={{
+    background:"#dc2626",
+    padding:"8px 12px",
+    borderRadius:"6px",
+    fontSize:"12px",
+    cursor:"pointer",
+    display:"flex",
+    alignItems:"center",
+    gap:"6px"
+  }}>
+  Event {openCategory==="event" ? "▲" : "▼"}
+</div>
 
       <div
-        onClick={()=>setOpenCategory(openCategory==="other" ? null : "other")}
-        style={{
-          background:"#16a34a",
-          padding:"8px 12px",
-          borderRadius:"6px",
-          fontSize:"12px",
-          cursor:"pointer"
-        }}>
-        Other
-      </div>
-    </div>
+  onClick={()=>setOpenCategory(openCategory==="other" ? null : "other")}
+  style={{
+    background:"#16a34a",
+    padding:"8px 12px",
+    borderRadius:"6px",
+    fontSize:"12px",
+    cursor:"pointer",
+    display:"flex",
+    alignItems:"center",
+    gap:"6px"
+  }}>
+  Other {openCategory==="other" ? "▲" : "▼"}
+</div>
 
     {/* 📂 MONTH */}
     {openCategory==="month" && (
