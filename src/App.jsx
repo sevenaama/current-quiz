@@ -259,8 +259,8 @@ function handleSelect(group){
 )}
 </div>
 
-      {/* MAIN DASHBOARD GRID */}
-  {screen==="home" && (
+  {/* MAIN DASHBOARD GRID */}
+{screen==="home" && (
   <div style={{ padding: "10px" }}>
 
     {/* 🔝 BUTTONS */}
@@ -308,10 +308,9 @@ function handleSelect(group){
       >
         Other {openCategory==="other" ? "▲" : "▼"}
       </div>
-
     </div>
 
-    {/* 🟣 MONTH DROPDOWN */}
+    {/* 🟣 MONTH */}
     {openCategory==="month" && (
       <div style={{
         height:"160px",
@@ -325,20 +324,15 @@ function handleSelect(group){
         marginBottom:"10px"
       }}>
         {monthGroups.map(m=>(
-          <div key={m}
-            onClick={()=>handleSelect(m)}
-            style={{
-              background:"#a78bfa",
-              padding:"10px",
-              borderRadius:"6px"
-            }}>
+          <div key={m} onClick={()=>handleSelect(m)}
+            style={{background:"#a78bfa",padding:"10px",borderRadius:"6px"}}>
             {m}
           </div>
         ))}
       </div>
     )}
 
-    {/* 🔴 EVENT DROPDOWN */}
+    {/* 🔴 EVENT */}
     {openCategory==="event" && (
       <div style={{
         height:"160px",
@@ -352,20 +346,15 @@ function handleSelect(group){
         marginBottom:"10px"
       }}>
         {eventGroups.map(m=>(
-          <div key={m}
-            onClick={()=>handleSelect(m)}
-            style={{
-              background:"#f87171",
-              padding:"10px",
-              borderRadius:"6px"
-            }}>
+          <div key={m} onClick={()=>handleSelect(m)}
+            style={{background:"#f87171",padding:"10px",borderRadius:"6px"}}>
             {m}
           </div>
         ))}
       </div>
     )}
 
-    {/* 🟢 OTHER DROPDOWN */}
+    {/* 🟢 OTHER */}
     {openCategory==="other" && (
       <div style={{
         height:"160px",
@@ -379,23 +368,15 @@ function handleSelect(group){
         marginBottom:"10px"
       }}>
         {otherGroups.map(m=>(
-          <div key={m}
-            onClick={()=>handleSelect(m)}
-            style={{
-              background:"#4ade80",
-              padding:"10px",
-              borderRadius:"6px"
-            }}>
+          <div key={m} onClick={()=>handleSelect(m)}
+            style={{background:"#4ade80",padding:"10px",borderRadius:"6px"}}>
             {m}
           </div>
         ))}
       </div>
     )}
 
-  </div>
-)}
-
-    {/* 🟦 MAIN BIG BUTTONS */}
+    {/* 🟦 MAIN BIG BUTTONS (FIXED POSITION) */}
     <div style={{
       display:"grid",
       gridTemplateColumns:"repeat(2,1fr)",
