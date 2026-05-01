@@ -162,13 +162,12 @@ function handleSelect(group){
 useEffect(()=>{
   function handleClickOutside(e){
 
-    // 🔴 menu close
+    // menu
     if(menuRef.current && !menuRef.current.contains(e.target)){
       setShowMenu(false);
     }
 
-    // 🔵 dropdown close
-    // यदि click dropdown वा button भित्र परेन भने मात्र बन्द
+    // dropdown
     if(
       !e.target.closest(".dropdown") &&
       !e.target.closest(".dropdown-btn")
@@ -178,8 +177,10 @@ useEffect(()=>{
 
   }
 
-  document.addEventListener("click", handleClickOutside);
-  return ()=>document.removeEventListener("click", handleClickOutside);
+  // 🔥 change here
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return ()=>document.removeEventListener("mousedown", handleClickOutside);
 },[]);
 
   useEffect(()=>{
