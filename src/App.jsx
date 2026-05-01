@@ -317,7 +317,7 @@ function handleSelect(group){
     top:"50px",
     left:"0",
     width:"200px",
-    maxHeight:"60vh",
+    maxHeight:"70vh",
     overflowY:"auto",
     display:"flex",
     flexDirection:"column",
@@ -341,9 +341,9 @@ function handleSelect(group){
       <div style={{
     position:"absolute",     // 🔥 new
     top:"50px",
-    left:"80px",
+    left:"0",
     width:"200px",
-    maxHeight:"60vh",
+    maxHeight:"70vh",
     overflowY:"auto",
     display:"flex",
     flexDirection:"column",
@@ -367,9 +367,9 @@ function handleSelect(group){
      <div style={{
     position:"absolute",     // 🔥 new
     top:"50px",
-    left:"160px",
+    left:"0",
     width:"200px",
-    maxHeight:"60vh",
+    maxHeight:"70vh",
     overflowY:"auto",
     display:"flex",
     flexDirection:"column",
