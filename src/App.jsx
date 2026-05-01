@@ -266,23 +266,31 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
       gap: "8px",
       marginBottom: "10px"
     }}>
-     <div
-  onClick={()=>setOpenCategory(openCategory==="month" ? null : "month")}
-  style={{
-    background:"#7c3aed",
-    padding:"8px 12px",
-    borderRadius:"6px",
-    fontSize:"12px",
-    cursor:"pointer",
+   {openCategory==="month" && (
+  <div style={{
+    height:"180px",
+    overflowY:"auto",
     display:"flex",
-    alignItems:"center",
-    justifyContent:"space-between",
-    minWidth:"80px"
-  }}
->
-  <span>Month</span>
-  <span>{openCategory==="month" ? "▲" : "▼"}</span>
-</div>
+    flexDirection:"column",
+    gap:"6px",
+    marginBottom:"10px",
+    padding:"5px",
+    background:"rgba(255,255,255,0.1)",
+    borderRadius:"8px"
+  }}>
+    {monthGroups.map(m=>(
+      <div key={m} onClick={()=>handleSelect(m)}
+        style={{
+          background:"#a78bfa",
+          padding:"10px",
+          textAlign:"center",
+          borderRadius:"6px"
+        }}>
+        {m}
+      </div>
+    ))}
+  </div>
+)}
 
       <div
   onClick={()=>setOpenCategory(openCategory==="event" ? null : "event")}
