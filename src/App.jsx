@@ -455,9 +455,9 @@ export default function QuizApp() {
   {/* RIGHT BUTTONS */}
   <div style={{
     position: "absolute",
-    right: "20px",
-    bottom: "10px",
-    display: "flex",
+    right: "  25%",
+  transform: "translatex(50%)" ,
+  display: "flex" ,
     gap: "12px"
   }}>
     <span onClick={handleInvite} style={{cursor:"pointer"}}>
