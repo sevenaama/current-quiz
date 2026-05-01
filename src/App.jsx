@@ -347,7 +347,15 @@ export default function QuizApp() {
   </div>
 )}
       {screen==="result" && (
-        <div className="flex-1 text-center flex flex-col items-center justify-center gap-2">
+        <div style={{
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    width: "100%"
+  }}>
           <div>Total: {questions.length}</div>
           <div>Attempted: {attempted}</div>
           <div>Right: {score}</div>
