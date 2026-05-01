@@ -120,7 +120,10 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
     setTime(15);
     setScreen("playing");
   }
-
+function handleSelect(group){
+  start(group);
+  setOpenCategory(null);
+}
   function next(){
     if(index+1<questions.length){
       setIndex(i=>i+1);
@@ -260,120 +263,137 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
   {screen==="home" && (
   <div style={{ padding: "10px" }}>
 
-    {/* 🔝 Month → Event → Other */}
-    
-  {/* 🔵 MONTH BUTTON */}
-{openCategory==="month" && (
-  <div style={{
-    height:"180px",
-    overflowY:"auto",
-    display:"flex",
-    flexDirection:"column",   // 🔥 single column
-    gap:"6px",
-    marginBottom:"10px",
-    padding:"5px",
-    background:"rgba(255,255,255,0.1)",
-    borderRadius:"8px"
-  }}>
-    {monthGroups.map(m=>(
-      <div key={m} onClick={()=>handleSelect(m)}
+    {/* 🔝 BUTTONS */}
+    <div style={{
+      display:"flex",
+      gap:"8px",
+      marginBottom:"10px"
+    }}>
+
+      {/* MONTH */}
+      <div
+        onClick={()=>setOpenCategory(openCategory==="month" ? null : "month")}
         style={{
-          background:"#a78bfa",
-          padding:"10px",
-          textAlign:"center",
-          borderRadius:"6px"
-        }}>
-        {m}
+          background:"#7c3aed",
+          padding:"8px 12px",
+          borderRadius:"6px",
+          cursor:"pointer"
+        }}
+      >
+        Month {openCategory==="month" ? "▲" : "▼"}
       </div>
-    ))}
-  </div>
-)}
-      <div
-  onClick={()=>setOpenCategory(openCategory==="event" ? null : "event")}
-  style={{
-    background:"#dc2626",
-    padding:"8px 12px",
-    borderRadius:"6px",
-    fontSize:"12px",
-    cursor:"pointer",
-    display:"flex",
-    alignItems:"center",
-    gap:"6px"
-  }}>
-  Event {openCategory==="event" ? "▲" : "▼"}
-</div>
 
+      {/* EVENT */}
       <div
-  onClick={()=>setOpenCategory(openCategory==="other" ? null : "other")}
-  style={{
-    background:"#16a34a",
-    padding:"8px 12px",
-    borderRadius:"6px",
-    fontSize:"12px",
-    cursor:"pointer",
-    display:"flex",
-    alignItems:"center",
-    gap:"6px"
-  }}>
-  Other {openCategory==="other" ? "▲" : "▼"}
-</div>
+        onClick={()=>setOpenCategory(openCategory==="event" ? null : "event")}
+        style={{
+          background:"#dc2626",
+          padding:"8px 12px",
+          borderRadius:"6px",
+          cursor:"pointer"
+        }}
+      >
+        Event {openCategory==="event" ? "▲" : "▼"}
+      </div>
 
-    {/* 📂 MONTH */}
+      {/* OTHER */}
+      <div
+        onClick={()=>setOpenCategory(openCategory==="other" ? null : "other")}
+        style={{
+          background:"#16a34a",
+          padding:"8px 12px",
+          borderRadius:"6px",
+          cursor:"pointer"
+        }}
+      >
+        Other {openCategory==="other" ? "▲" : "▼"}
+      </div>
+
+    </div>
+
+    {/* 🟣 MONTH DROPDOWN */}
     {openCategory==="month" && (
       <div style={{
-        maxHeight:"140px",
+        height:"160px",
         overflowY:"auto",
-        display:"grid",
-        gridTemplateColumns:"repeat(3,1fr)",
+        display:"flex",
+        flexDirection:"column",
         gap:"6px",
+        padding:"5px",
+        background:"rgba(255,255,255,0.1)",
+        borderRadius:"8px",
         marginBottom:"10px"
       }}>
         {monthGroups.map(m=>(
-          <div key={m} onClick={()=>start(m)}
-            style={{background:"#a78bfa",padding:"8px",textAlign:"center",borderRadius:"6px"}}>
+          <div key={m}
+            onClick={()=>handleSelect(m)}
+            style={{
+              background:"#a78bfa",
+              padding:"10px",
+              borderRadius:"6px"
+            }}>
             {m}
           </div>
         ))}
       </div>
     )}
 
-    {/* 📂 EVENT */}
+    {/* 🔴 EVENT DROPDOWN */}
     {openCategory==="event" && (
       <div style={{
-        maxHeight:"140px",
+        height:"160px",
         overflowY:"auto",
-        display:"grid",
-        gridTemplateColumns:"repeat(2,1fr)",
+        display:"flex",
+        flexDirection:"column",
         gap:"6px",
+        padding:"5px",
+        background:"rgba(255,255,255,0.1)",
+        borderRadius:"8px",
         marginBottom:"10px"
       }}>
         {eventGroups.map(m=>(
-          <div key={m} onClick={()=>start(m)}
-            style={{background:"#f87171",padding:"8px",textAlign:"center",borderRadius:"6px"}}>
+          <div key={m}
+            onClick={()=>handleSelect(m)}
+            style={{
+              background:"#f87171",
+              padding:"10px",
+              borderRadius:"6px"
+            }}>
             {m}
           </div>
         ))}
       </div>
     )}
 
-    {/* 📂 OTHER */}
+    {/* 🟢 OTHER DROPDOWN */}
     {openCategory==="other" && (
       <div style={{
-        maxHeight:"140px",
+        height:"160px",
         overflowY:"auto",
-        display:"grid",
-        gridTemplateColumns:"repeat(2,1fr)",
+        display:"flex",
+        flexDirection:"column",
         gap:"6px",
+        padding:"5px",
+        background:"rgba(255,255,255,0.1)",
+        borderRadius:"8px",
         marginBottom:"10px"
       }}>
         {otherGroups.map(m=>(
-          <div key={m} onClick={()=>start(m)}
-            style={{background:"#4ade80",padding:"8px",textAlign:"center",borderRadius:"6px"}}>
+          <div key={m}
+            onClick={()=>handleSelect(m)}
+            style={{
+              background:"#4ade80",
+              padding:"10px",
+              borderRadius:"6px"
+            }}>
             {m}
           </div>
         ))}
       </div>
     )}
+
+  </div>
+)}
 
     {/* 🟦 MAIN BIG BUTTONS */}
     <div style={{
