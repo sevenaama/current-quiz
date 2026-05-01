@@ -14,7 +14,9 @@ export default function QuizApp() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
   const menuRef = useRef(null);
-  const dropdownRef = useRef(null);
+ const monthRef = useRef(null);
+const eventRef = useRef(null);
+const otherRef = useRef(null);
   const mainGroups = ["today","thisweek","previousweek","thismonth"];
 
 const monthGroups = ["jan","feb","mar","apr","may","jun","july","aug","sep","oct","nov","dec"];
@@ -167,8 +169,12 @@ function handleSelect(group){
       setShowMenu(false);
     }
 
-    // 🔵 Dropdown close
-    if(dropdownRef.current && !dropdownRef.current.contains(e.target)){
+    // dropdown
+    if(
+      (!monthRef.current || !monthRef.current.contains(e.target)) &&
+      (!eventRef.current || !eventRef.current.contains(e.target)) &&
+      (!otherRef.current || !otherRef.current.contains(e.target))
+    ){
       setOpenCategory(null);
     }
 
@@ -326,8 +332,7 @@ function handleSelect(group){
     {/* 🟣 MONTH */}
     {openCategory==="month" && (
       <div
-         ref={dropdownRef} 
-        style={{
+        ref={monthRef} style={{
     position:"absolute",
     top:"50px",
     left:"0",
@@ -354,8 +359,7 @@ function handleSelect(group){
   {/* 🔴 EVENT */}
 {openCategory==="event" && (
   <div
-    ref={dropdownRef}
-    style={{
+    ref={eventRef} style={{
       position:"absolute",
       top:"50px",
       left:"0",
@@ -383,9 +387,8 @@ function handleSelect(group){
     {/* 🟢 OTHER */}
     {openCategory==="other" && (
      <div 
-        ref={dropdownRef} 
-       style={{
-    position:"absolute",     // 🔥 new
+        ref={otherRef} style={{
+    position:"absolute",
     top:"50px",
     left:"0",
     width:"200px",
