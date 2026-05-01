@@ -165,10 +165,17 @@ export default function QuizApp() {
 
   return (
    <div
-  className="min-h-screen flex flex-col relative pb-14"
-  style={{ background:'#1e3a8a', color:'white' }}
+  style={{
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    background: "#1e3a8a",
+    color: "white",
+    position: "relative",
+    paddingBottom: "56px"
+  }}
 >
-
+     
      <div style={{
   display: "flex",
   alignItems: "center",
