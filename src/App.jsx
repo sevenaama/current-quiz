@@ -452,7 +452,9 @@ export default function QuizApp() {
   </div>
 
   {/* RIGHT → Invite + Share */}
-  <div style={{flex:1, textAlign:"right"}}>
+  <div style={{flex:1, 
+               textAlign:"right" ,
+              paddingright:"8px"}}>
     <span onClick={handleInvite} style={{cursor:"pointer", marginRight:"12px"}}>
       Invite
     </span>
