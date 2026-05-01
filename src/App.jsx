@@ -269,7 +269,6 @@ function handleSelect(group){
       gap:"8px",
       marginBottom:"10px"
     }}>
-
       {/* MONTH */}
       <div
         onClick={()=>setOpenCategory(openCategory==="month" ? null : "month")}
