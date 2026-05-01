@@ -163,25 +163,28 @@ function handleSelect(group){
   }
 
   useEffect(()=>{
-    function handleClickOutside(e){
-      // 🔴 Menu close
+  function handleClickOutside(e){
+
+    // menu
     if(menuRef.current && !menuRef.current.contains(e.target)){
       setShowMenu(false);
     }
 
     // dropdown
     if(
-      (!monthRef.current || !monthRef.current.contains(e.target)) &&
-      (!eventRef.current || !eventRef.current.contains(e.target)) &&
-      (!otherRef.current || !otherRef.current.contains(e.target))
+      (monthRef.current && monthRef.current.contains(e.target)) ||
+      (eventRef.current && eventRef.current.contains(e.target)) ||
+      (otherRef.current && otherRef.current.contains(e.target))
     ){
-      setOpenCategory(null);
+      return;
     }
 
-    }
-    document.addEventListener("click", handleClickOutside);
-    return ()=>document.removeEventListener("click", handleClickOutside);
-  },[]);
+    setOpenCategory(null);
+  }
+
+  document.addEventListener("click", handleClickOutside);
+  return ()=>document.removeEventListener("click", handleClickOutside);
+},[]);
 
   useEffect(()=>{
     if(screen!=="playing") return;
