@@ -456,7 +456,10 @@ export default function QuizApp() {
 <div style={{
   position: "absolute",
   right: "25%",
-  transform: "translateX(50%)"
+  transform: "translateX(50%)" ,
+   bottom: "10px",
+    display: "flex",
+    gap: "12px"
 }}>
   <span onClick={handleInvite} style={{cursor:"pointer"}}>
     Invite
@@ -466,7 +469,10 @@ export default function QuizApp() {
 {/* SHARE (right edge) */}
 <div style={{
   position: "absolute",
-  right: "15px"
+  right: "15px" ,
+   bottom: "10px",
+    display: "flex",
+    gap: "12px"
 }}>
   <span onClick={handleShare} style={{cursor:"pointer"}}>
     Share
