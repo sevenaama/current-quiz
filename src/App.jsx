@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 export default function QuizApp() {
 
   const [screen, setScreen] = useState("home");
+  const [openCategory, setOpenCategory] = useState(null);
   const [week, setWeek] = useState("jan");
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -13,6 +14,13 @@ export default function QuizApp() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
   const menuRef = useRef(null);
+  const mainGroups = ["today","thisweek","previousweek","thismonth"];
+
+const monthGroups = ["jan","feb","mar","apr","may","jun","july","aug","sep","oct","nov","dec"];
+
+const otherGroups = ["plan16","economic","census","constitution"];
+
+const eventGroups = ["awards","deaths","conferences","sports","life","days","accidents"];
 
   const [lastUpdate, setLastUpdate] = useState(()=> typeof window !== "undefined" ? (localStorage.getItem("lastUpdate") || "-") : "-");
 
@@ -249,33 +257,137 @@ export default function QuizApp() {
 </div>
 
       {/* MAIN DASHBOARD GRID */}
-      {screen==="home" && (
-       <div style={{
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(80px, 1fr))",
-  gap: "8px",
-  padding: "8px",
-  width: "100%"
-}}>
-          {defaultGroups.map((m,i)=>{
-            const colors = [
-              "bg-red-500","bg-blue-500","bg-green-500","bg-yellow-500",
-              "bg-purple-500","bg-pink-500","bg-indigo-500","bg-teal-500"
-            ];
-            const color = colors[i % colors.length];
+  {screen==="home" && (
+  <div style={{ padding: "10px" }}>
 
-            return (
-              <div
-                key={m}
-                onClick={()=>start(m)}
-                className={`${color} text-white p-2 text-center text-[9px] leading-tight rounded-md shadow-sm active:scale-95 transition`}>
-                {m}
-              </div>
-            );
-          })}
+    {/* 🔝 Month → Event → Other */}
+    <div style={{
+      display: "flex",
+      gap: "8px",
+      marginBottom: "10px"
+    }}>
+      <div
+        onClick={()=>setOpenCategory(openCategory==="month" ? null : "month")}
+        style={{
+          background:"#7c3aed",
+          padding:"8px 12px",
+          borderRadius:"6px",
+          fontSize:"12px",
+          cursor:"pointer"
+        }}>
+        Month
+      </div>
+
+      <div
+        onClick={()=>setOpenCategory(openCategory==="event" ? null : "event")}
+        style={{
+          background:"#dc2626",
+          padding:"8px 12px",
+          borderRadius:"6px",
+          fontSize:"12px",
+          cursor:"pointer"
+        }}>
+        Event
+      </div>
+
+      <div
+        onClick={()=>setOpenCategory(openCategory==="other" ? null : "other")}
+        style={{
+          background:"#16a34a",
+          padding:"8px 12px",
+          borderRadius:"6px",
+          fontSize:"12px",
+          cursor:"pointer"
+        }}>
+        Other
+      </div>
+    </div>
+
+    {/* 📂 MONTH */}
+    {openCategory==="month" && (
+      <div style={{
+        maxHeight:"140px",
+        overflowY:"auto",
+        display:"grid",
+        gridTemplateColumns:"repeat(3,1fr)",
+        gap:"6px",
+        marginBottom:"10px"
+      }}>
+        {monthGroups.map(m=>(
+          <div key={m} onClick={()=>start(m)}
+            style={{background:"#a78bfa",padding:"8px",textAlign:"center",borderRadius:"6px"}}>
+            {m}
+          </div>
+        ))}
+      </div>
+    )}
+
+    {/* 📂 EVENT */}
+    {openCategory==="event" && (
+      <div style={{
+        maxHeight:"140px",
+        overflowY:"auto",
+        display:"grid",
+        gridTemplateColumns:"repeat(2,1fr)",
+        gap:"6px",
+        marginBottom:"10px"
+      }}>
+        {eventGroups.map(m=>(
+          <div key={m} onClick={()=>start(m)}
+            style={{background:"#f87171",padding:"8px",textAlign:"center",borderRadius:"6px"}}>
+            {m}
+          </div>
+        ))}
+      </div>
+    )}
+
+    {/* 📂 OTHER */}
+    {openCategory==="other" && (
+      <div style={{
+        maxHeight:"140px",
+        overflowY:"auto",
+        display:"grid",
+        gridTemplateColumns:"repeat(2,1fr)",
+        gap:"6px",
+        marginBottom:"10px"
+      }}>
+        {otherGroups.map(m=>(
+          <div key={m} onClick={()=>start(m)}
+            style={{background:"#4ade80",padding:"8px",textAlign:"center",borderRadius:"6px"}}>
+            {m}
+          </div>
+        ))}
+      </div>
+    )}
+
+    {/* 🟦 MAIN BIG BUTTONS */}
+    <div style={{
+      display:"grid",
+      gridTemplateColumns:"repeat(2,1fr)",
+      gap:"14px",
+      marginTop:"10px"
+    }}>
+      {mainGroups.map(m=>(
+        <div key={m}
+          onClick={()=>start(m)}
+          style={{
+            background:"#2563eb",
+            padding:"24px",
+            textAlign:"center",
+            borderRadius:"14px",
+            fontSize:"16px",
+            fontWeight:"bold",
+            cursor:"pointer",
+            boxShadow:"0 4px 10px rgba(0,0,0,0.3)"
+          }}>
+          {m}
         </div>
-      )}
+      ))}
+    </div>
 
+  </div>
+)}
+     
     {screen==="playing" && (
   <div style={{
     flex: 1,
@@ -439,7 +551,10 @@ export default function QuizApp() {
   bottom: 0,
   left: 0,
   width: "100%",
-  background: "black",
+  background: "rgba(0,0,0,0.5)",
+backdropFilter: "blur(10px)",
+WebkitBackdropFilter: "blur(10px)",
+borderTop: "1px solid rgba(255,255,255,0.2)",
   padding: "10px 12px",
   fontSize: "12px",
   zIndex: 9999
