@@ -416,28 +416,30 @@ export default function QuizApp() {
           </div>
         </div>
       )}
-     <div style={{
+    
+<div style={{
   position: "fixed",
   bottom: 0,
-
   left: 0,
   right: 0,
-
-  /* 🔥 IMPORTANT: parent constraint bypass */
   width: "100vw",
   marginLeft: "calc(50% - 50vw)",
-
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-
   background: "black",
   padding: "10px 12px",
   fontSize: "12px",
   zIndex: 9999
 }}>
-  {/* LEFT */}
+
+  {/* LEFT → Update */}
   <div style={{flex:1}}>
+    Update: {lastUpdate}
+  </div>
+
+  {/* CENTER → Video */}
+  <div style={{flex:1, textAlign:"center"}}>
     <span
       onClick={()=>{
         const url = prompt("Enter video link (YouTube/Reels)");
@@ -449,12 +451,7 @@ export default function QuizApp() {
     </span>
   </div>
 
-  {/* CENTER */}
-  <div style={{flex:1, textAlign:"center"}}>
-    Update: {lastUpdate}
-  </div>
-
-  {/* RIGHT */}
+  {/* RIGHT → Invite + Share */}
   <div style={{flex:1, textAlign:"right"}}>
     <span onClick={handleInvite} style={{cursor:"pointer", marginRight:"12px"}}>
       Invite
