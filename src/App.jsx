@@ -469,7 +469,7 @@ export default function QuizApp() {
 {/* SHARE (right edge) */}
 <div style={{
   position: "absolute",
-  right: "15px" ,
+  right: "45px" ,
    bottom: "10px",
     display: "flex",
     gap: "12px"
