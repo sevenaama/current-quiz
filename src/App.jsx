@@ -162,7 +162,16 @@ function handleSelect(group){
 
   useEffect(()=>{
     function handleClickOutside(e){
-      if(menuRef.current && !menuRef.current.contains(e.target)) setShowMenu(false);
+      // 🔴 Menu close
+    if(menuRef.current && !menuRef.current.contains(e.target)){
+      setShowMenu(false);
+    }
+
+    // 🔵 Dropdown close
+    if(dropdownRef.current && !dropdownRef.current.contains(e.target)){
+      setOpenCategory(null);
+    }
+
     }
     document.addEventListener("click", handleClickOutside);
     return ()=>document.removeEventListener("click", handleClickOutside);
@@ -273,7 +282,8 @@ function handleSelect(group){
     }}>
       {/* MONTH */}
       <div
-        onClick={()=>setOpenCategory(openCategory==="month" ? null : "month")}
+       onClick={(e)=>{
+    e.stopPropagation();setOpenCategory(openCategory==="month" ? null : "month")}
         style={{
           background:"#7c3aed",
           padding:"8px 12px",
@@ -286,7 +296,8 @@ function handleSelect(group){
 
       {/* EVENT */}
       <div
-        onClick={()=>setOpenCategory(openCategory==="event" ? null : "event")}
+        onClick={(e)=>{
+    e.stopPropagation();setOpenCategory(openCategory==="event" ? null : "event")}
         style={{
           background:"#dc2626",
           padding:"8px 12px",
@@ -299,7 +310,8 @@ function handleSelect(group){
 
       {/* OTHER */}
       <div
-        onClick={()=>setOpenCategory(openCategory==="other" ? null : "other")}
+       onClick={(e)=>{
+    e.stopPropagation();setOpenCategory(openCategory==="other" ? null : "other")}
         style={{
           background:"#16a34a",
           padding:"8px 12px",
