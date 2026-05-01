@@ -14,6 +14,7 @@ export default function QuizApp() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
   const menuRef = useRef(null);
+  const dropdownRef = useRef(null);
   const mainGroups = ["today","thisweek","previousweek","thismonth"];
 
 const monthGroups = ["jan","feb","mar","apr","may","jun","july","aug","sep","oct","nov","dec"];
@@ -312,7 +313,9 @@ function handleSelect(group){
 
     {/* 🟣 MONTH */}
     {openCategory==="month" && (
-      <div style={{
+      <div
+         ref={dropdownRef} 
+        style={{
     position:"absolute",
     top:"50px",
     left:"0",
@@ -338,8 +341,13 @@ function handleSelect(group){
 
     {/* 🔴 EVENT */}
     {openCategory==="event" && (
-      <div style={{
-    position:"absolute",     // 🔥 new
+      <div
+         {/* 🟣 MONTH */}
+    {openCategory==="month" && (
+      <div
+         ref={dropdownRef} 
+        style={{
+    position:"absolute",
     top:"50px",
     left:"0",
     width:"200px",
@@ -364,7 +372,9 @@ function handleSelect(group){
 
     {/* 🟢 OTHER */}
     {openCategory==="other" && (
-     <div style={{
+     <div 
+        ref={dropdownRef} 
+       style={{
     position:"absolute",     // 🔥 new
     top:"50px",
     left:"0",
