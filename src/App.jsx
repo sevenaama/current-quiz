@@ -378,8 +378,8 @@ function handleSelect(group){
 
     {/* 🟦 MAIN BIG BUTTONS (FIXED POSITION) */}
     <div style={{
-      display:"grid",
-      gridTemplateColumns:"repeat(2,1fr)",
+      display:"flex",
+      flexDirection:"column",
       gap:"14px",
       marginTop:"10px"
     }}>
@@ -394,7 +394,8 @@ function handleSelect(group){
             fontSize:"16px",
             fontWeight:"bold",
             cursor:"pointer",
-            boxShadow:"0 4px 10px rgba(0,0,0,0.3)"
+            boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
+            width:"90%"
           }}>
           {m}
         </div>
