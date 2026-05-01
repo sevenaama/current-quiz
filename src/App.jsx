@@ -458,6 +458,7 @@ export default function QuizApp() {
     right: "  25%",
   transform: "translatex(50%)" ,
   display: "flex" ,
+  bottom: "10px",
     gap: "12px"
   }}>
     <span onClick={handleInvite} style={{cursor:"pointer"}}>
