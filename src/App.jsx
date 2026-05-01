@@ -14,9 +14,6 @@ export default function QuizApp() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
   const menuRef = useRef(null);
- const monthRef = useRef(null);
-const eventRef = useRef(null);
-const otherRef = useRef(null);
   const mainGroups = ["today","thisweek","previousweek","thismonth"];
 
 const monthGroups = ["jan","feb","mar","apr","may","jun","july","aug","sep","oct","nov","dec"];
@@ -162,24 +159,23 @@ function handleSelect(group){
     });
   }
 
-  useEffect(()=>{
+useEffect(()=>{
   function handleClickOutside(e){
 
-    // menu
+    // 🔴 menu close
     if(menuRef.current && !menuRef.current.contains(e.target)){
       setShowMenu(false);
     }
 
-    // dropdown
+    // 🔵 dropdown close
+    // यदि click dropdown वा button भित्र परेन भने मात्र बन्द
     if(
-      (monthRef.current && monthRef.current.contains(e.target)) ||
-      (eventRef.current && eventRef.current.contains(e.target)) ||
-      (otherRef.current && otherRef.current.contains(e.target))
+      !e.target.closest(".dropdown") &&
+      !e.target.closest(".dropdown-btn")
     ){
-      return;
+      setOpenCategory(null);
     }
 
-    setOpenCategory(null);
   }
 
   document.addEventListener("click", handleClickOutside);
@@ -290,7 +286,8 @@ function handleSelect(group){
       marginBottom:"10px"
     }}>
       {/* MONTH */}
-      <div
+      <div 
+        className="dropdown-btn"
        onClick={(e)=>{
     e.stopPropagation();setOpenCategory(openCategory==="month" ? null : "month")}
         style={{
@@ -305,6 +302,7 @@ function handleSelect(group){
 
       {/* EVENT */}
       <div
+         className="dropdown-btn"
         onClick={(e)=>{
     e.stopPropagation();setOpenCategory(openCategory==="event" ? null : "event")}
         style={{
@@ -319,6 +317,7 @@ function handleSelect(group){
 
       {/* OTHER */}
       <div
+         className="dropdown-btn"
        onClick={(e)=>{
     e.stopPropagation();setOpenCategory(openCategory==="other" ? null : "other")}
         style={{
@@ -335,7 +334,8 @@ function handleSelect(group){
     {/* 🟣 MONTH */}
     {openCategory==="month" && (
       <div
-        ref={monthRef} style={{
+         className="dropdown"
+        style={{
     position:"absolute",
     top:"50px",
     left:"0",
@@ -362,7 +362,8 @@ function handleSelect(group){
   {/* 🔴 EVENT */}
 {openCategory==="event" && (
   <div
-    ref={eventRef} style={{
+     className="dropdown"
+    style={{
       position:"absolute",
       top:"50px",
       left:"0",
@@ -390,7 +391,8 @@ function handleSelect(group){
     {/* 🟢 OTHER */}
     {openCategory==="other" && (
      <div 
-        ref={otherRef} style={{
+         className="dropdown"
+       style={{
     position:"absolute",
     top:"50px",
     left:"0",
