@@ -266,7 +266,7 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
       gap: "8px",
       marginBottom: "10px"
     }}>
-      <div
+     <div
   onClick={()=>setOpenCategory(openCategory==="month" ? null : "month")}
   style={{
     background:"#7c3aed",
@@ -276,9 +276,12 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
     cursor:"pointer",
     display:"flex",
     alignItems:"center",
-    gap:"6px"
-  }}>
-  Month {openCategory==="month" ? "▲" : "▼"}
+    justifyContent:"space-between",
+    minWidth:"80px"
+  }}
+>
+  <span>Month</span>
+  <span>{openCategory==="month" ? "▲" : "▼"}</span>
 </div>
 
       <div
