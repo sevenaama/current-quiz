@@ -457,7 +457,7 @@ export default function QuizApp() {
   display:"flex",
   justifyContent:"flex-end",
   gap:"12px",
-  transform:"translateX(-12px)" 
+  transform:"translateX(-24px)" 
 }}>
   <span onClick={handleInvite} style={{cursor:"pointer"}}>
     Invite
