@@ -183,7 +183,9 @@ export default function QuizApp() {
   padding: "12px",
   background: "#1e40af",
   color: "white",
-  position: "relative"
+  position: "sticky",
+  top: 0,
+  zIndex: 1000
 }}>
 
   {/* Left: Users */}
@@ -436,9 +438,7 @@ export default function QuizApp() {
   position: "fixed",
   bottom: 0,
   left: 0,
-  right: 0,
-  width: "100vw",
-  marginLeft: "calc(50% - 50vw)",
+  width: "100%",
   background: "black",
   padding: "10px 12px",
   fontSize: "12px",
