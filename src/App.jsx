@@ -313,6 +313,7 @@ function handleSelect(group){
     {openCategory==="month" && (
       <div style={{
         height:"160px",
+        width:"200px",
         overflowY:"auto",
         display:"flex",
         flexDirection:"column",
@@ -320,7 +321,8 @@ function handleSelect(group){
         padding:"5px",
         background:"rgba(255,255,255,0.1)",
         borderRadius:"8px",
-        marginBottom:"10px"
+        marginBottom:"10px",
+        marginLeft:"auto"
       }}>
         {monthGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
@@ -335,6 +337,7 @@ function handleSelect(group){
     {openCategory==="event" && (
       <div style={{
         height:"160px",
+        width:"200px",
         overflowY:"auto",
         display:"flex",
         flexDirection:"column",
@@ -342,7 +345,8 @@ function handleSelect(group){
         padding:"5px",
         background:"rgba(255,255,255,0.1)",
         borderRadius:"8px",
-        marginBottom:"10px"
+        marginBottom:"10px",
+        marginLeft:"auto"
       }}>
         {eventGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
@@ -357,6 +361,7 @@ function handleSelect(group){
     {openCategory==="other" && (
       <div style={{
         height:"160px",
+        width:"200px",
         overflowY:"auto",
         display:"flex",
         flexDirection:"column",
@@ -364,7 +369,8 @@ function handleSelect(group){
         padding:"5px",
         background:"rgba(255,255,255,0.1)",
         borderRadius:"8px",
-        marginBottom:"10px"
+        marginBottom:"10px",
+        marginLeft:"auto"
       }}>
         {otherGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
