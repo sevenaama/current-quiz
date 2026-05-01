@@ -380,6 +380,7 @@ function handleSelect(group){
     <div style={{
       display:"flex",
       flexDirection:"column",
+    alignItems:"center",
       gap:"14px",
       marginTop:"10px"
     }}>
