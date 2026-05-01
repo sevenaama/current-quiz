@@ -452,22 +452,26 @@ export default function QuizApp() {
     Update: {lastUpdate}
   </div>
 
-  {/* RIGHT BUTTONS */}
-  <div style={{
-    position: "absolute",
-    right: "  25%",
-  transform: "translatex(50%)" ,
-  display: "flex" ,
-  bottom: "10px",
-    gap: "12px"
-  }}>
-    <span onClick={handleInvite} style={{cursor:"pointer"}}>
-      Invite
-    </span>
-    <span onClick={handleShare} style={{cursor:"pointer"}}>
-      Share
-    </span>
-  </div>
+  {/* INVITE (mid-right) */}
+<div style={{
+  position: "absolute",
+  right: "25%",
+  transform: "translateX(50%)"
+}}>
+  <span onClick={handleInvite} style={{cursor:"pointer"}}>
+    Invite
+  </span>
+</div>
+
+{/* SHARE (right edge) */}
+<div style={{
+  position: "absolute",
+  right: "15px"
+}}>
+  <span onClick={handleShare} style={{cursor:"pointer"}}>
+    Share
+  </span>
+</div>
 
 </div>
 </div>
