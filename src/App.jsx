@@ -321,8 +321,7 @@ function handleSelect(group){
         padding:"5px",
         background:"rgba(255,255,255,0.1)",
         borderRadius:"8px",
-        marginBottom:"10px",
-        marginLeft:"auto"
+        marginBottom:"10px"
       }}>
         {monthGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
@@ -345,8 +344,7 @@ function handleSelect(group){
         padding:"5px",
         background:"rgba(255,255,255,0.1)",
         borderRadius:"8px",
-        marginBottom:"10px",
-        marginLeft:"auto"
+        marginBottom:"10px"
       }}>
         {eventGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
@@ -369,8 +367,7 @@ function handleSelect(group){
         padding:"5px",
         background:"rgba(255,255,255,0.1)",
         borderRadius:"8px",
-        marginBottom:"10px",
-        marginLeft:"auto"
+        marginBottom:"10px"
       }}>
         {otherGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
