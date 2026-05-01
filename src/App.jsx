@@ -261,7 +261,8 @@ function handleSelect(group){
 
   {/* MAIN DASHBOARD GRID */}
 {screen==="home" && (
-  <div style={{ padding: "10px" }}>
+  <div style={{ padding: "10px",
+    position: "relative" }}>
 
     {/* 🔝 BUTTONS */}
     <div style={{
@@ -312,16 +313,19 @@ function handleSelect(group){
     {/* 🟣 MONTH */}
     {openCategory==="month" && (
       <div style={{
-        height:"160px",
-        width:"200px",
-        overflowY:"auto",
-        display:"flex",
-        flexDirection:"column",
-        gap:"6px",
-        padding:"5px",
-        background:"rgba(255,255,255,0.1)",
-        borderRadius:"8px",
-        marginBottom:"10px"
+    position:"absolute",
+    top:"50px",
+    left:"0",
+    width:"200px",
+    maxHeight:"200px",
+    overflowY:"auto",
+    display:"flex",
+    flexDirection:"column",
+    gap:"6px",
+    padding:"5px",
+    background:"rgba(0,0,0,0.9)",
+    borderRadius:"8px",
+    zIndex:999
       }}>
         {monthGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
@@ -335,16 +339,19 @@ function handleSelect(group){
     {/* 🔴 EVENT */}
     {openCategory==="event" && (
       <div style={{
-        height:"160px",
-        width:"200px",
-        overflowY:"auto",
-        display:"flex",
-        flexDirection:"column",
-        gap:"6px",
-        padding:"5px",
-        background:"rgba(255,255,255,0.1)",
-        borderRadius:"8px",
-        marginBottom:"10px"
+    position:"absolute",     // 🔥 new
+    top:"50px",
+    left:"80px",
+    width:"200px",
+    maxHeight:"200px",
+    overflowY:"auto",
+    display:"flex",
+    flexDirection:"column",
+    gap:"6px",
+    padding:"5px",
+    background:"rgba(0,0,0,0.9)",
+    borderRadius:"8px",
+    zIndex:999
       }}>
         {eventGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
@@ -357,17 +364,20 @@ function handleSelect(group){
 
     {/* 🟢 OTHER */}
     {openCategory==="other" && (
-      <div style={{
-        height:"160px",
-        width:"200px",
-        overflowY:"auto",
-        display:"flex",
-        flexDirection:"column",
-        gap:"6px",
-        padding:"5px",
-        background:"rgba(255,255,255,0.1)",
-        borderRadius:"8px",
-        marginBottom:"10px"
+     <div style={{
+    position:"absolute",     // 🔥 new
+    top:"50px",
+    left:"160px",
+    width:"200px",
+    maxHeight:"200px",
+    overflowY:"auto",
+    display:"flex",
+    flexDirection:"column",
+    gap:"6px",
+    padding:"5px",
+    background:"rgba(0,0,0,0.9)",
+    borderRadius:"8px",
+    zIndex:999
       }}>
         {otherGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
