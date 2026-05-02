@@ -138,7 +138,7 @@ function handleSelect(group){
     setSelected(opt);
     setAttempted(a=>a+1);
     if(opt===questions[index].a) setScore(s=>s+1);
-    setTimeout(()=>{ setSelected(null); next(); },500);
+    setTimeout(()=>{ setSelected(null); next(); },700);
   }
 
   function addQuestion(){
@@ -460,7 +460,7 @@ flexDirection: "column",
   <div style={{
     flex: 1,
     padding: "15px",
-    paddingBottom: "120px",
+    paddingBottom: "80px",
     display: "flex",
     flexDirection: "column",
     alignItems: "stretch",
