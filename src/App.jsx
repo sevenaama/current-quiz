@@ -425,10 +425,10 @@ useEffect(()=>{
       display:"flex",
       flexDirection:"column",
     alignItems:"center",
-  justifyContent:"center",
-      gap:"14px",
-      marginTop:"10px",
-   flex:1 
+  justifyContent:"space-evenly",
+      gap:"10px",
+   flex:1 ,
+  paddingBottom:"10px"
     }}>
       {mainGroups.map(m=>(
         <div key={m}
@@ -438,11 +438,15 @@ useEffect(()=>{
             padding:"clamp(18px, 5vw, 28px)",
             textAlign:"center",
             borderRadius:"14px",
-            fontSize:"clamp(18px, 5vw, 22px)",
             fontWeight:"bold",
             cursor:"pointer",
             boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
-            width:"100%",
+            width:"90%",
+            flex:1,
+            display:"flex",
+            alignItems:"center",
+            justifyContent:"center",
+             fontSize:"clamp(18px, 5vw, 22px)",
             maxWidth:"none"
           }}>
           {m}
