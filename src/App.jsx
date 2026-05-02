@@ -421,8 +421,10 @@ useEffect(()=>{
       display:"flex",
       flexDirection:"column",
     alignItems:"center",
+  justifyContent:"center",
       gap:"14px",
-      marginTop:"10px"
+      marginTop:"10px",
+   flex:1 
     }}>
       {mainGroups.map(m=>(
         <div key={m}
