@@ -460,7 +460,7 @@ flexDirection: "column",
   <div style={{
     flex: 1,
     padding: "15px",
-    paddingBottom: "120px", // 👈 तल space
+    paddingBottom: "120px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -530,46 +530,6 @@ flexDirection: "column",
         </button>
       );
     })}
-
-    {/* 🔽 Bottom Controls (same block भित्र) */}
-    <div style={{
-      position: "fixed",
-      bottom: "70px", // 👈 footer भन्दा माथि
-      left: "50%",
-      transform: "translateX(-50%)",
-      width: "100%",
-      maxWidth: "500px",
-      display: "flex",
-      justifyContent: "space-between",
-      padding: "0 20px",
-      zIndex: 1000
-    }}>
-      <button
-        onClick={()=>setScreen("home")}
-        style={{
-          background:"#ef4444",
-          color:"white",
-          padding:"10px 16px",
-          borderRadius:"8px",
-          border:"none"
-        }}
-      >
-        Back
-      </button>
-
-      <button
-        onClick={next}
-        style={{
-          background:"#22c55e",
-          color:"white",
-          padding:"10px 16px",
-          borderRadius:"8px",
-          border:"none"
-        }}
-      >
-        Skip
-      </button>
-    </div>
 
   </div>
 )}
@@ -653,7 +613,46 @@ flexDirection: "column",
           </div>
         </div>
       )}
-    
+    {screen==="playing" && (
+  <div style={{
+    position: "fixed",
+    bottom: "80px", // 👈 footer भन्दा माथि
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "100%",
+    maxWidth: "500px",
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "0 20px",
+    zIndex: 10000
+  }}>
+    <button
+      onClick={()=>setScreen("home")}
+      style={{
+        background:"#ef4444",
+        color:"white",
+        padding:"10px 16px",
+        borderRadius:"8px",
+        border:"none"
+      }}
+    >
+      Back
+    </button>
+
+    <button
+      onClick={next}
+      style={{
+        background:"#22c55e",
+        color:"white",
+        padding:"10px 16px",
+        borderRadius:"8px",
+        border:"none"
+      }}
+    >
+      Skip
+    </button>
+  </div>
+)}
 <div style={{
   position: "fixed",
   bottom: 0,
