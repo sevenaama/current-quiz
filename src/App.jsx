@@ -467,24 +467,20 @@ flexDirection: "column",
   }}>
 
     {/* Top bar */}
-    <div style={{
-      display: "flex",
-      justifyContent: "space-between",
-      width: "100%",
-      maxWidth: "400px",
-      marginBottom: "10px"
-    }}>
-      <button onClick={()=>setScreen("home")}>Back</button>
-
-      <div style={{ textAlign: "center" }}>
-        <div>{time}s</div>
-        <div style={{ fontSize: "12px" }}>
-          Q {index+1} / {questions.length}
-        </div>
-      </div>
-
-      <button onClick={next}>Skip</button>
+     <div style={{
+  display: "flex",
+  justifyContent: "center",
+  width: "100%",
+  maxWidth: "400px",
+  marginBottom: "10px"
+}}>
+  <div style={{ textAlign: "center" }}>
+    <div>{time}s</div>
+    <div style={{ fontSize: "12px" }}>
+      Q {index+1} / {questions.length}
     </div>
+  </div>
+</div>
 
     {/* Question */}
     <div style={{
@@ -536,6 +532,47 @@ fontSize: "clamp(14px, 4vw, 18px)",
 
   </div>
 )}
+     {/* Bottom Controls */}
+<div style={{
+  position: "fixed",
+  bottom: "70px", // तलको main footer भन्दा माथि
+  left: 0,
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  padding: "0 20px",
+  maxWidth: "500px",
+  margin: "0 auto",
+  left: "50%",
+  transform: "translateX(-50%)",
+  zIndex: 1000
+}}>
+  <button
+    onClick={()=>setScreen("home")}
+    style={{
+      background:"#ef4444",
+      color:"white",
+      padding:"10px 16px",
+      borderRadius:"8px",
+      border:"none"
+    }}
+  >
+    Back
+  </button>
+
+  <button
+    onClick={next}
+    style={{
+      background:"#22c55e",
+      color:"white",
+      padding:"10px 16px",
+      borderRadius:"8px",
+      border:"none"
+    }}
+  >
+    Skip
+  </button>
+</div>
       {screen==="result" && (
         <div style={{
     flex: 1,
