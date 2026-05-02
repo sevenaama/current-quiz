@@ -201,6 +201,14 @@ useEffect(()=>{
     const t=setTimeout(()=>setTime(t=>t-1),1000);
     return ()=>clearTimeout(t);
   },[time,screen]);
+  
+  useEffect(()=>{
+  if(editorOpen){
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+}, [editorOpen]);
 
   return (
    <div
@@ -210,7 +218,6 @@ useEffect(()=>{
     flexDirection: "column",
     background: "#1e3a8a",
     color: "white",
-    position: "relative",
     paddingBottom: "0px"
   }}
 >
@@ -602,8 +609,8 @@ flexDirection: "column",
       )}
 
       {editorOpen && (
-        <div className="fixed inset-0 bg-black/70 p-3 overflow-auto z-[9999]">
-          <div className="bg-white text-black p-3 rounded">
+       <div className="fixed inset-0 bg-black/70 z-[99999] flex items-start justify-center p-3 overflow-auto">
+         <div className="bg-white text-black p-3 rounded w-full max-w-[500px] mx-auto">
             <div className="flex justify-between">
               <div>
                 <b>Edit:</b>
