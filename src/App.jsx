@@ -651,14 +651,17 @@ borderTop: "1px solid rgba(255,255,255,0.2)",
     transform: "translateX(-50%)"
   }}>
     <span
-      onClick={()=>{
-        const url = prompt("Enter video link (YouTube/Reels)");
-        if(url) window.open(url, "_blank");
-      }}
-      style={{cursor:"pointer"}}
-    >
-      🎥 Video
-    </span>
+  onClick={()=>{
+    window.open(
+      "https://www.youtube.com/@niza.education",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }}
+  style={{cursor:"pointer"}}
+>
+  🎥 Video
+</span>
   </div>
 
   {/* LEFT UPDATE */}
