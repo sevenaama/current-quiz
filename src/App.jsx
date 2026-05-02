@@ -33,46 +33,58 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
     }
   },[]);
 
-  async function handleShare(){
-    try{
-      if (typeof window !== "undefined" && window.FBInstant && window.FBInstant.shareAsync) {
-        await window.FBInstant.shareAsync({
-          intent: "SHARE",
-          text: "Play this quiz game!",
-          image: "",
-          data: { score }
-        });
-      } else {
-        if (typeof window !== "undefined") {
-          navigator.clipboard.writeText(window.location.href);
-          alert("Link Copied!");
-        }
-      }
-    }catch(e){
-      if (typeof window !== "undefined") {
-        navigator.clipboard.writeText(window.location.href);
-        alert("Link Copied!");
-      }
+ async function handleShare(){
+  try{
+    if (navigator.share) {
+      await navigator.share({
+        title: "Quiz Game",
+        text: "Play this quiz game!",
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Link Copied!");
     }
+  } catch (e) {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link Copied!");
   }
+}
 
-  async function handleInvite(){
-    try{
-      if (typeof window !== "undefined" && window.FBInstant && window.FBInstant.context) {
-        await window.FBInstant.context.chooseAsync();
-      } else {
-        if (typeof window !== "undefined") {
-          const url = window.location.href;
-          window.open(`https://m.me/?link=${encodeURIComponent(url)}`, '_blank');
-        }
-      }
-    }catch(e){
-      if (typeof window !== "undefined") {
-        const url = window.location.href;
-        window.open(`https://m.me/?link=${encodeURIComponent(url)}`, '_blank');
+ async function handleInvite(){
+  const inviteLink = window.location.href;
+
+  const text = `🔥 Come play this quiz!\nCan you beat my score? 😎\n${inviteLink}`;
+
+  try {
+    if (navigator.share) {
+      // 📱 Mobile (best experience)
+      await navigator.share({
+        title: "Quiz Challenge",
+        text: text,
+        url: inviteLink
+      });
+    } else {
+      // 💻 Desktop fallback options
+      const choice = prompt(
+        "Send via:\n1 = WhatsApp\n2 = Messenger\n3 = Copy Link"
+      );
+
+      if (choice === "1") {
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+      } 
+      else if (choice === "2") {
+        window.open(`https://m.me/?link=${encodeURIComponent(inviteLink)}`, "_blank");
+      } 
+      else {
+        navigator.clipboard.writeText(inviteLink);
+        alert("Link copied!");
       }
     }
+  } catch (e) {
+    console.log("Share cancelled or failed");
   }
+}
 
   const defaultGroups = ["today","thisweek","thismonth","plan16","jan","feb","mar","economic","apr","may","jun","census","july","aug","sep","constitution","oct","nov","dec","other","awards","deaths","conferences","sports","life","days","accidents"];
 
