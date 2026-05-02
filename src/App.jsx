@@ -14,6 +14,7 @@ export default function QuizApp() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
   const menuRef = useRef(null);
+  const users = "5K";
   const mainGroups = ["today","thisweek","previousweek","thismonth"];
 
 const monthGroups = ["jan","feb","mar","apr","may","jun","july","aug","sep","oct","nov","dec"];
@@ -215,13 +216,13 @@ useEffect(()=>{
 }}>
 
    {/* 👥 Left: Users */}
-  <div style={{
-    position: "absolute",
-    left: "10px",
-    fontSize: "14px"
-  }}>
-    Users:--
-  </div>
+ <div style={{
+  position: "absolute",
+  left: "10px",
+  fontSize: "14px"
+}}>
+  👥 Users: {users}
+</div>
 
   {/* 📚 Center: Title (CLICKABLE) */}
   <div
@@ -237,7 +238,7 @@ useEffect(()=>{
     }}
   >
     <span>📚</span>
-    <span>Niza Current Quiz</span>
+    <span>Current Quiz</span>
   </div>
 
   {/* ☰ Right: Menu */}
