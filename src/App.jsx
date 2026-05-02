@@ -624,7 +624,7 @@ backdropFilter: "blur(10px)",
 WebkitBackdropFilter: "blur(10px)",
 borderTop: "1px solid rgba(255,255,255,0.2)",
   padding: "10px 12px",
-  fontSize: "12px",
+  fontSize: "clamp(12px,3.5vw,16px",
   zIndex: 9999
 }}>
 
