@@ -296,7 +296,7 @@ flexDirection: "column",
       <div 
         className="dropdown-btn"
        onClick={(e)=>{
-    e.stopPropagation();setOpenCategory(openCategory==="month" ? null : "month")}
+    e.stopPropagation();setOpenCategory(openCategory==="month" ? null : "month"),}}
         style={{
           background:"#7c3aed",
           padding:"8px 12px",
