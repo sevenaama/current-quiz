@@ -486,7 +486,7 @@ useEffect(()=>{
     {/* Question */}
     <div style={{
       textAlign: "center",
-      fontSize: "clamp(18px, 5vw, 24px",
+      fontSize: "clamp(18px, 5vw, 24px)",
       marginBottom: "15px",
       maxWidth: "90%"
     }}>
@@ -517,7 +517,7 @@ useEffect(()=>{
             width: "90%",
             maxWidth: "400px",
             margin: "5px auto",
-            padding: "clamp(12px, 4vw, 18px",
+            padding: "clamp(12px, 4vw, 18px)",
 fontSize: "clamp(14px, 4vw, 18px)",
             borderRadius: "8px",
             textAlign: "center",
@@ -624,7 +624,7 @@ backdropFilter: "blur(10px)",
 WebkitBackdropFilter: "blur(10px)",
 borderTop: "1px solid rgba(255,255,255,0.2)",
   padding: "10px 12px",
-  fontSize: "clamp(12px,3.5vw,16px",
+  fontSize: "clamp(12px,3.5vw,16px)",
   zIndex: 9999
 }}>
 
