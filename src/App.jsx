@@ -277,7 +277,7 @@ useEffect(()=>{
   {/* MAIN DASHBOARD GRID */}
 {screen==="home" && (
   <div style={{ padding: "10px",
-               paddingBottom: "56px"
+               paddingBottom: "56px",
     position: "relative" ,
          display: "flex",
 flexDirection: "column",
