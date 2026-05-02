@@ -225,7 +225,7 @@ useEffect(()=>{
 
   {/* Center: Title */}
   <div style={{
-    fontSize: "22px",
+    fontSize: "clamp(18px, 5vw, 26px)",
     fontWeight: "bold",
     textAlign: "center"
   }}>
@@ -435,10 +435,10 @@ useEffect(()=>{
           onClick={()=>start(m)}
           style={{
             background:"#2563eb",
-            padding:"24px",
+            padding:"clamp(18px, 5vw, 28px)",
             textAlign:"center",
             borderRadius:"14px",
-            fontSize:"16px",
+            fontSize:"clamp(18px, 5vw, 22px)",
             fontWeight:"bold",
             cursor:"pointer",
             boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
@@ -486,7 +486,7 @@ useEffect(()=>{
     {/* Question */}
     <div style={{
       textAlign: "center",
-      fontSize: "18px",
+      fontSize: "clamp(18px, 5vw, 24px",
       marginBottom: "15px",
       maxWidth: "90%"
     }}>
@@ -517,7 +517,8 @@ useEffect(()=>{
             width: "90%",
             maxWidth: "400px",
             margin: "5px auto",
-            padding: "12px",
+            padding: "clamp(12px, 4vw, 18px",
+fontSize: "clamp(14px, 4vw, 18px)",
             borderRadius: "8px",
             textAlign: "center",
             background: bg,
@@ -540,7 +541,9 @@ useEffect(()=>{
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    width: "100%"
+    width: "100%",
+          padding: "clamp(16px, 4vw, 24px)",
+  fontSize: "clamp(18px, 5vw, 24px)" 
   }}>
           <div>Total: {questions.length}</div>
           <div>Attempted: {attempted}</div>
@@ -548,15 +551,15 @@ useEffect(()=>{
           <div>Wrong: {attempted-score}</div>
 
           <div className="flex gap-2 mt-2">
-            <button onClick={()=>start(week)} className="bg-white text-black px-3 py-1">Play Again</button>
+            <button onClick={()=>start(week)} className="bg-white text-black px-5 py-3 text-base rounded">Play Again</button>
 
-            <button onClick={()=>setScreen("home")} className="bg-yellow-400 text-black px-3 py-1">Back</button>
+            <button onClick={()=>setScreen("home")} className="bg-yellow-400 text-black px-5 py-3 text-base rounded">Back</button>
 
             <button onClick={()=>{
               const idx = defaultGroups.indexOf(week);
               const nextGroup = defaultGroups[(idx+1) % defaultGroups.length];
               start(nextGroup);
-            }} className="bg-green-500 text-white px-3 py-1">Next Group</button>
+            }} className="bg-green-500 text-white px-5 py-3 text-base rounded">Next Group</button>
           </div>
         </div>
       )}
