@@ -436,7 +436,8 @@ useEffect(()=>{
             fontWeight:"bold",
             cursor:"pointer",
             boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
-            width:"90%"
+            width:"100%",
+            maxWidth:"none"
           }}>
           {m}
         </div>
