@@ -289,7 +289,8 @@ flexDirection: "column",
     <div style={{
       display:"flex",
       gap:"8px",
-      marginBottom:"10px"
+      marginBottom:"10px",
+    flexShrink:0
     }}>
       {/* MONTH */}
       <div 
