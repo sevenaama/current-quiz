@@ -603,12 +603,6 @@ flexDirection: "column",
 
       {editorOpen && (
         <div className="fixed inset-0 bg-black/70 p-3 overflow-auto z-[9999]">
-           <div style={{
-      background: "white",
-      color: "black",
-      padding: "10px",
-      borderRadius: "8px"
-    }}>
           <div className="bg-white text-black p-3 rounded">
             <div className="flex justify-between">
               <div>
