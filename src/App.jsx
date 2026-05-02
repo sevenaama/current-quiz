@@ -278,9 +278,9 @@ useEffect(()=>{
 {screen==="home" && (
   <div style={{ padding: "10px",
     position: "relative" ,
-    minHeight: "calc(100vh - 120px)",
-    display: "flex",
-    flexDirection: "column"
+        display: "flex",
+    flexDirection: "column",
+               flex:1  
   }}>
 
     {/* 🔝 BUTTONS */}
@@ -424,7 +424,7 @@ useEffect(()=>{
     <div style={{
       display:"flex",
       flexDirection:"column",
-    alignItems:"center",
+    alignItems:"stretch",
   justifyContent:"space-evenly",
       gap:"10px",
    flex:1 ,
