@@ -435,7 +435,6 @@ useEffect(()=>{
           onClick={()=>start(m)}
           style={{
             background:"#2563eb",
-            padding:"clamp(18px, 5vw, 28px)",
             textAlign:"center",
             borderRadius:"14px",
             fontWeight:"bold",
@@ -443,6 +442,7 @@ useEffect(()=>{
             boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
             width:"90%",
             flex:1,
+            margin:"6px 0", 
             display:"flex",
             alignItems:"center",
             justifyContent:"center",
