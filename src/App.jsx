@@ -278,8 +278,8 @@ useEffect(()=>{
 {screen==="home" && (
   <div style={{ padding: "10px",
     position: "relative" ,
-         display: "grid",
-    gridTemplateRows: "auto 1fr",
+         display: "flex",
+flexDirection: "column",
     flex: 1 
   }}>
 
