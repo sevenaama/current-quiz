@@ -531,10 +531,10 @@ flexDirection: "column",
       );
     })}
 
-    {/* ✅ Bottom Controls (अब भित्र छ) */}
+    {/* ✅ Bottom Controls */}
     <div style={{
-      position: "fixed",
-      bottom: "70px",
+      position: "sticky",
+      bottom: "10px",
       left: "50%",
       transform: "translateX(-50%)",
       width: "100%",
