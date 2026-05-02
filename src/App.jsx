@@ -425,7 +425,8 @@ useEffect(()=>{
   display:"grid",
   gridTemplateRows:"repeat(4, 1fr)",
   gap:"10px",
-  height:"100%"     
+  height:"100%",
+   flex:1 
     }}>
       {mainGroups.map(m=>(
         <div key={m}
@@ -437,10 +438,8 @@ useEffect(()=>{
   fontWeight:"bold",
   cursor:"pointer",
   boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
-  width:"90%",
+  width:"100%",
   height:"100%",
-  flex:1,
-  margin:"6px 0", 
   display:"flex",
   alignItems:"center",
   justifyContent:"center",
