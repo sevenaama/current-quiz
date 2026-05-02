@@ -425,7 +425,8 @@ useEffect(()=>{
   display:"grid",
   gridTemplateRows:"repeat(4, 1fr)",
   gap:"10px",
-   flex:1 
+   flex:1,
+  minHeight:0
     }}>
       {mainGroups.map(m=>(
         <div key={m}
