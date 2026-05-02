@@ -73,12 +73,12 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
     }
   }
 
-  const defaultGroups = ["today","thisweek","thismonth","plan16","jan","feb","mar","economic","apr","may","jun","census","july","aug","sep","constitution","oct","nov","dec","other"];
+  const defaultGroups = ["today","thisweek","thismonth","plan16","jan","feb","mar","economic","apr","may","jun","census","july","aug","sep","constitution","oct","nov","dec","other""awards","deaths","conferences","sports","life","days","accidents"];
 
   const emptyQ = { q:{en:""}, options:["","","",""], a:"" };
 
   const sampleQuestions = [
-    { q:{en:"नेपालको राजधानी के हो?"}, options:["काठमाडौं","दिल्ली","टोकियो","लन्डन"], a:"काठमाडौं" },
+    { q:{en:"नेपालको राजधानी कहाँ हो?"}, options:["काठमाडौं","दिल्ली","टोकियो","लन्डन"], a:"काठमाडौं" },
     { q:{en:"2+2 कति हुन्छ?"}, options:["3","4","5","6"], a:"4" },
     { q:{en:"सूर्य कुन दिशाबाट उदाउँछ?"}, options:["पूर्व","पश्चिम","उत्तर","दक्षिण"], a:"पूर्व" }
   ];
@@ -220,7 +220,7 @@ useEffect(()=>{
     left: "10px",
     fontSize: "14px"
   }}>
-    Users: 0
+    Users: 1000
   </div>
 
   {/* Center: Title */}
@@ -428,7 +428,7 @@ flexDirection: "column",
   display:"grid",
   gridTemplateRows:"repeat(4, 1fr)",
   gap:"10px",
-   height:"calc(100dvh - 180px)
+   height:"calc(100dvh - 180px)"
     }}>
       {mainGroups.map(m=>(
         <div key={m}
@@ -537,7 +537,7 @@ flexDirection: "column",
   display: "flex",
   justifyContent: "space-between",
   padding: "10px 20px",
-  background: "rgba(0,0,0,0.3)"
+  background: "rgba(0,0,0,0.3)",
   marginTop: "auto"
 }}>
   <button onClick={()=>setScreen("home")}>
