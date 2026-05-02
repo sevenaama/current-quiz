@@ -214,25 +214,33 @@ useEffect(()=>{
   zIndex: 1000
 }}>
 
-  {/* Left: Users */}
+   {/* 👥 Left: Users */}
   <div style={{
     position: "absolute",
     left: "10px",
     fontSize: "14px"
   }}>
-    Users:--"
+    Users:--
   </div>
 
-  {/* Center: Title */}
-  <div style={{
-    fontSize: "clamp(18px, 5vw, 26px)",
-    fontWeight: "bold",
-    textAlign: "center"
-  }}>
-    Current Quiz
+  {/* 📚 Center: Title (CLICKABLE) */}
+  <div
+    onClick={()=>setScreen("home")}
+    style={{
+      fontSize: "clamp(18px, 5vw, 26px)",
+      fontWeight: "bold",
+      textAlign: "center",
+      display: "flex",
+      alignItems: "center",
+      gap: "6px",
+      cursor: "pointer"
+    }}
+  >
+    <span>📚</span>
+    <span>Niza Current Quiz</span>
   </div>
 
-  {/* Right: Menu */}
+  {/* ☰ Right: Menu */}
   <div
     onClick={(e)=>{e.stopPropagation(); setShowMenu(!showMenu);}}
     style={{
