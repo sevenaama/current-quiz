@@ -464,7 +464,7 @@ flexDirection: "column",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "flex-start"
   }}>
 
     {/* 🔝 Top bar (timer only) */}
@@ -535,7 +535,7 @@ flexDirection: "column",
   width: "100%",
   maxWidth: "500px",
   display: "flex",
-  justifyContent: "space-between",
+  justifyContent: "flex-start",
   padding: "10px 20px",
   marginTop: "auto"
 }}>
