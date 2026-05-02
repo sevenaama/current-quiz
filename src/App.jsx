@@ -460,10 +460,11 @@ flexDirection: "column",
   <div style={{
     flex: 1,
     padding: "15px",
+    paddingBottom: "120px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "flex-start"
   }}>
 
     {/* Top bar */}
