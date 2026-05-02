@@ -609,7 +609,7 @@ flexDirection: "column",
       )}
 
       {editorOpen && (
-       <div className="fixed inset-0 bg-black/70 z-[99999] flex items-start justify-center p-3 overflow-auto">
+     className="fixed inset-0 bg-black/70 z-[2147483647] flex items-start justify-center p-3 overflow-auto"
          <div className="bg-white text-black p-3 rounded w-full max-w-[500px] mx-auto">
             <div className="flex justify-between">
               <div>
