@@ -428,8 +428,7 @@ flexDirection: "column",
   display:"grid",
   gridTemplateRows:"repeat(4, 1fr)",
   gap:"10px",
-   flex:1,
-  minHeight:0
+   height:"calc(100dvh - 180px)
     }}>
       {mainGroups.map(m=>(
         <div key={m}
