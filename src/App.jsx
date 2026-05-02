@@ -456,18 +456,18 @@ flexDirection: "column",
   </div>
 )}
      
-  {screen==="playing" && (
+ {screen==="playing" && (
   <div style={{
     flex: 1,
     padding: "15px",
-    paddingBottom: "120px",
+    paddingBottom: "120px", // 👈 तल space
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-start"
   }}>
 
-    {/* Top bar */}
+    {/* 🔝 Top bar (timer only) */}
     <div style={{
       display: "flex",
       justifyContent: "center",
@@ -483,7 +483,7 @@ flexDirection: "column",
       </div>
     </div>
 
-    {/* Question */}
+    {/* ❓ Question */}
     <div style={{
       textAlign: "center",
       fontSize: "clamp(18px, 5vw, 24px)",
@@ -493,7 +493,7 @@ flexDirection: "column",
       {questions[index]?.q.en}
     </div>
 
-    {/* Options */}
+    {/* 🔘 Options */}
     {questions[index]?.options.map((o,i)=>{
       let bg = "#ffffff";
       let color = "#000";
@@ -531,10 +531,10 @@ flexDirection: "column",
       );
     })}
 
-    {/* ✅ Bottom Controls */}
+    {/* 🔽 Bottom Controls (same block भित्र) */}
     <div style={{
-      position: "sticky",
-      bottom: "10px",
+      position: "fixed",
+      bottom: "70px", // 👈 footer भन्दा माथि
       left: "50%",
       transform: "translateX(-50%)",
       width: "100%",
