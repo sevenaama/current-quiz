@@ -220,7 +220,7 @@ useEffect(()=>{
     left: "10px",
     fontSize: "14px"
   }}>
-    Users: 1000
+    Users:--"
   </div>
 
   {/* Center: Title */}
@@ -296,7 +296,7 @@ flexDirection: "column",
       <div 
         className="dropdown-btn"
        onClick={(e)=>{
-    e.stopPropagation();setOpenCategory(openCategory==="month" ? null : "month"),}}
+    e.stopPropagation();setOpenCategory(openCategory==="month" ? null : "month");}}
         style={{
           background:"#7c3aed",
           padding:"8px 12px",
@@ -311,7 +311,7 @@ flexDirection: "column",
       <div
          className="dropdown-btn"
         onClick={(e)=>{
-    e.stopPropagation();setOpenCategory(openCategory==="event" ? null : "event")}
+    e.stopPropagation();setOpenCategory(openCategory==="event" ? null : "event");}}
         style={{
           background:"#dc2626",
           padding:"8px 12px",
@@ -326,7 +326,7 @@ flexDirection: "column",
       <div
          className="dropdown-btn"
        onClick={(e)=>{
-    e.stopPropagation();setOpenCategory(openCategory==="other" ? null : "other")}
+    e.stopPropagation();setOpenCategory(openCategory==="other" ? null : "other");}}
         style={{
           background:"#16a34a",
           padding:"8px 12px",
