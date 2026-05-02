@@ -278,9 +278,9 @@ useEffect(()=>{
 {screen==="home" && (
   <div style={{ padding: "10px",
     position: "relative" ,
-        display: "flex",
-    flexDirection: "column",
-               flex:1  
+         display: "grid",
+    gridTemplateRows: "auto 1fr",
+    height: "100%" 
   }}>
 
     {/* 🔝 BUTTONS */}
@@ -420,35 +420,33 @@ useEffect(()=>{
       </div>
     )}
 
-    {/* 🟦 MAIN BIG BUTTONS (FIXED POSITION) */}
-    <div style={{
-      display:"flex",
-      flexDirection:"column",
-    alignItems:"stretch",
-  justifyContent:"space-evenly",
-      gap:"10px",
-   flex:1 ,
-  paddingBottom:"10px"
+    {/* 🟦 MAIN BUTTONS (FIXED POSITION) */}
+  <div style={{
+  display:"grid",
+  gridTemplateRows:"repeat(4, 1fr)",
+  gap:"10px",
+  height:"100%"     
     }}>
       {mainGroups.map(m=>(
         <div key={m}
           onClick={()=>start(m)}
-          style={{
-            background:"#2563eb",
-            textAlign:"center",
-            borderRadius:"14px",
-            fontWeight:"bold",
-            cursor:"pointer",
-            boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
-            width:"90%",
-            flex:1,
-            margin:"6px 0", 
-            display:"flex",
-            alignItems:"center",
-            justifyContent:"center",
-             fontSize:"clamp(18px, 5vw, 22px)",
-            maxWidth:"none"
-          }}>
+         style={{
+  background:"#2563eb",
+  textAlign:"center",
+  borderRadius:"14px",
+  fontWeight:"bold",
+  cursor:"pointer",
+  boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
+  width:"90%",
+  height:"100%",
+  flex:1,
+  margin:"6px 0", 
+  display:"flex",
+  alignItems:"center",
+  justifyContent:"center",
+  fontSize:"clamp(18px, 5vw, 22px)",
+  maxWidth:"none"
+         }}>
           {m}
         </div>
       ))}
