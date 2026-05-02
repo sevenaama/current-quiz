@@ -456,7 +456,7 @@ flexDirection: "column",
   display:"grid",
   gridTemplateRows:"repeat(4, 1fr)",
   gap:"10px",
-   height:"calc(100dvh - 180px)"
+  flex: 1
     }}>
       {mainGroups.map(m=>(
         <div key={m}
@@ -669,7 +669,7 @@ WebkitBackdropFilter: "blur(10px)",
 borderTop: "1px solid rgba(255,255,255,0.2)",
   padding: "10px 12px",
   fontSize: "clamp(12px,3.5vw,16px)",
-  zIndex: 9999
+  zIndex: 1000
 }}>
 
   {/* CENTER VIDEO */}
