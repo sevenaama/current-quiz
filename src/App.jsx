@@ -192,7 +192,7 @@ useEffect(()=>{
   return (
    <div
   style={{
-    minHeight: "100vh",
+    minHeight: "100dvh",
     display: "flex",
     flexDirection: "column",
     background: "#1e3a8a",
@@ -280,7 +280,7 @@ useEffect(()=>{
     position: "relative" ,
          display: "grid",
     gridTemplateRows: "auto 1fr",
-    height: "100%" 
+    flex: 1 
   }}>
 
     {/* 🔝 BUTTONS */}
@@ -425,7 +425,6 @@ useEffect(()=>{
   display:"grid",
   gridTemplateRows:"repeat(4, 1fr)",
   gap:"10px",
-  height:"100%",
    flex:1 
     }}>
       {mainGroups.map(m=>(
