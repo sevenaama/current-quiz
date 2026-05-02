@@ -463,7 +463,7 @@ flexDirection: "column",
     paddingBottom: "120px",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "stretch",
     justifyContent: "flex-start"
   }}>
 
@@ -535,19 +535,18 @@ flexDirection: "column",
   width: "100%",
   maxWidth: "500px",
   display: "flex",
-  justifyContent: "flex-start",
+  justifyContent: "space-between",
   padding: "10px 20px",
+  background: "rgba(0,0,0,0.3)"
   marginTop: "auto"
 }}>
   <button onClick={()=>setScreen("home")}>
     Back
   </button>
-
   <button onClick={next}>
     Skip
   </button>
 </div>
-
   </div>
 )}
       {screen==="result" && (
