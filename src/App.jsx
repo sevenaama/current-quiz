@@ -573,6 +573,8 @@ fontSize: "clamp(14px, 4vw, 18px)",
     Skip
   </button>
 </div>
+      </div>
+)}
       {screen==="result" && (
         <div style={{
     flex: 1,
