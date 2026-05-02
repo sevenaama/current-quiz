@@ -277,7 +277,11 @@ useEffect(()=>{
   {/* MAIN DASHBOARD GRID */}
 {screen==="home" && (
   <div style={{ padding: "10px",
-    position: "relative" }}>
+    position: "relative" ,
+    minHeight: "calc(100vh - 120px)",
+    display: "flex",
+    flexDirection: "column"
+  }}>
 
     {/* 🔝 BUTTONS */}
     <div style={{
