@@ -623,16 +623,37 @@ flexDirection: "column",
               <button onClick={()=>setEditorOpen(false)}>Close</button>
             </div>
 
-            {questions.map((q,i)=>(
-              <div key={i} className="border p-2 my-2">
-                <input placeholder="Question" value={q.q.en} onChange={e=>updateQ(i,"q",e.target.value)} className="w-full border mb-1" />
-                {q.options.map((o,oi)=>(
-                  <input key={oi} placeholder={`Option ${oi+1}`} value={o} onChange={e=>updateQ(i,"opt",e.target.value,oi)} className="w-full border mb-1" />
-                ))}
-                <input placeholder="Correct answer" value={q.a} onChange={e=>updateQ(i,"a",e.target.value)} className="w-full border mb-1" />
-                <button onClick={()=>deleteQuestion(i)}>Delete</button>
-              </div>
-            ))}
+          {questions.map((q,i)=>(
+  <div key={i} className="border p-2 my-2">
+
+    <input
+      placeholder="Question"
+      value={q.q?.en || ""}
+      onChange={e=>updateQ(i,"q",e.target.value)}
+      className="w-full border mb-1"
+    />
+
+    {q.options.map((o,oi)=>(
+      <input
+        key={oi}
+        placeholder={`Option ${oi+1}`}
+        value={o || ""}
+        onChange={e=>updateQ(i,"opt",e.target.value,oi)}
+        className="w-full border mb-1"
+      />
+    ))}
+
+    <input
+      placeholder="Correct answer"
+      value={q.a || ""}
+      onChange={e=>updateQ(i,"a",e.target.value)}
+      className="w-full border mb-1"
+    />
+
+    <button onClick={()=>deleteQuestion(i)}>Delete</button>
+
+  </div>
+))}
 
             <div className="flex gap-2 mt-2 items-center">
               <button onClick={addQuestion} className="bg-blue-500 text-white p-2">+ Add Question</button>
