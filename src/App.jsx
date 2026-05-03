@@ -88,7 +88,7 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
   }
 }
 
-  const defaultGroups = ["today","thisweek","thismonth","plan16","jan","feb","mar","economic","apr","may","jun","census","july","aug","sep","constitution","oct","nov","dec","other","awards","deaths","conferences","sports","life","days","accidents"];
+  const defaultGroups = ["today","thisweek","thismonth","previousweek","plan16","jan","feb","mar","economic","apr","may","jun","census","july","aug","sep","constitution","oct","nov","dec","awards","deaths","conferences","sports","life","days","accidents"];
 
   const emptyQ = { q:{en:""}, options:["","","",""], a:"" };
 
