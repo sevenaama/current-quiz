@@ -745,7 +745,15 @@ flexDirection: "column",
       placeholder="Enter password"
       value={enteredPassword}
       onChange={(e)=>setEnteredPassword(e.target.value)}
-      style={{width:"100%", padding:"8px", marginTop:"10px"}}
+      style={{
+  width:"100%",
+  maxWidth:"300px",
+  padding:"10px",
+  marginTop:"10px",
+  marginLeft:"auto",
+  marginRight:"auto",
+  display:"block"
+}}
     />
 
     <button
