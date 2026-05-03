@@ -13,6 +13,7 @@ export default function QuizApp() {
   const [showMenu, setShowMenu] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
+  const [modal, setModal] = useState(null);
   const menuRef = useRef(null);
   const users = "5K";
   const mainGroups = ["today","thisweek","previousweek","thismonth"];
@@ -291,9 +292,9 @@ useEffect(()=>{
   >
     <div onClick={()=>{setEditorOpen(true); setShowMenu(false);}}>Edit Questions</div>
     <div onClick={()=>{alert("Saved"); setShowMenu(false);}}>Save</div>
-    <div onClick={()=>{prompt("Feedback"); setShowMenu(false);}}>Feedback</div>
-    <div onClick={()=>{alert("Contact"); setShowMenu(false);}}>Contact</div>
-    <div onClick={()=>{alert("Rules"); setShowMenu(false);}}>Rules</div>
+  <div onClick={()=>{setModal("feedback"); setShowMenu(false);}}>Feedback</div>
+   <div onClick={()=>{setModal("contact"); setShowMenu(false);}}>Contact</div>
+<div onClick={()=>{setModal("rules"); setShowMenu(false);}}>Rules</div>
     <div onClick={()=>{
       navigator.clipboard.writeText(window.location.href);
       setShowMenu(false);
@@ -678,7 +679,44 @@ flexDirection: "column",
           </div>
         </div>
       )}
-  
+     {modal && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(0,0,0,0.7)",
+      zIndex: 2147483648,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }}
+  >
+    <div style={{
+      background: "white",
+      color: "black",
+      padding: "20px",
+      borderRadius: "10px",
+      width: "90%",
+      maxWidth: "400px"
+    }}>
+      
+      <div style={{display:"flex", justifyContent:"space-between"}}>
+        <b>{modal}</b>
+        <button onClick={()=>setModal(null)}>Close</button>
+      </div>
+
+      {modal==="contact" && <div>📞 Contact info यहाँ राख</div>}
+      {modal==="rules" && <div>📜 Rules यहाँ राख</div>}
+      {modal==="feedback" && <div>✍️ Feedback लेख्ने ठाउँ</div>}
+
+    </div>
+  </div>
+)}
+
+     //footer (bottom bar)//
 <div style={{
   position: "fixed",
   bottom: 0,
