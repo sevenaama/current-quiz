@@ -608,23 +608,120 @@ flexDirection: "column",
 
 </div>
 )}
-      {screen==="result" && (
-        <div style={{
+  {screen==="result" && (
+  <div style={{
     flex: 1,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     textAlign: "center",
     width: "100%",
-          padding: "clamp(16px, 4vw, 24px)",
-  fontSize: "clamp(18px, 5vw, 24px)" 
+    padding: "clamp(16px, 4vw, 24px)",
+    paddingTop: "20px",
+    paddingBottom: "80px",   // 🔥 footer safe
+    overflowY: "auto"
   }}>
-          <div>Total: {questions.length}</div>
-          <div>Attempted: {attempted}</div>
-          <div>Right: {score}</div>
-          <div>Wrong: {attempted-score}</div>
 
+    {/* 🏆 Big Score */}
+    <div style={{
+      fontSize: "clamp(32px, 10vw, 48px)",
+      fontWeight: "bold",
+      marginBottom: "8px"
+    }}>
+      {score} / {questions.length}
+    </div>
+
+    {/* 📊 Progress Bar */}
+    <div style={{
+      width: "100%",
+      maxWidth: "280px",
+      height: "10px",
+      background: "#334155",
+      borderRadius: "10px",
+      overflow: "hidden",
+      marginBottom: "12px"
+    }}>
+      <div style={{
+        width: `${(score / questions.length) * 100}%`,
+        height: "100%",
+        background: "#22c55e",
+        transition: "width 0.6s ease"
+      }} />
+    </div>
+
+    {/* 🧠 Performance Message */}
+    <div style={{
+      fontSize: "clamp(15px, 4vw, 18px)",
+      marginBottom: "12px"
+    }}>
+      {score === questions.length
+        ? "Perfect 🎯"
+        : score > questions.length * 0.7
+        ? "Great Job 🔥"
+        : score > questions.length * 0.4
+        ? "Good 👍"
+        : "Try Again 😅"}
+    </div>
+
+    {/* 📋 Stats Grid */}
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "6px",
+      width: "100%",
+      maxWidth: "240px",
+      fontSize: "13px",
+      marginBottom: "16px"
+    }}>
+
+      <div style={{
+        background:"#1e293b",
+        padding:"6px",
+        borderRadius:"6px"
+      }}>
+        <div style={{opacity:0.7}}>Total</div>
+        <div style={{fontWeight:"bold"}}>
+          {questions.length}
+        </div>
+      </div>
+
+      <div style={{
+        background:"#1e293b",
+        padding:"6px",
+        borderRadius:"6px"
+      }}>
+        <div style={{opacity:0.7}}>Attempted</div>
+        <div style={{fontWeight:"bold"}}>
+          {attempted}
+        </div>
+      </div>
+
+      <div style={{
+        background:"#16a34a",
+        padding:"6px",
+        borderRadius:"6px"
+      }}>
+        <div style={{opacity:0.8}}>Right</div>
+        <div style={{fontWeight:"bold"}}>
+          {score}
+        </div>
+      </div>
+
+      <div style={{
+        background:"#dc2626",
+        padding:"6px",
+        borderRadius:"6px"
+      }}>
+        <div style={{opacity:0.8}}>Wrong</div>
+        <div style={{fontWeight:"bold"}}>
+          {attempted - score}
+        </div>
+      </div>
+
+    </div>
+
+ {/* 🔘 Buttons */}
         <div style={{
   width: "100%",
   maxWidth: "360px",
