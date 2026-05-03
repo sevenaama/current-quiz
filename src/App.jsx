@@ -625,17 +625,34 @@ flexDirection: "column",
           <div>Right: {score}</div>
           <div>Wrong: {attempted-score}</div>
 
-          <div className="flex gap-2 mt-2">
-            <button onClick={()=>start(week)} className="bg-white text-black px-5 py-3 text-base rounded">Play Again</button>
+         <div style={{
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginTop: "15px"
+}}>
 
-            <button onClick={()=>setScreen("home")} className="bg-yellow-400 text-black px-5 py-3 text-base rounded">Back</button>
+  {/* 🔙 Left */}
+  <button onClick={()=>setScreen("home")}>
+    Back
+  </button>
 
-            <button onClick={()=>{
-              const idx = defaultGroups.indexOf(week);
-              const nextGroup = defaultGroups[(idx+1) % defaultGroups.length];
-              start(nextGroup);
-            }} className="bg-green-500 text-white px-5 py-3 text-base rounded">Next Group</button>
-          </div>
+  {/* 🔁 Center */}
+  <button onClick={()=>start(week)}>
+    Play Again
+  </button>
+
+  {/* ⏭ Right */}
+  <button onClick={()=>{
+    const idx = defaultGroups.indexOf(week);
+    const nextGroup = defaultGroups[(idx+1) % defaultGroups.length];
+    start(nextGroup);
+  }}>
+    Next Group
+  </button>
+
+</div>
         </div>
       )}
 
