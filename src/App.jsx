@@ -627,29 +627,84 @@ flexDirection: "column",
 
          <div style={{
   width: "100%",
+  maxWidth: "420px",
+  margin: "15px auto 0 auto",
   display: "flex",
-  justifyContent: "space-between",
+  justifyContent: "center",
   alignItems: "center",
-  marginTop: "15px"
+  gap: "10px",
+  flexWrap: "wrap"
 }}>
 
-  {/* 🔙 Left */}
-  <button onClick={()=>setScreen("home")}>
-    Back
+  {/* 🔙 Back */}
+  <button 
+    onClick={()=>setScreen("home")}
+    style={{
+      flex: "1",
+      minWidth: "90px",
+      padding: "12px",
+      borderRadius: "10px",
+      background: "#facc15",
+      color: "black",
+      fontSize: "14px",
+      boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+      transition: "all 0.15s ease",
+      cursor: "pointer"
+    }}
+    onMouseDown={e=>e.currentTarget.style.transform="scale(0.95)"}
+    onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}
+    onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
+  >
+    ⬅ Back
   </button>
 
-  {/* 🔁 Center */}
-  <button onClick={()=>start(week)}>
-    Play Again
+  {/* 🔁 Play Again */}
+  <button 
+    onClick={()=>start(week)}
+    style={{
+      flex: "1.2",
+      minWidth: "110px",
+      padding: "12px",
+      borderRadius: "10px",
+      background: "white",
+      color: "black",
+      fontWeight: "bold",
+      fontSize: "15px",
+      boxShadow: "0 5px 14px rgba(0,0,0,0.35)",
+      transition: "all 0.15s ease",
+      cursor: "pointer"
+    }}
+    onMouseDown={e=>e.currentTarget.style.transform="scale(0.94)"}
+    onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}
+    onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
+  >
+    🔁 Play
   </button>
 
-  {/* ⏭ Right */}
-  <button onClick={()=>{
-    const idx = defaultGroups.indexOf(week);
-    const nextGroup = defaultGroups[(idx+1) % defaultGroups.length];
-    start(nextGroup);
-  }}>
-    Next Group
+  {/* ⏭ Next */}
+  <button 
+    onClick={()=>{
+      const idx = defaultGroups.indexOf(week);
+      const nextGroup = defaultGroups[(idx+1) % defaultGroups.length];
+      start(nextGroup);
+    }}
+    style={{
+      flex: "1",
+      minWidth: "90px",
+      padding: "12px",
+      borderRadius: "10px",
+      background: "#22c55e",
+      color: "white",
+      fontSize: "14px",
+      boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+      transition: "all 0.15s ease",
+      cursor: "pointer"
+    }}
+    onMouseDown={e=>e.currentTarget.style.transform="scale(0.95)"}
+    onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}
+    onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
+  >
+    ➡ Next
   </button>
 
 </div>
