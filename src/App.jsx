@@ -803,7 +803,7 @@ flexDirection: "column",
   </div>
 )}
 
-     //footer (bottom bar)//
+   {/* footer (bottom bar) */}
 <div style={{
   position: "fixed",
   bottom: 0,
