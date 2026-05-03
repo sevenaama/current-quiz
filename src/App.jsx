@@ -609,76 +609,82 @@ flexDirection: "column",
         </div>
       )}
 
-      {editorOpen && (
-      <div className="fixed inset-0 bg-black/70 z-[2147483647] flex items-center justify-center p-3 overflow-hidden">
-         <div className="bg-white text-black p-3 rounded w-full max-w-[500px] mx-auto max-h-[90vh] overflow-auto">
-            <div className="flex justify-between">
-              <div>
-                <b>Edit:</b>
-                <select value={week} onChange={(e)=>setWeek(e.target.value)} className="ml-2 border">
-                  {defaultGroups.map(g=> (
-                    <option key={g} value={g}>{g}</option>
-                  ))}
-                </select>
-              </div>
-              <button onClick={()=>setEditorOpen(false)}>Close</button>
-            </div>
+    {editorOpen && (
+  <div className="fixed inset-0 bg-black/70 z-[2147483647] flex items-center justify-center p-3">
 
-          {questions.map((q,i)=>(
-  <div key={i} className="border p-2 my-2">
+    <div className="bg-white text-black rounded w-full max-w-[500px] max-h-[90vh] flex flex-col">
 
-    <input
-      placeholder="Question"
-      value={q.q?.en || ""}
-      onChange={e=>updateQ(i,"q",e.target.value)}
-      className="w-full border mb-1"
-    />
-
-    {q.options.map((o,oi)=>(
-      <input
-        key={oi}
-        placeholder={`Option ${oi+1}`}
-        value={o || ""}
-        onChange={e=>updateQ(i,"opt",e.target.value,oi)}
-        className="w-full border mb-1"
-      />
-    ))}
-
-    <input
-      placeholder="Correct answer"
-      value={q.a || ""}
-      onChange={e=>updateQ(i,"a",e.target.value)}
-      className="w-full border mb-1"
-    />
-
-    <button onClick={()=>deleteQuestion(i)}>Delete</button>
-
-  </div>
-))}
-
-            <div className="flex gap-2 mt-2 items-center">
-              <button onClick={addQuestion} className="bg-blue-500 text-white p-2">+ Add Question</button>
-
-              <button onClick={()=>{
-                if (typeof window !== "undefined") {
-                  localStorage.setItem("quizData", JSON.stringify(data));
-                }
-                setSavedMsg(true);
-                setTimeout(()=>setSavedMsg(false),2000);
-              }} className="bg-green-600 text-white p-2">Submit</button>
-
-              <button onClick={()=>{
-                setEditorOpen(false);
-                setScreen("home");
-              }} className="bg-yellow-500 text-black p-2">Back</button>
-
-              {savedMsg && (
-                <div className="text-green-600 text-sm ml-2">✔ Saved</div>
-              )}
-            </div>
-          </div>
+      {/* edit question HEADER */}
+      <div className="p-3 border-b flex justify-between">
+        <div>
+          <b>Edit:</b>
+          <select value={week} onChange={(e)=>setWeek(e.target.value)} className="ml-2 border">
+            {defaultGroups.map(g=> (
+              <option key={g} value={g}>{g}</option>
+            ))}
+          </select>
         </div>
-      )}
+        <button onClick={()=>setEditorOpen(false)}>Close</button>
+      </div>
+
+      {/* edit question BODY (scroll here only) */}
+      <div className="p-3 overflow-auto">
+        {questions.map((q,i)=>(
+          <div key={i} className="border p-2 my-2">
+
+            <input
+              placeholder="Question"
+              value={q.q?.en || ""}
+              onChange={e=>updateQ(i,"q",e.target.value)}
+              className="w-full border mb-1"
+            />
+
+            {q.options.map((o,oi)=>(
+              <input
+                key={oi}
+                placeholder={`Option ${oi+1}`}
+                value={o || ""}
+                onChange={e=>updateQ(i,"opt",e.target.value,oi)}
+                className="w-full border mb-1"
+              />
+            ))}
+
+            <input
+              placeholder="Correct answer"
+              value={q.a || ""}
+              onChange={e=>updateQ(i,"a",e.target.value)}
+              className="w-full border mb-1"
+            />
+
+            <button onClick={()=>deleteQuestion(i)}>Delete</button>
+
+          </div>
+        ))}
+      </div>
+
+      {/*edit question FOOTER */}
+      <div className="p-3 border-t flex gap-2 items-center">
+        <button onClick={addQuestion} className="bg-blue-500 text-white p-2">+ Add</button>
+
+        <button onClick={()=>{
+          localStorage.setItem("quizData", JSON.stringify(data));
+          setSavedMsg(true);
+          setTimeout(()=>setSavedMsg(false),2000);
+        }} className="bg-green-600 text-white p-2">Submit</button>
+
+        <button onClick={()=>{
+          setEditorOpen(false);
+          setScreen("home");
+        }} className="bg-yellow-500 text-black p-2">Back</button>
+
+        {savedMsg && (
+          <div className="text-green-600 text-sm ml-2">✔ Saved</div>
+        )}
+      </div>
+
+    </div>
+  </div>
+)}
      {modal && (
   <div
     style={{
