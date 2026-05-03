@@ -505,7 +505,7 @@ flexDirection: "column",
       justifyContent: "center",
       width: "100%",
       maxWidth: "400px",
-      marginBottom: "10px"
+      marginBottom: "0 auto 10px auto"
     }}>
       <div style={{ textAlign: "center" }}>
         <div>{time}s</div>
@@ -520,7 +520,8 @@ flexDirection: "column",
       textAlign: "center",
       fontSize: "clamp(18px, 5vw, 24px)",
       marginBottom: "15px",
-      maxWidth: "90%"
+      maxWidth: "90%",
+    margin: "0 auto"
     }}>
       {questions[index]?.q?.en}
     </div>
@@ -573,17 +574,35 @@ flexDirection: "column",
     display: "flex",
     gap: "20px",
     background: "rgba(0,0,0,0.3)",
-    padding: "10px 20px",
-    borderRadius: "10px"
+    padding: "10px 18px",
+    borderRadius: "8px"
   }}>
-    <button onClick={()=>setScreen("home")}>
+    <button onClick={()=>setScreen("home")}
+  style={{
+    padding: "10px 18px",
+    borderRadius: "8px",
+    border: "none",
+    cursor: "pointer",
+    fontWeight: "bold"
+  }}
+>
       Back
     </button>
-    <button onClick={next}>
+    <button onClick={next}
+  style={{
+    padding: "10px 18px",
+    borderRadius: "8px",
+    border: "none",
+    cursor: "pointer",
+    fontWeight: "bold"
+  }}
+>
       Skip
     </button>
   </div>
 </div>
+    </div>
+)}  
       {screen==="result" && (
         <div style={{
     flex: 1,
