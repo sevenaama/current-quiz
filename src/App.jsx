@@ -538,7 +538,6 @@ flexDirection: "column",
   </div>
 
 </div>
-</div>
 
     {/* ❓ Question */}
     <div style={{
