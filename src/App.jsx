@@ -132,6 +132,7 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
     setIndex(0);
     setScore(0);
     setAttempted(0);
+    setSelected(null);
     setTime(15);
     setScreen("playing");
   }
@@ -498,26 +499,39 @@ flexDirection: "column",
     justifyContent: "flex-start"
   }}>
 
-    {/* 🔝 Top bar (timer only) */}
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      width: "100%",
-      maxWidth: "400px",
-      margin: "0 auto 10px auto"
-    }}>
-      <div style={{ textAlign: "center" }}>
-       <div style={{
+ {/* 🔝 Top bar (group + timer) */}
+<div style={{
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  width: "100%",
+  maxWidth: "400px",
+  margin: "0 auto 10px auto"
+}}>
+
+  {/* 📂 Current Group */}
+  <div style={{
+    fontSize: "14px",
     fontWeight: "bold",
-    fontSize: "18px"
+    opacity: 0.9
   }}>
-    {time}s
+    📂 {week}
   </div>
-        <div style={{ fontSize: "12px" }}>
-          Q {index+1} / {questions.length}
-        </div>
-      </div>
+
+  {/* ⏱ Timer */}
+  <div style={{ textAlign: "right" }}>
+    <div style={{
+      fontWeight: "bold",
+      fontSize: "18px"
+    }}>
+      {time}s
     </div>
+    <div style={{ fontSize: "12px" }}>
+      Q {index+1} / {questions.length}
+    </div>
+  </div>
+
+</div>
 
     {/* ❓ Question */}
     <div style={{
