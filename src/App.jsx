@@ -609,16 +609,40 @@ flexDirection: "column",
         </div>
       )}
 
-    {editorOpen && (
-  <div className="fixed inset-0 bg-black/70 z-[2147483647] flex items-center justify-center p-3">
+   {editorOpen && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(0,0,0,0.7)",
+      zIndex: 2147483647,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }}
+  >
 
-    <div className="bg-white text-black rounded w-full max-w-[500px] max-h-[90vh] flex flex-col">
+    <div
+      style={{
+        background: "white",
+        color: "black",
+        width: "95%",
+        maxWidth: "500px",
+        maxHeight: "90vh",
+        borderRadius: "10px",
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
 
-      {/* edit question HEADER */}
-      <div className="p-3 border-b flex justify-between">
+      {/* HEADER */}
+      <div style={{padding:"10px", borderBottom:"1px solid #ddd", display:"flex", justifyContent:"space-between"}}>
         <div>
           <b>Edit:</b>
-          <select value={week} onChange={(e)=>setWeek(e.target.value)} className="ml-2 border">
+          <select value={week} onChange={(e)=>setWeek(e.target.value)}>
             {defaultGroups.map(g=> (
               <option key={g} value={g}>{g}</option>
             ))}
@@ -627,16 +651,15 @@ flexDirection: "column",
         <button onClick={()=>setEditorOpen(false)}>Close</button>
       </div>
 
-      {/* edit question BODY (scroll here only) */}
-      <div className="p-3 overflow-auto">
+      {/* BODY */}
+      <div style={{padding:"10px", overflowY:"auto"}}>
         {questions.map((q,i)=>(
-          <div key={i} className="border p-2 my-2">
-
+          <div key={i} style={{border:"1px solid #ddd", padding:"10px", margin:"8px 0"}}>
             <input
               placeholder="Question"
               value={q.q?.en || ""}
               onChange={e=>updateQ(i,"q",e.target.value)}
-              className="w-full border mb-1"
+              style={{width:"100%", marginBottom:"5px"}}
             />
 
             {q.options.map((o,oi)=>(
@@ -645,7 +668,7 @@ flexDirection: "column",
                 placeholder={`Option ${oi+1}`}
                 value={o || ""}
                 onChange={e=>updateQ(i,"opt",e.target.value,oi)}
-                className="w-full border mb-1"
+                style={{width:"100%", marginBottom:"5px"}}
               />
             ))}
 
@@ -653,33 +676,28 @@ flexDirection: "column",
               placeholder="Correct answer"
               value={q.a || ""}
               onChange={e=>updateQ(i,"a",e.target.value)}
-              className="w-full border mb-1"
+              style={{width:"100%", marginBottom:"5px"}}
             />
 
             <button onClick={()=>deleteQuestion(i)}>Delete</button>
-
           </div>
         ))}
       </div>
 
-      {/*edit question FOOTER */}
-      <div className="p-3 border-t flex gap-2 items-center">
-        <button onClick={addQuestion} className="bg-blue-500 text-white p-2">+ Add</button>
-
+      {/* FOOTER */}
+      <div style={{padding:"10px", borderTop:"1px solid #ddd"}}>
+        <button onClick={addQuestion}>+ Add</button>
         <button onClick={()=>{
           localStorage.setItem("quizData", JSON.stringify(data));
           setSavedMsg(true);
           setTimeout(()=>setSavedMsg(false),2000);
-        }} className="bg-green-600 text-white p-2">Submit</button>
-
+        }}>Submit</button>
         <button onClick={()=>{
           setEditorOpen(false);
           setScreen("home");
-        }} className="bg-yellow-500 text-black p-2">Back</button>
+        }}>Back</button>
 
-        {savedMsg && (
-          <div className="text-green-600 text-sm ml-2">✔ Saved</div>
-        )}
+        {savedMsg && <div>✔ Saved</div>}
       </div>
 
     </div>
