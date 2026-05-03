@@ -567,7 +567,7 @@ flexDirection: "column",
         </button>
       );
     })}
-  {/* Bottom Controls */}
+{/* Bottom Controls */}
 <div style={{
   width: "100%",
   display: "flex",
@@ -581,32 +581,13 @@ flexDirection: "column",
     padding: "10px 18px",
     borderRadius: "8px"
   }}>
-    <button onClick={()=>setScreen("home")}
-  style={{
-    padding: "10px 18px",
-    borderRadius: "8px",
-    border: "none",
-    cursor: "pointer",
-    fontWeight: "bold"
-  }}
->
-      Back
-    </button>
-    <button onClick={next}
-  style={{
-    padding: "10px 18px",
-    borderRadius: "8px",
-    border: "none",
-    cursor: "pointer",
-    fontWeight: "bold"
-  }}
->
-      Skip
-    </button>
- </div>
-    </div>
+    <button onClick={()=>setScreen("home")}>Back</button>
+    <button onClick={next}>Skip</button>
   </div>
-)}   
+</div>
+
+</div>
+)}
       {screen==="result" && (
         <div style={{
     flex: 1,
