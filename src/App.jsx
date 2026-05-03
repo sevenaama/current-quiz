@@ -625,84 +625,67 @@ flexDirection: "column",
           <div>Right: {score}</div>
           <div>Wrong: {attempted-score}</div>
 
-         <div style={{
+        <div style={{
   width: "100%",
   maxWidth: "420px",
   margin: "15px auto 0 auto",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  gap: "10px",
-  flexWrap: "wrap"
+  display: "grid",
+  gridTemplateColumns: "1fr 1.2fr 1fr",
+  gap: "6px"
 }}>
 
   {/* 🔙 Back */}
-  <button 
+  <button
     onClick={()=>setScreen("home")}
     style={{
-      flex: "1",
-      minWidth: "90px",
-      padding: "12px",
-      borderRadius: "10px",
+      width: "100%",
+      padding: "clamp(6px, 2.5vw, 10px)",   // 🔥 auto responsive
+      fontSize: "clamp(11px, 3vw, 14px)",   // 🔥 auto responsive
+      borderRadius: "8px",
       background: "#facc15",
       color: "black",
-      fontSize: "14px",
-      boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
-      transition: "all 0.15s ease",
-      cursor: "pointer"
+      boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+      transition: "all 0.15s ease"
     }}
-    onMouseDown={e=>e.currentTarget.style.transform="scale(0.95)"}
-    onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}
-    onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
   >
     ⬅ Back
   </button>
 
-  {/* 🔁 Play Again */}
-  <button 
+  {/* 🔁 Play */}
+  <button
     onClick={()=>start(week)}
     style={{
-      flex: "1.2",
-      minWidth: "110px",
-      padding: "12px",
-      borderRadius: "10px",
+      width: "100%",
+      padding: "clamp(7px, 3vw, 11px)",
+      fontSize: "clamp(12px, 3.2vw, 15px)",
+      borderRadius: "8px",
       background: "white",
       color: "black",
-      fontWeight: "bold",
-      fontSize: "15px",
-      boxShadow: "0 5px 14px rgba(0,0,0,0.35)",
-      transition: "all 0.15s ease",
-      cursor: "pointer"
+      fontWeight: "600",
+      boxShadow: "0 3px 8px rgba(0,0,0,0.3)",
+      transition: "all 0.15s ease"
     }}
-    onMouseDown={e=>e.currentTarget.style.transform="scale(0.94)"}
-    onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}
-    onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
   >
     🔁 Play
   </button>
 
   {/* ⏭ Next */}
-  <button 
+  <button
     onClick={()=>{
       const idx = defaultGroups.indexOf(week);
       const nextGroup = defaultGroups[(idx+1) % defaultGroups.length];
       start(nextGroup);
     }}
     style={{
-      flex: "1",
-      minWidth: "90px",
-      padding: "12px",
-      borderRadius: "10px",
+      width: "100%",
+      padding: "clamp(6px, 2.5vw, 10px)",
+      fontSize: "clamp(11px, 3vw, 14px)",
+      borderRadius: "8px",
       background: "#22c55e",
       color: "white",
-      fontSize: "14px",
-      boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
-      transition: "all 0.15s ease",
-      cursor: "pointer"
+      boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+      transition: "all 0.15s ease"
     }}
-    onMouseDown={e=>e.currentTarget.style.transform="scale(0.95)"}
-    onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}
-    onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}
   >
     ➡ Next
   </button>
