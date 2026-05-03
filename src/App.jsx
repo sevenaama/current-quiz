@@ -485,8 +485,7 @@ flexDirection: "column",
       ))}
     </div>
   </div>
-)}
-     
+  
  {screen==="playing" && (
   <div style={{
     flex: 1,
