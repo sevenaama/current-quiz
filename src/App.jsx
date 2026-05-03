@@ -604,7 +604,6 @@ flexDirection: "column",
       Skip
     </button>
   </div>
-</div>
     </div>
 )}  
       {screen==="result" && (
