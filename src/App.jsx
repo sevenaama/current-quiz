@@ -499,17 +499,18 @@ flexDirection: "column",
     justifyContent: "flex-start"
   }}>
 
- {/* 🔝 Top bar (group + timer) */}
+{/* 🔝 Top bar (group | question center | timer right) */}
 <div style={{
   display: "flex",
-  justifyContent: "space-between",
   alignItems: "center",
+  justifyContent: "space-between",
   width: "100%",
   maxWidth: "400px",
-  margin: "0 auto 10px auto"
+  margin: "0 auto 10px auto",
+  position: "relative"
 }}>
 
-  {/* 📂 Current Group */}
+  {/* 📂 Left: Current Group */}
   <div style={{
     fontSize: "14px",
     fontWeight: "bold",
@@ -518,19 +519,25 @@ flexDirection: "column",
     📂 {week}
   </div>
 
-  {/* ⏱ Timer */}
-  <div style={{ textAlign: "right" }}>
-    <div style={{
-      fontWeight: "bold",
-      fontSize: "18px"
-    }}>
-      {time}s
-    </div>
-    <div style={{ fontSize: "12px" }}>
-      Q {index+1} / {questions.length}
-    </div>
+  {/* 🔢 Center: Question count */}
+  <div style={{
+    position: "absolute",
+    left: "50%",
+    transform: "translateX(-50%)",
+    fontSize: "13px"
+  }}>
+    Q {index+1} / {questions.length}
   </div>
 
+  {/* ⏱ Right: Timer */}
+  <div style={{
+    fontWeight: "bold",
+    fontSize: "18px"
+  }}>
+    {time}s
+  </div>
+
+</div>
 </div>
 
     {/* ❓ Question */}
