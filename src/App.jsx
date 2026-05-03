@@ -627,10 +627,10 @@ flexDirection: "column",
 
         <div style={{
   width: "100%",
-  maxWidth: "420px",
-  margin: "15px auto 0 auto",
+  maxWidth: "360px",
+  margin: "12px auto 0 auto",
   display: "grid",
-  gridTemplateColumns: "1fr 1.2fr 1fr",
+  gridTemplateColumns: "repeat(auto-fit, minmax(90px, 1fr))",
   gap: "6px"
 }}>
 
@@ -639,8 +639,8 @@ flexDirection: "column",
     onClick={()=>setScreen("home")}
     style={{
       width: "100%",
-      padding: "clamp(6px, 2.5vw, 10px)",   // 🔥 auto responsive
-      fontSize: "clamp(11px, 3vw, 14px)",   // 🔥 auto responsive
+      padding: "6px 4px)",
+      fontSize: "12px",
       borderRadius: "8px",
       background: "#facc15",
       color: "black",
@@ -656,8 +656,8 @@ flexDirection: "column",
     onClick={()=>start(week)}
     style={{
       width: "100%",
-      padding: "clamp(7px, 3vw, 11px)",
-      fontSize: "clamp(12px, 3.2vw, 15px)",
+      padding: "6px 4px)",
+      fontSize: "12px",
       borderRadius: "8px",
       background: "white",
       color: "black",
@@ -678,8 +678,8 @@ flexDirection: "column",
     }}
     style={{
       width: "100%",
-      padding: "clamp(6px, 2.5vw, 10px)",
-      fontSize: "clamp(11px, 3vw, 14px)",
+      padding: "6px 4px)",
+      fontSize: "12px",
       borderRadius: "8px",
       background: "#22c55e",
       color: "white",
