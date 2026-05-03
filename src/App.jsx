@@ -14,6 +14,7 @@ export default function QuizApp() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
   const [modal, setModal] = useState(null);
+  const [enteredPassword, setEnteredPassword] = useState("");
   const menuRef = useRef(null);
   const users = "5K";
   const mainGroups = ["today","thisweek","previousweek","thismonth"];
@@ -290,7 +291,9 @@ useEffect(()=>{
       zIndex: 9999
     }}
   >
-    <div onClick={()=>{setEditorOpen(true); setShowMenu(false);}}>Edit Questions</div>
+    <div onClick={()=>{setModal("password"); setShowMenu(false);}}>
+  Edit Questions
+</div>
     <div onClick={()=>{alert("Saved"); setShowMenu(false);}}>Save</div>
   <div onClick={()=>{setModal("feedback"); setShowMenu(false);}}>Feedback</div>
    <div onClick={()=>{setModal("contact"); setShowMenu(false);}}>Contact</div>
@@ -735,6 +738,32 @@ flexDirection: "column",
       {modal==="contact" && <div>📞 Contact info यहाँ राख</div>}
       {modal==="rules" && <div>📜 Rules यहाँ राख</div>}
       {modal==="feedback" && <div>✍️ Feedback लेख्ने ठाउँ</div>}
+      {modal==="password" && (
+  <div>
+    <input
+      type="password"
+      placeholder="Enter password"
+      value={enteredPassword}
+      onChange={(e)=>setEnteredPassword(e.target.value)}
+      style={{width:"100%", padding:"8px", marginTop:"10px"}}
+    />
+
+    <button
+      onClick={()=>{
+        if(enteredPassword==="6420"){
+          setModal(null);
+          setEditorOpen(true);
+          setEnteredPassword("");
+        } else {
+          alert("Wrong password");
+        }
+      }}
+      style={{marginTop:"10px"}}
+    >
+      Unlock
+    </button>
+  </div>
+)}
 
     </div>
   </div>
