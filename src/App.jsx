@@ -484,7 +484,6 @@ flexDirection: "column",
         </div>
       ))}
     </div>
-
   </div>
 )}
      
@@ -505,10 +504,15 @@ flexDirection: "column",
       justifyContent: "center",
       width: "100%",
       maxWidth: "400px",
-      marginBottom: "0 auto 10px auto"
+      margin: "0 auto 10px auto"
     }}>
       <div style={{ textAlign: "center" }}>
-        <div>{time}s</div>
+       <div style={{
+    fontWeight: "bold",
+    fontSize: "18px"
+  }}>
+    {time}s
+  </div>
         <div style={{ fontSize: "12px" }}>
           Q {index+1} / {questions.length}
         </div>
