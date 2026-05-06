@@ -1,9 +1,36 @@
 import React, { useEffect, useState, useRef } from "react";
+import { db } from "./firebase";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 export default function QuizApp() {
+ async function saveQuizData(data) {
+    try {
+      await setDoc(doc(db, "quiz", "main"), {
+        all: data
+      });
+    } catch (e) {
+      console.log("Firebase save error", e);
+    }
+  }
+  async function loadQuizData() {
+  try {
+    const snap = await getDoc(doc(db, "quiz", "main"));
 
+    if (snap.exists()) {
+      return snap.data().all;
+    }
+
+    return null;
+
+  } catch (e) {
+    console.log("Firebase load error", e);
+    return null;
+  }
+}
   const [screen, setScreen] = useState("home");
+  const [lastUpdate, setLastUpdate] = useState("-");
   const [openCategory, setOpenCategory] = useState(null);
+
   const [week, setWeek] = useState("jan");
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -25,7 +52,6 @@ const otherGroups = ["plan16","economic","census","constitution"];
 
 const eventGroups = ["awards","deaths","conferences","sports","life","days","accidents"];
 
-  const [lastUpdate, setLastUpdate] = useState(()=> typeof window !== "undefined" ? (localStorage.getItem("lastUpdate") || "-") : "-");
 
   useEffect(()=>{
     if (typeof window !== "undefined" && window.FBInstant) {
@@ -56,7 +82,7 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
  async function handleInvite(){
   const inviteLink = window.location.href;
 
-  const text = `🔥 Come play this quiz!\nCan you beat my score? 😎\n${inviteLink}`;
+  const text = `🔥 Come play this quiz!\nCan you challenge my score? 😎\n${inviteLink}`;
 
   try {
     if (navigator.share) {
@@ -98,34 +124,28 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
     { q:{en:"सूर्य कुन दिशाबाट उदाउँछ?"}, options:["पूर्व","पश्चिम","उत्तर","दक्षिण"], a:"पूर्व" }
   ];
 
-  const [data, setData] = useState(()=>{
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("quizData");
-      if(saved) return JSON.parse(saved);
-    }
+ const [data, setData] = useState(() => {
+  const init = {};
 
-    const init = {};
-    defaultGroups.forEach(g=>{
-      init[g] = sampleQuestions.map(q => ({
-        q: { en: q.q.en },
-        options: [...q.options],
-        a: q.a
-      }));
-    });
-
-    return init;
+  defaultGroups.forEach(g => {
+    init[g] = sampleQuestions.map(q => ({
+      q: { en: q.q.en },
+      options: [...q.options],
+      a: q.a
+    }));
   });
 
-  useEffect(()=>{
-    if (typeof window !== "undefined") {
-      localStorage.setItem("quizData", JSON.stringify(data));
-      const today = new Date().toLocaleDateString();
-      localStorage.setItem("lastUpdate", today);
-      setLastUpdate(today);
-    }
-  },[data]);
+  return init;
+});
+const questions = data[week] || [];
 
-  const questions = data[week] || [];
+useEffect(() => {
+  loadQuizData().then((res) => {
+    if (res && typeof res === "object") {
+      setData(res);
+    }
+  });
+}, []);
 
   function start(w){
     setWeek(w);
@@ -869,8 +889,8 @@ flexDirection: "column",
       {/* FOOTER */}
       <div style={{padding:"10px", borderTop:"1px solid #ddd"}}>
         <button onClick={addQuestion}>+ Add</button>
-        <button onClick={()=>{
-          localStorage.setItem("quizData", JSON.stringify(data));
+        <button onClick={async ()=>{
+  await saveQuizData(data);
           setSavedMsg(true);
           setTimeout(()=>setSavedMsg(false),2000);
         }}>Submit</button>
