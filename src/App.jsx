@@ -56,7 +56,7 @@ export default function QuizApp() {
   const [lastUpdate, setLastUpdate] = useState("-");
   const [openCategory, setOpenCategory] = useState(null);
 
-  const [week, setWeek] = useState("jan");
+  const [week, setWeek] = useState("january");
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [attempted, setAttempted] = useState(0);
@@ -71,7 +71,7 @@ export default function QuizApp() {
   const users = "5K";
   const mainGroups = ["today","thisweek","previousweek","thismonth"];
 
-const monthGroups = ["jan","feb","mar","apr","may","jun","july","aug","sep","oct","nov","dec"];
+const monthGroups = ["january","feb","mar","apr","may","jun","july","aug","sep","oct","nov","dec"];
 
 const otherGroups = ["plan16","economic","census","constitution"];
 
@@ -139,7 +139,7 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
   }
 }
 
-  const defaultGroups = ["today","thisweek","thismonth","previousweek","plan16","jan","feb","mar","economic","apr","may","jun","census","july","aug","sep","constitution","oct","nov","dec","awards","deaths","conferences","sports","life","days","accidents"];
+  const defaultGroups = ["today","thisweek","thismonth","previousweek","plan16","january","feb","mar","economic","apr","may","jun","census","july","aug","sep","constitution","oct","nov","dec","awards","deaths","conferences","sports","life","days","accidents"];
 
   const emptyQ = { q:{en:""}, options:["","","",""], a:"" };
 
