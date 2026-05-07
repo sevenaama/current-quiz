@@ -1,29 +1,54 @@
 import React, { useEffect, useState, useRef } from "react";
 import { db } from "./firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDocs,
+  collection
+} from "firebase/firestore";
 
 export default function QuizApp() {
- async function saveQuizData(data) {
-    try {
-      await setDoc(doc(db, "quiz", "main"), {
-        all: data
-      });
-    } catch (e) {
-      console.log("Firebase save error", e);
-    }
-  }
-  async function loadQuizData() {
+ async function saveSingleCategory(category, questions) {
+
   try {
-    const snap = await getDoc(doc(db, "quiz", "main"));
 
-    if (snap.exists()) {
-      return snap.data().all;
-    }
-
-    return null;
+    await setDoc(
+      doc(db, "quiz", category),
+      {
+        questions: questions
+      }
+    );
 
   } catch (e) {
+
+    console.log("Firebase save error", e);
+
+  }
+
+}
+ async function loadQuizData() {
+
+  try {
+
+    const querySnapshot = await getDocs(
+      collection(db, "quiz")
+    );
+
+    const loadedData = {};
+
+    querySnapshot.forEach((docSnap) => {
+
+      loadedData[docSnap.id] =
+        docSnap.data().questions || [];
+
+    });
+
+    return loadedData;
+
+  } catch (e) {
+
     console.log("Firebase load error", e);
+
     return null;
   }
 }
@@ -890,7 +915,11 @@ flexDirection: "column",
       <div style={{padding:"10px", borderTop:"1px solid #ddd"}}>
         <button onClick={addQuestion}>+ Add</button>
         <button onClick={async ()=>{
-  await saveQuizData(data);
+  await saveSingleCategory(
+    week,
+    data[week]
+  );
+
           setSavedMsg(true);
           setTimeout(()=>setSavedMsg(false),2000);
         }}>Submit</button>
