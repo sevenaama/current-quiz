@@ -56,7 +56,7 @@ export default function QuizApp() {
   const [lastUpdate, setLastUpdate] = useState("-");
   const [openCategory, setOpenCategory] = useState(null);
 
-  const [week, setWeek] = useState("january");
+  const [week, setWeek] = useState("वैशाख");
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [attempted, setAttempted] = useState(0);
@@ -69,13 +69,13 @@ export default function QuizApp() {
   const [enteredPassword, setEnteredPassword] = useState("");
   const menuRef = useRef(null);
   const users = "5K";
-  const mainGroups = ["today","thisweek","previousweek","thismonth"];
+  const mainGroups = ["Today","This Week","Previous Week","This Month"];
 
-const monthGroups = ["january","feb","mar","apr","may","jun","july","aug","sep","oct","nov","dec"];
+const monthGroups = ["वैशाख","जेठ","असार","साउन","भाद्र","अशोज","कार्तिक","मंसिर","पौष","माघ","फागुन","चैत","अघिल्लो वर्ष"];
 
-const otherGroups = ["plan16","economic","census","constitution"];
+const otherGroups = ["१६ औ योजना","जनगणना","दिर्घकालीन सोच","संविधान","प्रदेश","स्थानीय तह","दिगो विकास लक्ष्य","राष्ट्रिय गौरवका आयोजना"];
 
-const eventGroups = ["awards","deaths","conferences","sports","life","days","accidents"];
+const eventGroups = ["पुरस्कार","निधन","सम्मेलन","खेलकुद","दुर्घटना","दिवश","साहित्य","प्रतिवेदन","नियुक्ति","सम्झौता/समझदारी","सार्वजनिक संस्थान","मलेप प्रतिवेदन","आर्थिक सर्वेक्षण","मौद्रिक नीति","अन्तराष्ट्रिय घटना"];
 
 
   useEffect(()=>{
@@ -139,7 +139,7 @@ const eventGroups = ["awards","deaths","conferences","sports","life","days","acc
   }
 }
 
-  const defaultGroups = ["today","thisweek","thismonth","previousweek","plan16","january","feb","mar","economic","apr","may","jun","census","july","aug","sep","constitution","oct","nov","dec","awards","deaths","conferences","sports","life","days","accidents"];
+  const defaultGroups = ["Today","This Week","This Month","Previous Week","वैशाख","जेठ","असार","साउन","भाद्र","अशोज","कार्तिक","मंसिर","पौष","माघ","फागुन","चैत","अघिल्लो वर्ष","१६ औ योजना","जनगणना","दिर्घकालीन सोच","संविधान","प्रदेश","स्थानीय तह","दिगो विकास लक्ष्य","राष्ट्रिय गौरवका आयोजना","पुरस्कार","निधन","सम्मेलन","खेलकुद","दुर्घटना","दिवश","साहित्य","प्रतिवेदन","नियुक्ति","सम्झौता/समझदारी","सार्वजनिक संस्थान","मलेप प्रतिवेदन","आर्थिक सर्वेक्षण","मौद्रिक नीति","अन्तराष्ट्रिय घटना"];
 
   const emptyQ = { q:{en:""}, options:["","","",""], a:"" };
 
