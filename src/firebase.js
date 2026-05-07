@@ -5,7 +5,6 @@ const firebaseConfig = {
   apiKey: "AIzaSyDzZZ8dbNGj9vYsQDIPytL_kOHHalIsGsA",
   authDomain: "currentquiz7.firebaseapp.com",
   projectId: "currentquiz7",
-  storageBucket: "currentquiz7.firebasestorage.app",
   messagingSenderId: "6540146391",
   appId: "1:6540146391:web:4855a36246cb8480e6e292",
 };
