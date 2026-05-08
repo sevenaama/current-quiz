@@ -3,6 +3,7 @@ import { db } from "./firebase";
 import {
   doc,
   setDoc,
+  getDoc,
   getDocs,
   collection
 } from "firebase/firestore";
@@ -57,15 +58,38 @@ async function autoMoveBySchedule(allData){
   const now = new Date();
 
   const hour = now.getHours();
-  const date = now.getDate();
+
+  const day = now.getDay(); // Saturday = 6
+
+  const todayKey =
+    now.toDateString();
 
   const updated = { ...allData };
 
-  // 🔵 Today -> This Week
-  if(hour >= 20){
+  // 🔥 schedule document
+  const scheduleRef =
+    doc(db, "system", "schedule");
 
-    const todayQs = updated["Today"] || [];
-    const weekQs = updated["This Week"] || [];
+  const scheduleSnap =
+    await getDoc(scheduleRef);
+
+  const schedule =
+    scheduleSnap.exists()
+      ? scheduleSnap.data()
+      : {};
+
+  /* 🔵 Today -> This Week
+     Every day after 8 PM */
+  if(
+    hour >= 20 &&
+    schedule.todayMoved !== todayKey
+  ){
+
+    const todayQs =
+      updated["Today"] || [];
+
+    const weekQs =
+      updated["This Week"] || [];
 
     if(todayQs.length > 0){
 
@@ -86,10 +110,23 @@ async function autoMoveBySchedule(allData){
         updated["This Week"]
       );
     }
+
+    schedule.todayMoved = todayKey;
+
+    await setDoc(
+      scheduleRef,
+      schedule,
+      { merge:true }
+    );
   }
 
-  // 🟣 This Week -> Previous Week
-  if(date >= 7 && hour >= 20){
+  /* 🟣 This Week -> Previous Week
+     Every Saturday after 7 PM */
+  if(
+    day === 6 &&
+    hour >= 19 &&
+    schedule.weekMoved !== todayKey
+  ){
 
     const weekQs =
       updated["This Week"] || [];
@@ -116,10 +153,23 @@ async function autoMoveBySchedule(allData){
         updated["Previous Week"]
       );
     }
+
+    schedule.weekMoved = todayKey;
+
+    await setDoc(
+      scheduleRef,
+      schedule,
+      { merge:true }
+    );
   }
 
-  // 🟢 Previous Week -> This Month
-  if(date >= 14 && hour >= 20){
+  /* 🟢 Previous Week -> This Month
+     Every Saturday after 6 PM */
+  if(
+    day === 6 &&
+    hour >= 18 &&
+    schedule.monthMoved !== todayKey
+  ){
 
     const prevQs =
       updated["Previous Week"] || [];
@@ -146,6 +196,14 @@ async function autoMoveBySchedule(allData){
         updated["This Month"]
       );
     }
+
+    schedule.monthMoved = todayKey;
+
+    await setDoc(
+      scheduleRef,
+      schedule,
+      { merge:true }
+    );
   }
 
   return updated;
@@ -565,15 +623,16 @@ flexDirection: "column",
     position:"absolute",
     top:"50px",
     left:"0",
-    width:"200px",
+    width:"150px",
     maxHeight:"70vh",
     overflowY:"auto",
     display:"flex",
     flexDirection:"column",
     gap:"6px",
     padding:"5px",
-    background:"rgba(0,0,0,0.9)",
+    background:"#1e40af",
     borderRadius:"8px",
+     cursor:"pointer",
     zIndex:999
       }}>
         {monthGroups.map(m=>(
@@ -593,15 +652,16 @@ flexDirection: "column",
       position:"absolute",
       top:"50px",
       left:"0",
-      width:"200px",
+      width:"150px",
       maxHeight:"70vh",
       overflowY:"auto",
       display:"flex",
       flexDirection:"column",
       gap:"6px",
       padding:"5px",
-      background:"rgba(0,0,0,0.9)",
+      background:"#1e40af",
       borderRadius:"8px",
+       cursor:"pointer",
       zIndex:999
     }}
   >
@@ -622,15 +682,16 @@ flexDirection: "column",
     position:"absolute",
     top:"50px",
     left:"0",
-    width:"200px",
+    width:"150px",
     maxHeight:"70vh",
     overflowY:"auto",
     display:"flex",
     flexDirection:"column",
     gap:"6px",
     padding:"5px",
-    background:"rgba(0,0,0,0.9)",
+    background:"#1e40af",
     borderRadius:"8px",
+     cursor:"pointer",
     zIndex:999
       }}>
         {otherGroups.map(m=>(
