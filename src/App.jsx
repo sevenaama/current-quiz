@@ -546,18 +546,56 @@ useEffect(()=>{
 
 </div>
 
-  {/* ☰ Right: Menu */}
-  <div
-    onClick={(e)=>{e.stopPropagation(); setShowMenu(!showMenu);}}
-    style={{
-      position: "absolute",
-      right: "10px",
-      fontSize: "22px",
-      cursor: "pointer"
-    }}
-  >
-    ☰
-  </div>
+ {/* ☰ Right: Menu */}
+<div
+  onClick={(e)=>{
+    e.stopPropagation();
+    setShowMenu(!showMenu);
+  }}
+  style={{
+    position: "absolute",
+    right: "10px",
+
+    width: "42px",
+    height: "42px",
+
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+
+    fontSize: "24px",
+    fontWeight: "bold",
+
+    cursor: "pointer",
+
+    borderRadius: "12px",
+
+    background: showMenu
+      ? "#2563eb"
+      : "rgba(255,255,255,0.15)",
+
+    color: "white",
+
+    boxShadow:
+      "0 2px 8px rgba(0,0,0,0.25)",
+
+    transition: "all 0.2s ease",
+
+    backdropFilter: "blur(6px)"
+  }}
+
+  onMouseEnter={(e)=>{
+    e.currentTarget.style.transform =
+      "scale(1.08)";
+  }}
+
+  onMouseLeave={(e)=>{
+    e.currentTarget.style.transform =
+      "scale(1)";
+  }}
+>
+  {showMenu ? "✕" : "☰"}
+</div>
   {/* MENU */}
        {showMenu && (
   <div
@@ -575,19 +613,40 @@ useEffect(()=>{
       zIndex: 9999
     }}
   >
-    <div onClick={()=>{setModal("password"); setShowMenu(false);}}>
+    <div onClick={()=>{setModal("password"); setShowMenu(false);}}style={{
+    padding:"12px",
+    cursor:"pointer",
+    borderBottom:"1px solid #ddd"
+  }}>
   Edit Questions
 </div>
-    <div onClick={()=>{alert("Saved"); setShowMenu(false);}}>Save</div>
-  <div onClick={()=>{setModal("feedback"); setShowMenu(false);}}>Feedback</div>
-   <div onClick={()=>{setModal("contact"); setShowMenu(false);}}>Contact</div>
-<div onClick={()=>{setModal("rules"); setShowMenu(false);}}>Rules</div>
+  <div onClick={()=>{setModal("feedback"); setShowMenu(false);}}style={{
+    padding:"12px",
+    cursor:"pointer",
+    borderBottom:"1px solid #ddd"
+  }}>
+  Feedback
+</div>
+   <div onClick={()=>{setModal("contact"); setShowMenu(false);}}style={{
+    padding:"12px",
+    cursor:"pointer",
+    borderBottom:"1px solid #ddd"
+  }}>Contact</div>
+<div onClick={()=>{setModal("rules"); setShowMenu(false);}}style={{
+    padding:"12px",
+    cursor:"pointer",
+    borderBottom:"1px solid #ddd"
+  }}>Rules</div>
     <div onClick={()=>{
        navigator.clipboard.writeText(
     window.location.href
   );
       setShowMenu(false);
-    }}>Copy Link</div>
+    }}style={{
+    padding:"12px",
+    cursor:"pointer",
+    borderBottom:"1px solid #ddd"
+  }}>Copy Link</div>
   </div>
 )}
 </div>
@@ -1211,7 +1270,7 @@ flexDirection: "column",
     marginTop:"12px",
     lineHeight:"1.8",
     fontSize:"15px",
-    
+
     maxHeight:"60vh",
   overflowY:"auto",
   paddingRight:"6px"
@@ -1344,7 +1403,7 @@ shared on
   Facebook
 </a>
 
-every Saturday after 8 PM.
+every Saturday.
 
     <br/><br/>
 
