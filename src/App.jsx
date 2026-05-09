@@ -1,20 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
 import { db } from "./firebase";
-import {
-  generateAutoName,
-  createPlayer,
-  loadPlayer,
-  renamePlayer
-} from "./player";
-
-import {
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  collection
-} from "firebase/firestore";
+import { generateAutoName, createPlayer, loadPlayer, renamePlayer } from "./player";
+import { saveScore,loadTopScores } from "./leaderboard";
+import { doc, setDoc, getDoc, getDocs, collection } from "firebase/firestore";
 
 export default function QuizApp() {
  async function saveSingleCategory(category, questions) {
@@ -268,6 +257,7 @@ async function archiveMonth(targetGroup){
   const [playerName, setPlayerName] = useState("");
   const [nameInput, setNameInput] = useState("");
   const [showNameModal, setShowNameModal] = useState(false);
+  const [topScores, setTopScores] = useState([]);
   const menuRef = useRef(null);
   const users = "5K";
   const mainGroups = ["Today","This Week","Previous Week","This Month"];
@@ -457,6 +447,7 @@ function handleSelect(group){
       setIndex(i=>i+1);
       setTime(15);
     } else {
+      saveScore({ playerName, score, total: questions.length, category: week });
       setScreen("result");
     }
   }
@@ -516,6 +507,13 @@ useEffect(()=>{
     const t=setTimeout(()=>setTime(t=>t-1),1000);
     return ()=>clearTimeout(t);
   },[time,screen]);
+
+useEffect(()=>{
+  if(screen !== "result")
+    return;
+  loadTopScores(week)
+    .then(setTopScores);
+},[screen, week]);
   
   useEffect(()=>{
   if(editorOpen){
@@ -549,12 +547,41 @@ useEffect(()=>{
   zIndex: 1000
 }}>
 
-   {/* 👥 Left: Users */}
- <div style={{
-  position: "absolute",
-  left: "10px",
-  fontSize: "14px"
-}}>
+{/* 👤 Left: Player */}
+<div
+  onClick={async ()=>{
+
+    const newName = prompt(
+      "Enter new name",
+      playerName
+    );
+
+    if(
+      !newName ||
+      !newName.trim()
+    ) return;
+
+    await renamePlayer(
+      newName
+    );
+
+    setPlayerName(
+      newName
+    );
+  }}
+
+  style={{
+    position: "absolute",
+    left: "10px",
+    fontSize: "14px",
+    cursor:"pointer",
+    lineHeight:"1.4"
+  }}
+>
+  👤 {playerName || "Player"}
+
+  <br/>
+
   👥 Users: {users}
 </div>
 
@@ -1128,6 +1155,97 @@ flexDirection: "column",
       </div>
 
     </div>
+
+{/* 🏆 Leaderboard */}
+<div style={{
+
+  width:"100%",
+  maxWidth:"360px",
+
+  marginTop:"18px",
+
+  background:"rgba(255,255,255,0.08)",
+
+  borderRadius:"14px",
+
+  padding:"12px",
+
+  backdropFilter:"blur(10px)"
+}}>
+
+  <div style={{
+
+    fontSize:"18px",
+    fontWeight:"bold",
+
+    marginBottom:"10px"
+  }}>
+    🏆 Top Players
+  </div>
+
+  <div style={{
+
+    maxHeight:"220px",
+
+    overflowY:"auto",
+
+    display:"flex",
+
+    flexDirection:"column",
+
+    gap:"8px"
+  }}>
+
+    {topScores.map((p,i)=>(
+
+      <div
+        key={p.id}
+
+        style={{
+
+          display:"flex",
+
+          justifyContent:"space-between",
+
+          alignItems:"center",
+
+          background:
+            p.playerName === playerName
+            ? "rgba(34,197,94,0.25)"
+            : "rgba(255,255,255,0.06)",
+
+          padding:"10px",
+
+          borderRadius:"10px",
+
+          fontSize:"14px"
+        }}
+      >
+
+        <div>
+
+          {i===0 ? "🥇" :
+           i===1 ? "🥈" :
+           i===2 ? "🥉" :
+           `#${i+1}`}
+
+          {" "}
+
+          {p.playerName}
+
+        </div>
+
+        <div style={{
+          fontWeight:"bold"
+        }}>
+          {p.score}
+        </div>
+
+      </div>
+    ))}
+
+  </div>
+</div>
 
  {/* 🔘 Buttons */}
         <div style={{
