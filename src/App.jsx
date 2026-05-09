@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import "./App.css";
 import { db } from "./firebase";
 import {
   doc,
@@ -490,22 +491,60 @@ useEffect(()=>{
   👥 Users: {users}
 </div>
 
-  {/* 📚 Center: Title (CLICKABLE) */}
-  <div
-    onClick={()=>setScreen("home")}
-    style={{
-      fontSize: "clamp(18px, 5vw, 26px)",
-      fontWeight: "bold",
-      textAlign: "center",
-      display: "flex",
-      alignItems: "center",
-      gap: "6px",
-      cursor: "pointer"
-    }}
-  >
-    <span>📚</span>
-    <span>Current Quiz</span>
-  </div>
+  {/* 📚 Center: Smart Animated Title */}
+<div
+  onClick={()=>setScreen("home")}
+  style={{
+    fontSize: "clamp(22px, 6vw, 34px)",
+    fontWeight: "900",
+    textAlign: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "10px",
+    cursor: "pointer",
+
+    padding: "8px 16px",
+    borderRadius: "14px",
+
+    background:
+      "linear-gradient(90deg,#2563eb,#7c3aed)",
+
+    color: "white",
+
+    boxShadow:
+      "0 0 18px rgba(124,58,237,0.6)",
+
+    transition: "0.3s ease",
+
+    transform: "scale(1)",
+
+    animation:
+      "pulseTitle 2s infinite"
+  }}
+
+  onMouseEnter={(e)=>{
+    e.currentTarget.style.transform =
+      "scale(1.08)";
+  }}
+
+  onMouseLeave={(e)=>{
+    e.currentTarget.style.transform =
+      "scale(1)";
+  }}
+>
+
+  <span style={{
+    fontSize:"1.2em"
+  }}>
+    📚
+  </span>
+
+  <span>
+    Current Quiz
+  </span>
+
+</div>
 
   {/* ☰ Right: Menu */}
   <div
@@ -544,15 +583,9 @@ useEffect(()=>{
    <div onClick={()=>{setModal("contact"); setShowMenu(false);}}>Contact</div>
 <div onClick={()=>{setModal("rules"); setShowMenu(false);}}>Rules</div>
     <div onClick={()=>{
-      navigator.clipboard.writeText(
-`🔥 Come play this Current Quiz!
-
-😎 Can you challenge my score?
-
-▶ Tap the preview above to play!
-
-${window.location.href}`
-);
+       navigator.clipboard.writeText(
+    window.location.href
+  );
       setShowMenu(false);
     }}>Copy Link</div>
   </div>
