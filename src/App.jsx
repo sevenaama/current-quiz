@@ -297,7 +297,7 @@ const eventGroups = ["पुरस्कार","निधन","सम्मे�
  async function handleInvite(){
   const inviteLink = window.location.href;
 
-  const text = `🔥 Come play this quiz!\nCan you challenge my score? 😎\n${inviteLink}`;
+  const text = `🔥 Come play this Current quiz!\nCan you challenge my score? 😎\n${inviteLink}`;
 
   try {
     if (navigator.share) {
