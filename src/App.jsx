@@ -2,6 +2,13 @@ import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
 import { db } from "./firebase";
 import {
+  generateAutoName,
+  createPlayer,
+  loadPlayer,
+  renamePlayer
+} from "./player";
+
+import {
   doc,
   setDoc,
   getDoc,
@@ -258,6 +265,9 @@ async function archiveMonth(targetGroup){
   const [savedMsg, setSavedMsg] = useState(false);
   const [modal, setModal] = useState(null);
   const [enteredPassword, setEnteredPassword] = useState("");
+  const [playerName, setPlayerName] = useState("");
+  const [nameInput, setNameInput] = useState("");
+  const [showNameModal, setShowNameModal] = useState(false);
   const menuRef = useRef(null);
   const users = "5K";
   const mainGroups = ["Today","This Week","Previous Week","This Month"];
@@ -276,6 +286,11 @@ const eventGroups = ["पुरस्कार","निधन","सम्मे�
         .catch(()=>{});
     }
   },[]);
+  useEffect(()=>{
+
+setupPlayer();
+
+},[]);
 
  async function handleShare(){
   try{
@@ -381,6 +396,58 @@ useEffect(() => {
     setTime(15);
     setScreen("playing");
   }
+async function setupPlayer(){
+
+  // already exists
+  const existingPlayer =
+    await loadPlayer();
+
+  if(existingPlayer){
+
+    setPlayerName(
+      existingPlayer.name
+    );
+
+    return;
+  }
+
+  // Facebook name
+  if(
+    typeof window !== "undefined" &&
+    window.FBInstant &&
+    window.FBInstant.player
+  ){
+
+    const fbName =
+      window.FBInstant.player.getName();
+
+    if(fbName){
+
+      await createPlayer(fbName);
+
+      setPlayerName(fbName);
+
+      return;
+    }
+  }
+
+  // no FB name
+  setShowNameModal(true);
+
+  // auto create after 10 sec
+  setTimeout(async ()=>{
+
+    const autoName =
+      generateAutoName();
+
+    await createPlayer(autoName);
+
+    setPlayerName(autoName);
+
+    setShowNameModal(false);
+
+  },10000);
+}
 function handleSelect(group){
   start(group);
   setOpenCategory(null);
@@ -1513,6 +1580,87 @@ every Saturday.
 )}
 
     </div>
+  </div>
+)}
+{showNameModal && (
+
+  <div
+    style={{
+      position:"fixed",
+      top:0,
+      left:0,
+      width:"100%",
+      height:"100%",
+      background:"rgba(0,0,0,0.7)",
+      zIndex:999999,
+      display:"flex",
+      alignItems:"center",
+      justifyContent:"center"
+    }}
+  >
+
+```
+<div
+  style={{
+    background:"white",
+    color:"black",
+    padding:"20px",
+    borderRadius:"12px",
+    width:"90%",
+    maxWidth:"320px",
+    textAlign:"center"
+  }}
+>
+
+  <h3>
+    Enter Your Name
+  </h3>
+
+  <div
+    style={{
+      fontSize:"13px",
+      opacity:0.7,
+      marginBottom:"10px"
+    }}
+  >
+    Auto name in 10 seconds...
+  </div>
+
+  <input
+    value={nameInput}
+    onChange={(e)=>
+      setNameInput(e.target.value)
+    }
+    placeholder="Your nickname"
+    style={{
+      width:"100%",
+      padding:"10px",
+      marginBottom:"12px"
+    }}
+  />
+
+  <button
+    onClick={async ()=>{
+
+      if(!nameInput.trim()) return;
+
+      await createPlayer(
+        nameInput
+      );
+
+      setPlayerName(
+        nameInput
+      );
+
+      setShowNameModal(false);
+    }}
+  >
+    Continue
+  </button>
+
+</div>
+```
+
   </div>
 )}
 
