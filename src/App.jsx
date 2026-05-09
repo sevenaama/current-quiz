@@ -548,9 +548,9 @@ useEffect(()=>{
 
  {/* ☰ Right: Menu */}
 <div
-  onClick={(e)=>{
-    e.stopPropagation();
-    setShowMenu(!showMenu);
+  onMouseDown={(e)=>{
+  e.stopPropagation();
+  setShowMenu(prev => !prev);
   }}
   style={{
     position: "absolute",
@@ -584,15 +584,6 @@ useEffect(()=>{
     backdropFilter: "blur(6px)"
   }}
 
-  onMouseEnter={(e)=>{
-    e.currentTarget.style.transform =
-      "scale(1.08)";
-  }}
-
-  onMouseLeave={(e)=>{
-    e.currentTarget.style.transform =
-      "scale(1)";
-  }}
 >
   {showMenu ? "✕" : "☰"}
 </div>
@@ -602,7 +593,7 @@ useEffect(()=>{
     ref={menuRef}
     style={{
       position: "absolute",
-      top: "50px",
+      top: "70px",
       right: "10px",
       background: "white",
       color: "black",
@@ -610,7 +601,10 @@ useEffect(()=>{
       fontSize: "12px",
       borderRadius: "8px",
       boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-      zIndex: 9999
+      zIndex: 9999,
+
+      maxHeight: "70vh",
+      overflowY: "auto"
     }}
   >
     <div onClick={()=>{setModal("password"); setShowMenu(false);}}style={{
