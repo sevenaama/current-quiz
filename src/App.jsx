@@ -297,7 +297,7 @@ const eventGroups = ["पुरस्कार","निधन","सम्मे�
  async function handleInvite(){
   const inviteLink = window.location.href;
 
-  const text = `🔥 Come play this Current quiz!\nCan you challenge my score? 😎\n${inviteLink}`;
+  const text = `🔥 Come play this Current quiz!\nCan you challenge my score? 😎\n▶ Tap the preview above to play!`;
 
   try {
     if (navigator.share) {
@@ -544,7 +544,15 @@ useEffect(()=>{
    <div onClick={()=>{setModal("contact"); setShowMenu(false);}}>Contact</div>
 <div onClick={()=>{setModal("rules"); setShowMenu(false);}}>Rules</div>
     <div onClick={()=>{
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(
+`🔥 Come play this Current Quiz!
+
+😎 Can you challenge my score?
+
+▶ Tap the preview above to play!
+
+${window.location.href}`
+);
       setShowMenu(false);
     }}>Copy Link</div>
   </div>
@@ -623,7 +631,7 @@ flexDirection: "column",
     position:"absolute",
     top:"50px",
     left:"0",
-    width:"150px",
+    width:"115px",
     maxHeight:"70vh",
     overflowY:"auto",
     display:"flex",
@@ -652,7 +660,7 @@ flexDirection: "column",
       position:"absolute",
       top:"50px",
       left:"0",
-      width:"150px",
+      width:"115px",
       maxHeight:"70vh",
       overflowY:"auto",
       display:"flex",
@@ -682,7 +690,7 @@ flexDirection: "column",
     position:"absolute",
     top:"50px",
     left:"0",
-    width:"150px",
+    width:"125px",
     maxHeight:"70vh",
     overflowY:"auto",
     display:"flex",
