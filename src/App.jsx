@@ -424,19 +424,27 @@ async function setupPlayer(){
   // no FB name
   setShowNameModal(true);
 
-  // auto create after 10 sec
+  // auto create after 30 sec
   setTimeout(async ()=>{
 
-    const autoName =
-      generateAutoName();
+const autoPlayer =
+  generateAutoName();
 
-    await createPlayer(autoName);
+await createPlayer(
+  autoPlayer.name
+);
 
-    setPlayerName(autoName);
+setPlayerName(
+  autoPlayer.name
+);
+
+setPlayerAvatar(
+  autoPlayer.avatar
+);
 
     setShowNameModal(false);
 
-  },10000);
+  },30000);
 }
 function handleSelect(group){
   start(group);
@@ -589,7 +597,11 @@ useEffect(()=>{
     }}
 
     style={{
-      cursor:"pointer"
+      cursor:"pointer",
+      display:"inline-block",
+      overflow:"hidden",
+      textOverflow:"ellipsis",
+      whiteSpace:"nowrap"
     }}
   >
     {playerAvatar} {playerName || "Player"}
@@ -1777,15 +1789,15 @@ every Saturday.
     {isRenameMode ? "Edit Your Name" : "Enter Your Name"}
   </h3>
 
-  <div
-    style={{
-      fontSize:"13px",
-      opacity:0.7,
-      marginBottom:"10px"
-    }}
-  >
-    Auto name in {nameTimer} seconds...
-  </div>
+ {!isRenameMode && ( 
+  <div style={{ 
+    fontSize:"13px",
+    opacity:0.7,
+    marginBottom:"10px"
+  }}
+    > Auto name in {nameTimer} seconds... 
+    </div> 
+  )}
 
   <input
     value={nameInput}
