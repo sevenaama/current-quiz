@@ -3,9 +3,49 @@ import "./App.css";
 import { db } from "./firebase";
 import { generateAutoName, createPlayer, loadPlayer, renamePlayer } from "./player";
 import { saveScore,loadTopScores } from "./leaderboard";
-import { doc, setDoc, getDoc, getDocs, collection } from "firebase/firestore";
+import { doc, setDoc, getDoc, getDocs, collection, updateDoc } from "firebase/firestore";
 
 export default function QuizApp() {
+  async function updatePlayerScores(newName){
+
+  try {
+
+    const currentPlayerId =
+      localStorage.getItem("playerId");
+
+    const snap = await getDocs(
+      collection(db,"scores")
+    );
+
+    for (const d of snap.docs){
+
+      const data = d.data();
+
+      if(
+        data.playerId === currentPlayerId
+      ){
+
+        await updateDoc(
+          doc(db,"scores",d.id),
+          {
+            playerName:newName
+          }
+        );
+
+      }
+
+    }
+
+  } catch(e){
+
+    console.log(
+      "update error",
+      e
+    );
+
+  }
+
+}
  async function saveSingleCategory(category, questions) {
 
   try {
@@ -13,7 +53,9 @@ export default function QuizApp() {
     await setDoc(
       doc(db, "quiz", category),
       {
-        questions: questions
+        questions: questions,
+        updatedAt:
+      new Date().toLocaleDateString()
       }
     );
 
@@ -36,10 +78,18 @@ export default function QuizApp() {
 
     querySnapshot.forEach((docSnap) => {
 
-      loadedData[docSnap.id] =
-        docSnap.data().questions || [];
+  if(docSnap.data().updatedAt){
 
-    });
+    setLastUpdate(
+      docSnap.data().updatedAt
+    );
+
+  }
+
+  loadedData[docSnap.id] =
+    docSnap.data().questions || [];
+
+});
 
     return loadedData;
 
@@ -1138,74 +1188,55 @@ flexDirection: "column",
     overflowX:"hidden",
     position:"relative",
   }}>
-      {/* 🏆 Top left Card */}
-    <div style={{
+    
+   {/* 🏆 Top left Card */}
+<div style={{
   position:"absolute",
-  top:"12px",
-  left:"12px",
+  top:"8px",
+  left:"8px",
 
-  background:"rgba(255,255,255,0.12)",
+  background:"rgba(255,255,255,0.10)",
 
-  backdropFilter:"blur(10px)",
+  backdropFilter:"blur(8px)",
 
-  padding:"10px 14px",
+  padding:"6px 8px",
 
-  borderRadius:"14px",
+  borderRadius:"10px",
 
-  border:"1px solid rgba(255,255,255,0.15)",
+  border:"1px solid rgba(255,255,255,0.12)",
 
-  boxShadow:"0 4px 12px rgba(0,0,0,0.25)",
+  boxShadow:"0 2px 8px rgba(0,0,0,0.2)",
 
   textAlign:"left",
 
-  minWidth:"120px"
+  display:"inline-block"
 }}>
 
   <div style={{
-    fontSize:"12px",
+    fontSize:"10px",
     opacity:0.8,
-    marginBottom:"4px"
+    marginBottom:"2px",
+    whiteSpace:"nowrap"
   }}>
     📂 {week}
   </div>
 
   <div style={{
     fontWeight:"bold",
-    fontSize:"15px"
+    fontSize:"12px",
+    whiteSpace:"nowrap"
   }}>
     ⭐ {score}/{questions.length}
   </div>
 
   <div style={{
-    marginTop:"4px",
+    marginTop:"2px",
     color:"#facc15",
-    fontWeight:"bold"
+    fontWeight:"bold",
+    fontSize:"10px",
+    whiteSpace:"nowrap"
   }}>
     🏆 #{finalRank}
-  </div>
-
-</div>
-
-    {/* 🏆 Big Score */}
-    <div style={{
-      fontSize: "clamp(32px, 10vw, 48px)",
-      fontWeight: "bold",
-      marginBottom: "8px"
-    }}>
-      {score} / {questions.length}
-    </div>
-    <div style={{
-  marginBottom:"10px",
-  fontSize:"14px",
-  opacity:0.9
-}}>
-
-  <div>
-    ✅ Correct: {score}
-  </div>
-
-  <div>
-    ⚡ Time Used: {totalTimeUsed}s
   </div>
 
 </div>
@@ -1254,7 +1285,7 @@ flexDirection: "column",
     }}>
 
       <div style={{
-        background:"#1e293b",
+        background:"#c210b3",
         padding:"6px",
         borderRadius:"6px"
       }}>
@@ -1265,7 +1296,7 @@ flexDirection: "column",
       </div>
 
       <div style={{
-        background:"#1e293b",
+        background:"#0b2bdd",
         padding:"6px",
         borderRadius:"6px"
       }}>
@@ -1276,7 +1307,7 @@ flexDirection: "column",
       </div>
 
       <div style={{
-        background:"#16a34a",
+        background:"#11ee62",
         padding:"6px",
         borderRadius:"6px"
       }}>
@@ -1302,45 +1333,50 @@ flexDirection: "column",
 {/* 🏆 Leaderboard */}
 <div style={{
 
-  width:"100%", 
-  maxWidth:"360px",
+  width:"85%",
+  maxWidth:"330px",
+
   overflow:"hidden",
+
   boxSizing:"border-box",
- 
-  marginTop:"18px",
+
+  marginTop:"10px",
 
   background:"rgba(255,255,255,0.08)",
 
   borderRadius:"14px",
 
-  padding:"12px",
+  padding:"6px",
 
   backdropFilter:"blur(10px)"
 }}>
 
+  {/* Title */}
   <div style={{
 
-    fontSize:"18px",
+    fontSize:"17px",
+
     fontWeight:"bold",
 
-    marginBottom:"10px"
+    marginBottom:"10px",
+
+    textAlign:"center"
   }}>
     🏆 Top Players
   </div>
 
+  {/* Scroll Area */}
   <div style={{
 
-    maxHeight:"220px",
-
+    height:"165px",
     overflowY:"auto",
-    overflowX:"hidden", 
-    width:"100%",
-
+    overflowX:"hidden",
+    width:"95%",
     display:"flex",
-
     flexDirection:"column",
-
-    gap:"8px"
+    gap:"4px",
+    paddingRight:"2px",
+    scrollbarWidth:"thin",
   }}>
 
     {topScores.slice(0,10).map((p,i)=>(
@@ -1350,61 +1386,142 @@ flexDirection: "column",
 
         style={{
 
-          display:"flex",
-
-          justifyContent:"space-between",
-
+          display:"grid",
+          gridTemplateColumns:"38px 1fr 52px 52px",
           alignItems:"center",
-          width:"100%", boxSizing:"border-box", overflow:"hidden",
-
+          minHeight:"36px",
+          gap:"4px",
+          width:"100%",
+          boxSizing:"border-box",
+          overflow:"hidden",
           background:
-            p.playerName === playerName
-            ? "rgba(34,197,94,0.25)"
-            : "rgba(255,255,255,0.06)",
+            i===0
+              ? "rgba(250,204,21,0.18)"
+            : i===1
+              ? "rgba(226,232,240,0.14)"
+            : i===2
+              ? "rgba(251,146,60,0.14)"
+            : p.playerName === playerName
+              ? "rgba(34,197,94,0.18)"
+              : "rgba(255,255,255,0.06)",
 
-          padding:"10px",
-
+          boxShadow:
+            i===0
+              ? "0 0 10px rgba(250,204,21,0.25)"
+              : "none",
+          padding:"6px",
           borderRadius:"10px",
-
-          fontSize:"14px"
+          fontSize:"10px"
         }}
       >
+
+        {/* Rank */}
         <div style={{
-
-  flex:1,
-
-  minWidth:0,
-
-  overflow:"hidden",
-
-  textOverflow:"ellipsis",
-
-  whiteSpace:"nowrap",
-
-  textAlign:"left"
-}}>
-
+          fontWeight:"bold",
+          fontSize:"12px"
+        }}>
           {i===0 ? "🥇" :
            i===1 ? "🥈" :
            i===2 ? "🥉" :
            `#${i+1}`}
-
-          {" "}
-
-          {p.playerName}
-
         </div>
 
+        {/* Name */}
         <div style={{
-          fontWeight:"bold"
+
+          overflow:"hidden",
+
+          textOverflow:"ellipsis",
+
+          whiteSpace:"nowrap"
         }}>
-          {p.score}
+          {p.playerName}
+        </div>
+
+        {/* Score */}
+        <div style={{
+          background:"#2563eb",
+          padding:"3px 6px",
+          borderRadius:"999px",
+          fontSize:"12px",
+          fontWeight:"bold",
+          textAlign:"center"
+        }}> ⭐{p.score}
+        </div>
+
+        {/* Time */}
+        <div style={{
+          fontSize:"10px",
+          opacity:0.8,
+          textAlign:"right"
+        }}>
+          ⏱ {p.timeUsed || 0}s
         </div>
 
       </div>
     ))}
 
   </div>
+
+  {/* Sticky Current Player */}
+  {!topScores
+    .slice(0,10)
+    .some(p => p.playerName === playerName) && (
+
+    <div style={{
+
+      display:"grid",
+      gridTemplateColumns:"38px 1fr 52px 52px",
+      alignItems:"center",
+      gap:"4px",
+      marginTop:"8px",
+      width:"100%",
+      boxSizing:"border-box",
+      background:"rgba(34,197,94,0.18)",
+      padding:"3px 6px",
+      borderRadius:"10px",
+      fontSize:"10px"
+    }}>
+
+      {/* Rank */}
+      <div style={{
+        fontWeight:"bold"
+      }}>
+        #{finalRank}
+      </div>
+
+      {/* Name */}
+      <div style={{
+        overflow:"hidden",
+        textOverflow:"ellipsis",
+        whiteSpace:"nowrap"
+      }}>
+        You
+      </div>
+
+      {/* Score */}
+      <div style={{
+        background:"#16a34a",
+        padding:"3px 6px",
+        borderRadius:"999px",
+        fontSize:"12px",
+        fontWeight:"bold",
+        textAlign:"center"
+      }}> ⭐{score}
+      </div>
+
+      {/* Time */}
+      <div style={{
+        fontSize:"11px",
+        opacity:0.8,
+        textAlign:"right"
+      }}>
+        ⏱ {totalTimeUsed}s
+      </div>
+
+    </div>
+  )}
+
 </div>
 
  {/* 🔘 Buttons */}
@@ -1935,7 +2052,7 @@ every Saturday.
         await renamePlayer(
           nameInput
         );
-        updatePlayerScores(nameInput);
+        updatePlayerScores(nameInput); 
 
         setPlayerName(
           nameInput
