@@ -1,10 +1,20 @@
-import { addDoc, collection, query, orderBy, limit, getDocs, doc, setDoc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  query,
+  getDocs,
+  doc,
+  setDoc,
+  where
+} from "firebase/firestore";
+
 import { db } from "./firebase";
 
 export async function saveScore({
 
   playerName,
-  score,
+  correctAnswers,
+  timeUsed,
   total,
   category
 
@@ -14,71 +24,121 @@ export async function saveScore({
     localStorage.getItem("playerId");
 
   if(!playerId) return;
-
   const scoreRef = doc(
 
-    db,
+  db,
 
-    "leaderboards",
+  "scores",
+
+  `${category}_${playerId}`
+
+);
+
+  await setDoc(
+
+  scoreRef,
+
+  {
+
+    playerId,
+
+    playerName,
+
+    correctAnswers,
+
+    timeUsed,
+
+    total,
 
     category,
 
-    "scores",
+    createdAt: Date.now()
 
-    playerId
-  );
-
-  const oldSnap =
-    await getDoc(scoreRef);
-
-  // already exists
-  if(oldSnap.exists()){
-
-    const oldData =
-      oldSnap.data();
-
-    // lower score ignore
-    if(oldData.score >= score)
-      return;
   }
 
-  // save/update best score
-  await setDoc(
-
-    scoreRef,
-
-    {
-      playerId,
-      playerName,
-      score,
-      total,
-      category,
-
-      updatedAt: Date.now()
-    }
-  );
+);
 }
+
 export async function loadTopScores(category){
 
   const q = query(
 
-    collection(
-      db,
-      "leaderboards",
-      category,
-      "scores"
-    ),
+    collection(db,"scores"),
 
-    orderBy("score","desc"),
+    where("category","==",category)
 
-    limit(10)
   );
 
-  const snap =
-    await getDocs(q);
+  const snap = await getDocs(q);
 
-  return snap.docs.map(doc=>({
+  const data = snap.docs.map(doc => ({
+
     id: doc.id,
+
     ...doc.data()
+
   }));
+
+  data.sort((a,b)=>{
+
+    if(
+
+      b.correctAnswers !==
+      a.correctAnswers
+
+    ){
+
+      return (
+
+        b.correctAnswers -
+        a.correctAnswers
+
+      );
+    }
+
+    return (
+
+      a.timeUsed -
+      b.timeUsed
+
+    );
+
+  });
+
+  return data;
+
+}
+export async function updatePlayerScores(newName){
+
+  const playerId =
+    localStorage.getItem("playerId");
+
+  const q = query(
+
+    collection(db,"scores"),
+
+    where("playerId","==",playerId)
+
+  );
+
+  const snap = await getDocs(q);
+
+  snap.forEach(async d => {
+
+    await setDoc(
+
+      doc(db,"scores",d.id),
+
+      {
+
+        ...d.data(),
+
+        playerName: newName
+
+      }
+
+    );
+
+  });
+
 }

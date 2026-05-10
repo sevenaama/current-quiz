@@ -243,6 +243,7 @@ async function archiveMonth(targetGroup){
   const [week, setWeek] = useState("वैशाख");
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [totalTimeUsed, setTotalTimeUsed] = useState(0);
   const [attempted, setAttempted] = useState(0);
   const [time, setTime] = useState(15);
   const [selected, setSelected] = useState(null);
@@ -359,6 +360,23 @@ setupPlayer();
   return init;
 });
 const questions = data[week] || [];
+const currentPlayerId =
+ localStorage.getItem("playerId");
+
+const playerRank =
+  topScores.findIndex(
+
+    p => p.playerId === currentPlayerId
+
+  ) + 1;
+
+const finalRank =
+
+  playerRank > 0
+
+    ? playerRank
+
+    : "--";
 
 useEffect(() => {
 
@@ -384,6 +402,7 @@ useEffect(() => {
     setAttempted(0);
     setSelected(null);
     setTime(15);
+    setTotalTimeUsed(0);
     setScreen("playing");
   }
 async function setupPlayer(){
@@ -451,20 +470,42 @@ function handleSelect(group){
   setOpenCategory(null);
 }
   function next(){
-    if(index+1<questions.length){
-      setIndex(i=>i+1);
-      setTime(15);
-    } else {
-      saveScore({ playerName, score, total: questions.length, category: week });
-      setScreen("result");
-    }
+
+  if(index + 1 < questions.length){
+
+    setIndex(i => i + 1);
+
+    setTime(15);
+
+  } else {
+
+    saveScore({
+
+      playerName,
+
+      correctAnswers: score,
+
+      timeUsed: totalTimeUsed,
+
+      total: questions.length,
+
+      category: week
+
+    });
+
+    setScreen("result");
+
   }
+
+}
 
   function answer(opt){
     if(selected!==null) return;
     setSelected(opt);
     setAttempted(a=>a+1);
     if(opt===questions[index].a) setScore(s=>s+1);
+    setTotalTimeUsed( t => t + (15 - time)
+);
     setTimeout(()=>{ setSelected(null); next(); },700);
   }
 
@@ -612,7 +653,7 @@ useEffect(()=>{
     opacity:0.8,
     marginTop:"2px"
   }}>
-    👥 Users: {
+    👥 {
 
       users >= 1000
 
@@ -1094,8 +1135,56 @@ flexDirection: "column",
     padding: "clamp(16px, 4vw, 24px)",
     paddingTop: "20px",
     paddingBottom: "80px",
-    overflowX:"hidden"
+    overflowX:"hidden",
+    position:"relative",
   }}>
+      {/* 🏆 Top left Card */}
+    <div style={{
+  position:"absolute",
+  top:"12px",
+  left:"12px",
+
+  background:"rgba(255,255,255,0.12)",
+
+  backdropFilter:"blur(10px)",
+
+  padding:"10px 14px",
+
+  borderRadius:"14px",
+
+  border:"1px solid rgba(255,255,255,0.15)",
+
+  boxShadow:"0 4px 12px rgba(0,0,0,0.25)",
+
+  textAlign:"left",
+
+  minWidth:"120px"
+}}>
+
+  <div style={{
+    fontSize:"12px",
+    opacity:0.8,
+    marginBottom:"4px"
+  }}>
+    📂 {week}
+  </div>
+
+  <div style={{
+    fontWeight:"bold",
+    fontSize:"15px"
+  }}>
+    ⭐ {score}/{questions.length}
+  </div>
+
+  <div style={{
+    marginTop:"4px",
+    color:"#facc15",
+    fontWeight:"bold"
+  }}>
+    🏆 #{finalRank}
+  </div>
+
+</div>
 
     {/* 🏆 Big Score */}
     <div style={{
@@ -1105,6 +1194,21 @@ flexDirection: "column",
     }}>
       {score} / {questions.length}
     </div>
+    <div style={{
+  marginBottom:"10px",
+  fontSize:"14px",
+  opacity:0.9
+}}>
+
+  <div>
+    ✅ Correct: {score}
+  </div>
+
+  <div>
+    ⚡ Time Used: {totalTimeUsed}s
+  </div>
+
+</div>
 
     {/* 📊 Progress Bar */}
     <div style={{
@@ -1239,7 +1343,7 @@ flexDirection: "column",
     gap:"8px"
   }}>
 
-    {topScores.map((p,i)=>(
+    {topScores.slice(0,10).map((p,i)=>(
 
       <div
         key={p.id}
@@ -1831,6 +1935,7 @@ every Saturday.
         await renamePlayer(
           nameInput
         );
+        updatePlayerScores(nameInput);
 
         setPlayerName(
           nameInput
