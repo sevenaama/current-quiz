@@ -3,22 +3,24 @@ import { db } from "./firebase";
 
 export function generateAutoName(){
 
-  const names = [
-    "QuizKing",
-    "BrainMaster",
-    "Player",
-    "QuizHero",
-    "SmartGamer",
-    "FastPlayer"
-  ];
+const avatars = [
+  "🙋‍♂️","🙋‍♀️","💁‍♂️","💁‍♀️","🙆‍♂️","🙆‍♀️","🙎‍♂️","🙎‍♀️","👨‍💻","👩‍💻","👨‍🎓","👩‍🎓","💃","🤵","👰","🦸‍♂️","🦸‍♀️","🧑‍🚀","👩‍🚀",
+  "👨‍🍳","👩‍🍳","👨‍🎤","👩‍🎤","👨‍🎨","👩‍🎨","🏃‍♂️","🏃‍♀️","🚴‍♂️","🚴‍♀️","🏄‍♂️","🏄‍♀️"
+];
+const names = [
+  "Sujan", "Aayush", "Pratik", "Nabin", "Suman", "Roshan", "Bikash", "Aarav","Kabir", "Sagar", "Kiran", "Dipesh",
+  "Anish", "Rohit", "Aman", "Santosh", "Ramesh", "Bibek", "Sisir", "Sudip","Asmita", "Riya", "Sabina", "Anisha",
+  "Sita", "Puja", "Sneha", "Nisha","Samiksha", "Alisha", "Shristi", "Karuna", "Mina", "Aakriti", "Barsha", "Nirmala",
+  "Jenisha", "Prerana", "Sujata", "Roshani","Aarohi", "Ishan", "Niraj", "Utsav","Yubraj", "Saroj", "Bipin", "Rabin","Tek", "Gokul"
+];
 
   const randomName =
     names[Math.floor(Math.random() * names.length)] +
     Math.floor(1000 + Math.random() * 9000);
 
-  return randomName;
+const randomAvatar = avatars[ Math.floor( Math.random() * avatars.length ) ];
+  return { name: randomName, avatar: randomAvatar };
 }
-
 export async function createPlayer(name){
 
   const playerId =

@@ -216,10 +216,7 @@ async function archiveMonth(targetGroup){
 
   const targetQs = data[targetGroup] || [];
 
-  const updatedTarget = [
-    ...targetQs,
-    ...monthQs
-  ];
+  const updatedTarget = [...targetQs,...monthQs];
 
   await saveSingleCategory(
     targetGroup,
@@ -255,11 +252,14 @@ async function archiveMonth(targetGroup){
   const [modal, setModal] = useState(null);
   const [enteredPassword, setEnteredPassword] = useState("");
   const [playerName, setPlayerName] = useState("");
+  const [playerAvatar, setPlayerAvatar] = useState("👨‍💻");
   const [nameInput, setNameInput] = useState("");
   const [showNameModal, setShowNameModal] = useState(false);
+  const [nameTimer, setNameTimer] = useState(30);
+  const [isRenameMode, setIsRenameMode] = useState(false);
   const [topScores, setTopScores] = useState([]);
   const menuRef = useRef(null);
-  const users = "5K";
+  const [users, setUsers] = useState(0);
   const mainGroups = ["Today","This Week","Previous Week","This Month"];
 
 const monthGroups = ["वैशाख","जेठ","असार","साउन","भाद्र","अशोज","कार्तिक","मंसिर","पौष","माघ","फागुन","चैत","अघिल्लो वर्ष"];
@@ -514,6 +514,27 @@ useEffect(()=>{
   loadTopScores(week)
     .then(setTopScores);
 },[screen, week]);
+
+useEffect(()=>{ async function loadUsers(){ const snap = await getDocs( collection(db,"players") );
+setUsers( snap.size * 50 ); } loadUsers(); },[]);
+
+useEffect(()=>{
+
+  if(!showNameModal)
+    return;
+
+  if(nameTimer <= 0)
+    return;
+
+  const t = setTimeout(()=>{
+
+    setNameTimer(v=>v-1);
+
+  },1000);
+
+  return ()=>clearTimeout(t);
+
+},[showNameModal, nameTimer]);
   
   useEffect(()=>{
   if(editorOpen){
@@ -521,7 +542,8 @@ useEffect(()=>{
   } else {
     document.body.style.overflow = "auto";
   }
-}, [editorOpen]);
+}, 
+[editorOpen]);
 
   return (
    <div
@@ -548,41 +570,46 @@ useEffect(()=>{
 }}>
 
 {/* 👤 Left: Player */}
-<div
-  onClick={async ()=>{
+<div style={{
+  position: "absolute",
+  left: "10px",
+  fontSize: "14px",
+  lineHeight:"1.4",
+  maxWidth:"120px"
+}}>
 
-    const newName = prompt(
-      "Enter new name",
-      playerName
-    );
+  <div
+    onClick={()=>{
 
-    if(
-      !newName ||
-      !newName.trim()
-    ) return;
+      setIsRenameMode(true);
 
-    await renamePlayer(
-      newName
-    );
+      setNameInput(playerName);
 
-    setPlayerName(
-      newName
-    );
-  }}
+      setShowNameModal(true);
+    }}
 
-  style={{
-    position: "absolute",
-    left: "10px",
-    fontSize: "14px",
-    cursor:"pointer",
-    lineHeight:"1.4"
-  }}
->
-  👤 {playerName || "Player"}
+    style={{
+      cursor:"pointer"
+    }}
+  >
+    {playerAvatar} {playerName || "Player"}
+  </div>
 
-  <br/>
+  <div style={{
+    fontSize:"12px",
+    opacity:0.8,
+    marginTop:"2px"
+  }}>
+    👥 Users: {
 
-  👥 Users: {users}
+      users >= 1000
+
+        ? (users / 1000).toFixed(1) + "K"
+
+        : users
+    }
+  </div>
+
 </div>
 
   {/* 📚 Center: Smart Animated Title */}
@@ -1054,8 +1081,8 @@ flexDirection: "column",
     width: "100%",
     padding: "clamp(16px, 4vw, 24px)",
     paddingTop: "20px",
-    paddingBottom: "80px",   // 🔥 footer safe
-    overflowY: "auto"
+    paddingBottom: "80px",
+    overflowX:"hidden"
   }}>
 
     {/* 🏆 Big Score */}
@@ -1159,9 +1186,11 @@ flexDirection: "column",
 {/* 🏆 Leaderboard */}
 <div style={{
 
-  width:"100%",
+  width:"100%", 
   maxWidth:"360px",
-
+  overflow:"hidden",
+  boxSizing:"border-box",
+ 
   marginTop:"18px",
 
   background:"rgba(255,255,255,0.08)",
@@ -1188,6 +1217,8 @@ flexDirection: "column",
     maxHeight:"220px",
 
     overflowY:"auto",
+    overflowX:"hidden", 
+    width:"100%",
 
     display:"flex",
 
@@ -1208,6 +1239,7 @@ flexDirection: "column",
           justifyContent:"space-between",
 
           alignItems:"center",
+          width:"100%", boxSizing:"border-box", overflow:"hidden",
 
           background:
             p.playerName === playerName
@@ -1221,8 +1253,20 @@ flexDirection: "column",
           fontSize:"14px"
         }}
       >
+        <div style={{
 
-        <div>
+  flex:1,
+
+  minWidth:0,
+
+  overflow:"hidden",
+
+  textOverflow:"ellipsis",
+
+  whiteSpace:"nowrap",
+
+  textAlign:"left"
+}}>
 
           {i===0 ? "🥇" :
            i===1 ? "🥈" :
@@ -1717,7 +1761,6 @@ every Saturday.
     }}
   >
 
-```
 <div
   style={{
     background:"white",
@@ -1731,7 +1774,7 @@ every Saturday.
 >
 
   <h3>
-    Enter Your Name
+    {isRenameMode ? "Edit Your Name" : "Enter Your Name"}
   </h3>
 
   <div
@@ -1741,7 +1784,7 @@ every Saturday.
       marginBottom:"10px"
     }}
   >
-    Auto name in 10 seconds...
+    Auto name in {nameTimer} seconds...
   </div>
 
   <input
@@ -1751,17 +1794,44 @@ every Saturday.
     }
     placeholder="Your nickname"
     style={{
-      width:"100%",
-      padding:"10px",
-      marginBottom:"12px"
+      width:"100%", boxSizing:"border-box", padding:"10px", marginBottom:"12px"
     }}
   />
+<div style={{
+
+  display:"flex",
+
+  gap:"10px",
+
+  justifyContent:"center",
+
+  marginTop:"10px"
+}}>
 
   <button
     onClick={async ()=>{
 
       if(!nameInput.trim()) return;
 
+      // rename existing player
+      if(isRenameMode){
+
+        await renamePlayer(
+          nameInput
+        );
+
+        setPlayerName(
+          nameInput
+        );
+
+        setIsRenameMode(false);
+
+        setShowNameModal(false);
+
+        return;
+      }
+
+      // create new player
       await createPlayer(
         nameInput
       );
@@ -1772,16 +1842,46 @@ every Saturday.
 
       setShowNameModal(false);
     }}
+
+    style={{
+      background:"#2563eb",
+      color:"white",
+      border:"none",
+      padding:"10px 16px",
+      borderRadius:"8px",
+      cursor:"pointer"
+    }}
   >
     Continue
   </button>
 
+  <button
+    onClick={()=>{
+
+      setShowNameModal(false);
+
+      setIsRenameMode(false);
+    }}
+
+    style={{
+      background:"transparent",
+      border:"1px solid #999",
+      color:"black",
+      padding:"10px 16px",
+      borderRadius:"8px",
+      cursor:"pointer"
+    }}
+  >
+    Cancel
+  </button>
+
 </div>
-```
+
+</div>
 
   </div>
-)}
 
+)}
    {/* footer (bottom bar) */}
 <div style={{
   position: "fixed",
