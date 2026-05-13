@@ -1800,28 +1800,157 @@ flexDirection: "column",
         {questions.map((q,i)=>(
           <div key={i} style={{border:"1px solid #ddd", padding:"10px", margin:"8px 0"}}>
             <input
-              placeholder="Question"
-              value={q.q?.en || ""}
-              onChange={e=>updateQ(i,"q",e.target.value)}
-              style={{width:"100%", marginBottom:"5px"}}
-            />
+  placeholder="Question"
+  value={q.q?.en || ""}
+
+  onChange={e=>
+    updateQ(
+      i,
+      "q",
+      e.target.value
+    )
+  }
+
+  onKeyDown={(e)=>{
+
+    const inputs =
+      Array.from(
+        document.querySelectorAll(
+          "input"
+        )
+      );
+
+    const index =
+      inputs.indexOf(e.target);
+
+    if(e.key === "ArrowDown"){
+
+      e.preventDefault();
+
+      inputs[index + 1]?.focus();
+    }
+
+    if(e.key === "ArrowUp"){
+
+      e.preventDefault();
+
+      inputs[index - 1]?.focus();
+    }
+
+  }}
+
+  style={{
+    width:"100%",
+    marginBottom:"5px"
+  }}
+/>
 
             {q.options.map((o,oi)=>(
-              <input
-                key={oi}
-                placeholder={`Option ${oi+1}`}
-                value={o || ""}
-                onChange={e=>updateQ(i,"opt",e.target.value,oi)}
-                style={{width:"100%", marginBottom:"5px"}}
-              />
+             <input
+  key={oi}
+  placeholder={`Option ${oi+1}`}
+  value={o || ""}
+
+  onChange={e=>
+    updateQ(
+      i,
+      "opt",
+      e.target.value,
+      oi
+    )
+  }
+
+  onKeyDown={(e)=>{
+
+    const inputs =
+      Array.from(
+        document.querySelectorAll(
+          "input"
+        )
+      );
+
+    const index =
+      inputs.indexOf(e.target);
+
+    if(e.key === "ArrowDown"){
+
+      e.preventDefault();
+
+      inputs[index + 1]?.focus();
+    }
+
+    if(e.key === "ArrowUp"){
+
+      e.preventDefault();
+
+      inputs[index - 1]?.focus();
+    }
+
+  }}
+
+  style={{
+    width:"100%",
+    marginBottom:"5px"
+  }}
+/>
             ))}
 
             <input
-              placeholder="Correct answer"
-              value={q.a || ""}
-              onChange={e=>updateQ(i,"a",e.target.value)}
-              style={{width:"100%", marginBottom:"5px"}}
-            />
+  placeholder="Correct answer"
+  value={q.a || ""}
+
+  onChange={e=>
+    updateQ(
+      i,
+      "a",
+      e.target.value
+    )
+  }
+
+  onKeyDown={(e)=>{
+
+    const inputs =
+      Array.from(
+        document.querySelectorAll(
+          "input"
+        )
+      );
+
+    const index =
+      inputs.indexOf(e.target);
+
+    if(e.key === "ArrowDown"){
+
+      e.preventDefault();
+
+      inputs[index + 1]?.focus();
+    }
+
+    if(e.key === "ArrowUp"){
+
+      e.preventDefault();
+
+      inputs[index - 1]?.focus();
+    }
+     if(e.key === "Enter"){
+
+    e.preventDefault();
+
+    document
+      .getElementById(
+        "submitBtn"
+      )
+      ?.click();
+
+  }
+
+  }}
+
+  style={{
+    width:"100%",
+    marginBottom:"5px"
+  }}
+/>
 <select
   id={`copy-${i}`}
   style={{
@@ -1927,8 +2056,20 @@ flexDirection: "column",
 <div style={{padding:"10px", borderTop:"1px solid #ddd"}}>
 
   <button onClick={addQuestion}>+ Add</button>
+<button
+  id="submitBtn"
+  onKeyDown={(e)=>{
 
-  <button onClick={async ()=>{
+    if(e.key === "Enter"){
+
+      e.preventDefault();
+
+      e.target.click();
+
+    }
+
+  }}
+   onClick={async ()=>{
 
   const list = data[week];
 
@@ -2336,8 +2477,8 @@ every Saturday.
 )}
 
 {showOverall && (
-
   <div
+   onClick={() => setShowOverall(false)}
     style={{
       position:"fixed",
       top:0,
@@ -2348,32 +2489,24 @@ every Saturday.
       zIndex:999999,
       display:"flex",
       alignItems:"flex-end",
-      justifyContent:"center"
+      justifyContent:"flex-start"
     }}
   >
 
     <div
+     onClick={(e) => e.stopPropagation()}
       style={{
         background:"rgba(15,23,42,0.96)",
         color:"white",
-
         backdropFilter:"blur(16px)",
-
         border:"1px solid rgba(255,255,255,0.08)",
-
-        boxShadow:
-          "0 10px 35px rgba(0,0,0,0.45)",
-
-        width:"100%",
+        boxShadow:"0 10px 35px rgba(0,0,0,0.45)",
+        width:"50%",
         maxWidth:"430px",
-
         height:"75%",
-
         overflowY:"auto",
-
         borderTopLeftRadius:"20px",
         borderTopRightRadius:"20px",
-
         padding:"15px"
       }}
     >
@@ -2399,21 +2532,15 @@ every Saturday.
 
         <button
           onClick={()=>
-            setShowOverall(false)
+          setShowOverall(false)
           }
 
           style={{
-            background:
-              "rgba(255,255,255,0.08)",
-
+            background:"rgba(255,255,255,0.08)",
             color:"white",
-
             border:"none",
-
             padding:"8px 14px",
-
             borderRadius:"10px",
-
             cursor:"pointer"
           }}
         >
@@ -2431,38 +2558,22 @@ every Saturday.
           key={p.playerId}
 
           style={{
-
             display:"grid",
-
-            gridTemplateColumns:
-              "50px 1fr 90px",
-
-            gap:"10px",
-
+            gridTemplateColumns:"35px 1fr fit-content(70px)",
+            gap:"6px",
             alignItems:"center",
-
             padding:"12px",
-
             marginBottom:"8px",
-
             borderRadius:"12px",
-
             background:
 
               i===0
-
                 ? "linear-gradient(135deg,#f59e0b,#facc15)"
-
               : i===1
-
                 ? "linear-gradient(135deg,#94a3b8,#e2e8f0)"
-
               : i===2
-
                 ? "linear-gradient(135deg,#fb923c,#fdba74)"
-
               : "rgba(255,255,255,0.06)",
-
             color:
               i < 3
                 ? "#111827"
@@ -2474,7 +2585,7 @@ every Saturday.
           <div
             style={{
               fontWeight:"bold",
-              fontSize:"16px"
+              fontSize:"14px"
             }}
           >
             #{i+1}
@@ -2486,7 +2597,8 @@ every Saturday.
               overflow:"hidden",
               textOverflow:"ellipsis",
               whiteSpace:"nowrap",
-              fontWeight:"600"
+              fontWeight:"600",
+              minWidth:0
             }}
           >
             {p.playerName}
@@ -2497,7 +2609,8 @@ every Saturday.
             style={{
               textAlign:"right",
               fontWeight:"bold",
-              fontSize:"16px"
+              fontSize:"14px",
+              whiteSpace:"nowrap",
             }}
           >
             ⭐ {p.totalScore}
@@ -2551,23 +2664,13 @@ every Saturday.
             <div
               style={{
                 display:"grid",
-
-                gridTemplateColumns:
-                  "50px 1fr 90px",
-
-                gap:"10px",
-
+                gridTemplateColumns:"35px 1fr fit-content(70px)",
+                gap:"8px",
                 alignItems:"center",
-
                 padding:"12px",
-
                 borderRadius:"12px",
-
-                background:
-                  "rgba(34,197,94,0.18)",
-
-                border:
-                  "1px solid rgba(34,197,94,0.35)"
+                background:"rgba(34,197,94,0.18)",
+                border:"1px solid rgba(34,197,94,0.35)"
               }}
             >
 
