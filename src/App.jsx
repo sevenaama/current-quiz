@@ -255,6 +255,60 @@ async function autoMoveBySchedule(allData){
 
   return updated;
 }
+/* mannual move one group to another group */
+async function moveQuestions(
+  fromGroup,
+  toGroup
+){
+
+  const fromQs =
+    data[fromGroup] || [];
+
+  if(fromQs.length === 0){
+
+    alert("No questions");
+    return;
+  }
+
+  const toQs =
+    data[toGroup] || [];
+
+  // duplicate avoid
+  const uniqueToQs =
+    toQs.filter(
+      q =>
+        !fromQs.some(
+          f =>
+            f.q.en === q.q.en
+        )
+    );
+
+  const updatedTo = [
+    ...uniqueToQs,
+    ...fromQs
+  ];
+
+  await saveSingleCategory(
+    toGroup,
+    updatedTo
+  );
+
+  await saveSingleCategory(
+    fromGroup,
+    []
+  );
+
+  setData(prev => ({
+    ...prev,
+    [toGroup]: updatedTo,
+    [fromGroup]: []
+  }));
+
+  alert(
+    `${fromGroup} → ${toGroup} moved`
+  );
+}
+
 async function archiveMonth(targetGroup){
 
   const monthQs = data["This Month"] || [];
@@ -1663,6 +1717,101 @@ flexDirection: "column",
               onChange={e=>updateQ(i,"a",e.target.value)}
               style={{width:"100%", marginBottom:"5px"}}
             />
+<select
+  id={`copy-${i}`}
+  style={{
+    marginRight:"6px"
+  }}
+>
+
+  {defaultGroups.map(g=>(
+
+    <option
+      key={g}
+      value={g}
+    >
+      {g}
+    </option>
+
+  ))}
+
+</select>
+
+<button
+  onClick={()=>{
+
+    const targetGroup =
+      document.getElementById(
+        `copy-${i}`
+      ).value;
+
+    // same group avoid
+    if(targetGroup === week){
+
+      alert(
+        "Same group selected"
+      );
+
+      return;
+    }
+
+    // duplicate avoid
+    const alreadyExists =
+
+      (data[targetGroup] || [])
+      .some(
+
+        item =>
+
+          item.q.en ===
+          q.q.en
+
+      );
+
+    if(alreadyExists){
+
+      alert(
+        "Question already exists"
+      );
+
+      return;
+    }
+
+    const copiedQuestion =
+
+      JSON.parse(
+        JSON.stringify(q)
+      );
+
+    setData(prev=>({
+
+      ...prev,
+
+      [targetGroup]: [
+
+        ...(prev[targetGroup] || []),
+
+        copiedQuestion
+
+      ]
+
+    }));
+    saveSingleCategory(
+  targetGroup,
+  [
+    ...(data[targetGroup] || []),
+    copiedQuestion
+  ]
+);
+
+    alert(
+      `Copied to ${targetGroup}`
+    );
+
+  }}
+>
+  Copy
+</button>
 
             <button onClick={()=>deleteQuestion(i)}>Delete</button>
           </div>
@@ -1670,27 +1819,130 @@ flexDirection: "column",
       </div>
 
       {/* FOOTER */}
-      <div style={{padding:"10px", borderTop:"1px solid #ddd"}}>
-        <button onClick={addQuestion}>+ Add</button>
-        <button onClick={async ()=>{
+<div style={{padding:"10px", borderTop:"1px solid #ddd"}}>
+
+  <button onClick={addQuestion}>+ Add</button>
+
+  <button onClick={async ()=>{
+
+  const list = data[week];
+
+  for(const q of list){
+
+    // question empty
+    if(!q.q?.en?.trim()){
+
+      alert("Question empty");
+      return;
+    }
+
+    // option empty
+    if(
+      q.options.some(
+        op => !op.trim()
+      )
+    ){
+
+      alert(
+        "All 4 options required"
+      );
+
+      return;
+    }
+
+    // answer empty
+    if(!q.a?.trim()){
+
+      alert(
+        "Correct answer required"
+      );
+
+      return;
+    }
+
+    // answer must match option
+    if(
+      !q.options.some(
+  op =>
+    op.trim() === q.a.trim()
+)
+    ){
+
+      alert(
+        "Correct answer must match one option"
+      );
+
+      return;
+    }
+
+  }
+
   await saveSingleCategory(
     week,
     data[week]
   );
 
-          setSavedMsg(true);
-          setTimeout(()=>setSavedMsg(false),2000);
-        }}>Submit</button>
-        <button onClick={()=>{
-          setEditorOpen(false);
-          setScreen("home");
-        }}>Back</button>
+  setSavedMsg(true);
 
-        {savedMsg && <div>✔ Saved</div>}
-      </div>
+  setTimeout(
+    ()=>setSavedMsg(false),
+    2000
+  );
 
-    </div>
+}}>
+  Submit
+</button>
+
+  <button onClick={()=>{
+    setEditorOpen(false);
+    setScreen("home");
+  }}>
+    Back
+  </button>
+
+  {savedMsg && <div>✔ Saved</div>}
+
+  <div style={{marginTop:"15px"}}>
+
+    <button
+      onClick={()=>
+        moveQuestions(
+          "Today",
+          "This Week"
+        )
+      }
+    >
+      Today → This Week
+    </button>
+
+    <button
+      onClick={()=>
+        moveQuestions(
+          "This Week",
+          "Previous Week"
+        )
+      }
+    >
+      This Week → Previous Week
+    </button>
+
+    <button
+      onClick={()=>
+        moveQuestions(
+          "Previous Week",
+          "This Month"
+        )
+      }
+    >
+      Previous Week → This Month
+    </button>
+
   </div>
+
+</div>
+
+</div>
+</div>
 )}
      {modal && (
   <div
