@@ -319,7 +319,6 @@ async function archiveMonth(targetGroup){
   }
 
   const targetQs = data[targetGroup] || [];
-
   const updatedTarget = [...targetQs,...monthQs];
 
   await saveSingleCategory(
@@ -340,10 +339,105 @@ async function archiveMonth(targetGroup){
 
   alert("Moved!");
 }
+async function loadOverallLeaderboard(){
+
+  try{
+
+    const snap = await getDocs(
+      collection(db,"scores")
+    );
+
+    const bestScores = {};
+
+    snap.forEach(docSnap=>{
+
+      const d = docSnap.data();
+
+      const playerId = d.playerId;
+
+      const category = d.category;
+
+      const score =
+        d.score ||
+        d.correctAnswers ||
+        0;
+
+      if(!playerId || !category)
+        return;
+
+      if(!bestScores[playerId]){
+
+        bestScores[playerId] = {
+
+          playerName:
+            d.playerName || "Player",
+
+          playerId,
+
+          categories:{},
+
+          totalScore:0
+
+        };
+
+      }
+
+      const currentBest =
+
+        bestScores[playerId]
+          .categories[category] || 0;
+
+      if(score > currentBest){
+
+        bestScores[playerId]
+          .categories[category] = score;
+
+      }
+
+    });
+
+    const finalLeaders =
+
+      Object.values(bestScores)
+
+        .map(player=>({
+
+          ...player,
+
+          totalScore:
+
+            Object.values(
+              player.categories
+            ).reduce(
+              (a,b)=>a+b,
+              0
+            )
+
+        }))
+
+        .sort(
+          (a,b)=>
+            b.totalScore -
+            a.totalScore
+        );
+
+    setOverallLeaders(
+      finalLeaders
+    );
+
+  } catch(e){
+
+    console.log(
+      "overall leaderboard error",
+      e
+    );
+
+  }
+
+}
   const [screen, setScreen] = useState("home");
   const [lastUpdate, setLastUpdate] = useState("-");
   const [openCategory, setOpenCategory] = useState(null);
-
   const [week, setWeek] = useState("वैशाख");
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -365,6 +459,8 @@ async function archiveMonth(targetGroup){
   const [topScores, setTopScores] = useState([]);
   const menuRef = useRef(null);
   const [users, setUsers] = useState(0);
+  const [showOverall,setShowOverall] = useState(false);
+  const [overallLeaders,setOverallLeaders] = useState([]);
   const mainGroups = ["Today","This Week","Previous Week","This Month"];
 
 const monthGroups = ["वैशाख","जेठ","असार","साउन","भाद्र","अशोज","कार्तिक","मंसिर","पौष","माघ","फागुन","चैत","अघिल्लो वर्ष"];
@@ -751,11 +847,20 @@ useEffect(()=>{
   >
     {playerAvatar} {playerName || "Player"}
   </div>
+<div
 
-  <div style={{
+  onClick={async ()=>{
+
+    await loadOverallLeaderboard();
+
+    setShowOverall(true);
+
+  }}
+  style={{
     fontSize:"12px",
     opacity:0.8,
-    marginTop:"2px"
+    marginTop:"2px",
+    cursor:"pointer"
   }}>
     👥 {
 
@@ -2229,6 +2334,285 @@ every Saturday.
     </div>
   </div>
 )}
+
+{showOverall && (
+
+  <div
+    style={{
+      position:"fixed",
+      top:0,
+      left:0,
+      width:"100%",
+      height:"100%",
+      background:"rgba(0,0,0,0.55)",
+      zIndex:999999,
+      display:"flex",
+      alignItems:"flex-end",
+      justifyContent:"center"
+    }}
+  >
+
+    <div
+      style={{
+        background:"rgba(15,23,42,0.96)",
+        color:"white",
+
+        backdropFilter:"blur(16px)",
+
+        border:"1px solid rgba(255,255,255,0.08)",
+
+        boxShadow:
+          "0 10px 35px rgba(0,0,0,0.45)",
+
+        width:"100%",
+        maxWidth:"430px",
+
+        height:"75%",
+
+        overflowY:"auto",
+
+        borderTopLeftRadius:"20px",
+        borderTopRightRadius:"20px",
+
+        padding:"15px"
+      }}
+    >
+
+      {/* HEADER */}
+      <div
+        style={{
+          display:"flex",
+          justifyContent:"space-between",
+          alignItems:"center",
+          marginBottom:"15px"
+        }}
+      >
+
+        <h3
+          style={{
+            margin:0,
+            fontSize:"22px"
+          }}
+        >
+          🏆 Overall Champions
+        </h3>
+
+        <button
+          onClick={()=>
+            setShowOverall(false)
+          }
+
+          style={{
+            background:
+              "rgba(255,255,255,0.08)",
+
+            color:"white",
+
+            border:"none",
+
+            padding:"8px 14px",
+
+            borderRadius:"10px",
+
+            cursor:"pointer"
+          }}
+        >
+          Close
+        </button>
+
+      </div>
+
+      {/* TOP 10 */}
+      {overallLeaders
+        .slice(0,10)
+        .map((p,i)=>(
+
+        <div
+          key={p.playerId}
+
+          style={{
+
+            display:"grid",
+
+            gridTemplateColumns:
+              "50px 1fr 90px",
+
+            gap:"10px",
+
+            alignItems:"center",
+
+            padding:"12px",
+
+            marginBottom:"8px",
+
+            borderRadius:"12px",
+
+            background:
+
+              i===0
+
+                ? "linear-gradient(135deg,#f59e0b,#facc15)"
+
+              : i===1
+
+                ? "linear-gradient(135deg,#94a3b8,#e2e8f0)"
+
+              : i===2
+
+                ? "linear-gradient(135deg,#fb923c,#fdba74)"
+
+              : "rgba(255,255,255,0.06)",
+
+            color:
+              i < 3
+                ? "#111827"
+                : "white"
+          }}
+        >
+
+          {/* RANK */}
+          <div
+            style={{
+              fontWeight:"bold",
+              fontSize:"16px"
+            }}
+          >
+            #{i+1}
+          </div>
+
+          {/* NAME */}
+          <div
+            style={{
+              overflow:"hidden",
+              textOverflow:"ellipsis",
+              whiteSpace:"nowrap",
+              fontWeight:"600"
+            }}
+          >
+            {p.playerName}
+          </div>
+
+          {/* SCORE */}
+          <div
+            style={{
+              textAlign:"right",
+              fontWeight:"bold",
+              fontSize:"16px"
+            }}
+          >
+            ⭐ {p.totalScore}
+          </div>
+
+        </div>
+
+      ))}
+
+      {/* CURRENT PLAYER */}
+      {(() => {
+
+        const currentPlayerId =
+          localStorage.getItem(
+            "playerId"
+          );
+
+        const myRank =
+          overallLeaders.findIndex(
+            p =>
+              p.playerId ===
+              currentPlayerId
+          );
+
+        if(
+          myRank < 0 ||
+          myRank < 10
+        ) return null;
+
+        const me =
+          overallLeaders[myRank];
+
+        return (
+
+          <div
+            style={{
+              marginTop:"18px"
+            }}
+          >
+
+            <div
+              style={{
+                fontSize:"13px",
+                opacity:0.75,
+                marginBottom:"8px"
+              }}
+            >
+              Your Rank
+            </div>
+
+            <div
+              style={{
+                display:"grid",
+
+                gridTemplateColumns:
+                  "50px 1fr 90px",
+
+                gap:"10px",
+
+                alignItems:"center",
+
+                padding:"12px",
+
+                borderRadius:"12px",
+
+                background:
+                  "rgba(34,197,94,0.18)",
+
+                border:
+                  "1px solid rgba(34,197,94,0.35)"
+              }}
+            >
+
+              <div
+                style={{
+                  fontWeight:"bold"
+                }}
+              >
+                #{myRank + 1}
+              </div>
+
+              <div
+                style={{
+                  overflow:"hidden",
+                  textOverflow:"ellipsis",
+                  whiteSpace:"nowrap",
+                  fontWeight:"600"
+                }}
+              >
+                You
+              </div>
+
+              <div
+                style={{
+                  textAlign:"right",
+                  fontWeight:"bold"
+                }}
+              >
+                ⭐ {me.totalScore}
+              </div>
+
+            </div>
+
+          </div>
+
+        );
+
+      })()}
+
+    </div>
+
+  </div>
+
+)}
+
 {showNameModal && (
 
   <div
