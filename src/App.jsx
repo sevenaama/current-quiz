@@ -2539,39 +2539,44 @@ every Saturday.
         >
           🏆 Overall
         </h3>
-<input
-  placeholder="🔍"
-  value={searchPlayer}
-  onChange={(e)=>
-    setSearchPlayer(
-      e.target.value
-    )
-  }
-  onFocus={()=> setShowSearch(true)
-  }
-  onBlur={()=>{
-    if(!searchPlayer){ setShowSearch(false);
-    }
-  }}
-
+<div
   style={{
-    background:"rgba(255,255,255,0.08)",
-  color:"white",
-  border:"1px solid rgba(255,255,255,0.08)",
-  width:showSearch ? "100px": "26px",
-  padding:"4px 6px",
-  fontSize:"12px",
-  borderRadius:"10px",
-  outline:"none",
-  marginRight:"8px",
-  transition:"0.25s"
+    position:"relative"
   }}
-/>
+>
+  <input
+    placeholder="🔍"
+    value={searchPlayer}
+    onChange={(e)=>
+      setSearchPlayer(e.target.value)
+    }
+    onFocus={()=> setShowSearch(true)}
+    onBlur={()=>{
+      if(!searchPlayer){
+        setShowSearch(false);
+      }
+    }}
+
+    style={{
+      position:"absolute",
+      right:"0",
+      top:"2px",
+      background:"rgba(255,255,255,0.08)",
+      color:"white",
+      border:"1px solid rgba(255,255,255,0.08)",
+      width:showSearch ? "70px":"22px",
+      padding:"2px 4px",
+      fontSize:"11px",
+      borderRadius:"8px",
+      outline:"none",
+      transition:"0.25s"
+    }}
+  />
+</div>
         <button
           onClick={()=>
           setShowOverall(false)
           }
-
           style={{
               background:"rgba(255,255,255,0.08)",
               color:"white",
@@ -2611,7 +2616,7 @@ every Saturday.
             gridTemplateColumns:"35px 1fr fit-content(70px)",
             gap:"6px",
             alignItems:"center",
-            padding:"12px",
+            padding:"7px 10px",
             marginBottom:"8px",
             borderRadius:"12px",
             background:
@@ -2717,7 +2722,7 @@ every Saturday.
                 gridTemplateColumns:"35px 1fr fit-content(70px)",
                 gap:"8px",
                 alignItems:"center",
-                padding:"12px",
+                padding:"7px 10px",
                 borderRadius:"12px",
                 background:"rgba(34,197,94,0.18)",
                 border:"1px solid rgba(34,197,94,0.35)"
