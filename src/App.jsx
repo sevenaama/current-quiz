@@ -460,6 +460,8 @@ async function loadOverallLeaderboard(){
   const menuRef = useRef(null);
   const [users, setUsers] = useState(0);
   const [showOverall,setShowOverall] = useState(false);
+  const [searchPlayer,setSearchPlayer] = useState("");
+  const [showSearch,setShowSearch] = useState(false);
   const [overallLeaders,setOverallLeaders] = useState([]);
   const mainGroups = ["Today","This Week","Previous Week","This Month"];
 
@@ -2507,13 +2509,21 @@ every Saturday.
         overflowY:"auto",
         borderTopLeftRadius:"20px",
         borderTopRightRadius:"20px",
-        padding:"15px"
+        padding:"15px",
+        marginBottom:"65px",
       }}
     >
 
       {/* HEADER */}
       <div
         style={{
+          position:"sticky",
+          top:0,
+          zIndex:10,
+          background:"rgba(15,23,42,0.96)",
+          backdropFilter:"blur(10px)",
+          borderBottom:"1px solid rgba(255,255,255,0.08)",
+          paddingBottom:"10px",
           display:"flex",
           justifyContent:"space-between",
           alignItems:"center",
@@ -2524,35 +2534,74 @@ every Saturday.
         <h3
           style={{
             margin:0,
-            fontSize:"22px"
+            fontSize:"20px"
           }}
         >
-          🏆 Overall Champions
+          🏆 Overall
         </h3>
+<input
+  placeholder="🔍"
+  value={searchPlayer}
+  onChange={(e)=>
+    setSearchPlayer(
+      e.target.value
+    )
+  }
+  onFocus={()=> setShowSearch(true)
+  }
+  onBlur={()=>{
+    if(!searchPlayer){ setShowSearch(false);
+    }
+  }}
 
+  style={{
+    background:"rgba(255,255,255,0.08)",
+  color:"white",
+  border:"1px solid rgba(255,255,255,0.08)",
+  width:showSearch ? "100px": "26px",
+  padding:"4px 6px",
+  fontSize:"12px",
+  borderRadius:"10px",
+  outline:"none",
+  marginRight:"8px",
+  transition:"0.25s"
+  }}
+/>
         <button
           onClick={()=>
           setShowOverall(false)
           }
 
           style={{
-            background:"rgba(255,255,255,0.08)",
-            color:"white",
-            border:"none",
-            padding:"8px 14px",
-            borderRadius:"10px",
-            cursor:"pointer"
+              background:"rgba(255,255,255,0.08)",
+              color:"white",
+              border:"none",
+              width:"28px",
+              height:"28px",
+              fontSize:"12px",
+              borderRadius:"8px",
+              cursor:"pointer",
+               padding:0
           }}
         >
-          Close
+          ❌
         </button>
 
       </div>
 
-      {/* TOP 10 */}
+      {/* TOP 20 */}
       {overallLeaders
-        .slice(0,10)
-        .map((p,i)=>(
+
+  .filter(p=>
+    p.playerName
+      ?.toLowerCase()
+      .includes(
+        searchPlayer
+          .toLowerCase()
+      )
+  )
+  .slice(0,20)
+  .map((p,i)=>(
 
         <div
           key={p.playerId}
@@ -2585,7 +2634,7 @@ every Saturday.
           <div
             style={{
               fontWeight:"bold",
-              fontSize:"14px"
+              fontSize:"12px"
             }}
           >
             #{i+1}
@@ -2597,6 +2646,7 @@ every Saturday.
               overflow:"hidden",
               textOverflow:"ellipsis",
               whiteSpace:"nowrap",
+              fontSize:"12px",
               fontWeight:"600",
               minWidth:0
             }}
@@ -2609,7 +2659,7 @@ every Saturday.
             style={{
               textAlign:"right",
               fontWeight:"bold",
-              fontSize:"14px",
+              fontSize:"12px",
               whiteSpace:"nowrap",
             }}
           >
@@ -2653,7 +2703,7 @@ every Saturday.
 
             <div
               style={{
-                fontSize:"13px",
+                fontSize:"12px",
                 opacity:0.75,
                 marginBottom:"8px"
               }}
