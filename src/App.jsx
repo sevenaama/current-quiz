@@ -2470,6 +2470,7 @@ every Saturday.
     </div>
   </div>
 )}
+
 {/* overall leaderboard */}
 {showOverall && (
   <div
@@ -2592,7 +2593,7 @@ setShowSearch(false);
 
       </div>
 
-      {/* TOP 20 */}
+{/* TOP 20 */}
       {overallLeaders
 
   .filter(p=>
@@ -2605,39 +2606,58 @@ setShowSearch(false);
   )
   .slice(0,20)
   .map((p,i)=>(
+  <>
+    
+    <div
+      key={p.playerId}
 
-        <div
-          key={p.playerId}
+  onClick={() => {
 
-          style={{
-            display:"grid",
-            gridTemplateColumns:"35px 1fr fit-content(70px)",
-            gap:"6px",
-            alignItems:"center",
-            padding:"7px 10px",
-            marginBottom:"8px",
-            borderRadius:"12px",
-            background:
+  if(selectedPlayer?.playerId === p.playerId){
 
-              i===0
-                ? "linear-gradient(135deg,#f59e0b,#facc15)"
-              : i===1
-                ? "linear-gradient(135deg,#94a3b8,#e2e8f0)"
-              : i===2
-                ? "linear-gradient(135deg,#fb923c,#fdba74)"
-              : "rgba(255,255,255,0.06)",
-            color:
-              i < 3
-                ? "#111827"
-                : "white"
-          }}
+    setSelectedPlayer(null);
+
+  } else {
+
+    setSelectedPlayer(p);
+
+  }
+
+}}
+  style={{
+  display:"grid",
+  gridTemplateColumns:"35px 1fr fit-content(70px)",
+  gap:"6px",
+  alignItems:"center",
+  padding:"7px 10px",
+  marginBottom:"8px",
+  borderRadius:"12px",
+
+  position:"relative",
+  zIndex:20,
+  cursor:"pointer",
+
+  background:
+    i===0
+      ? "linear-gradient(135deg,#f59e0b,#facc15)"
+    : i===1
+      ? "linear-gradient(135deg,#94a3b8,#e2e8f0)"
+    : i===2
+      ? "linear-gradient(135deg,#fb923c,#fdba74)"
+    : "rgba(255,255,255,0.06)",
+
+  color:
+    i < 3
+      ? "#111827"
+      : "white"
+}}
         >
 
           {/* RANK */}
           <div
             style={{
-              fontWeight:"bold",
-              fontSize:"12px"
+            fontWeight:"bold",
+            fontSize:"12px"
             }}
           >
             #{i+1}
@@ -2645,22 +2665,21 @@ setShowSearch(false);
 
           {/* NAME */}
           <div
-           onClick={() => setSelectedPlayer(p)}
-            style={{
-              overflow:"hidden",
-              textOverflow:"ellipsis",
-              whiteSpace:"nowrap",
-              fontSize:"12px",
-              fontWeight:"600",
-              minWidth:0,
-              cursor:"pointer"
-            }}
-          >
-            {p.playerName}
-          </div>
 
-          {/* SCORE */}
-          <div
+  style={{
+    overflow:"hidden",
+    textOverflow:"ellipsis",
+    whiteSpace:"nowrap",
+    fontSize:"12px",
+    fontWeight:"600",
+    minWidth:0
+  }}
+>
+  {p.playerName}
+</div>
+
+    {/* SCORE */}
+         <div
             style={{
               textAlign:"right",
               fontWeight:"bold",
@@ -2670,73 +2689,64 @@ setShowSearch(false);
           >
             ⭐ {p.totalScore}
           </div>
+          </div>
+        {selectedPlayer?.playerId === p.playerId && (
 
-        </div>
+          <div
+           onClick={() => setSelectedPlayer(null)}
+           style={{
+             position:"sticky",
+             top:"35%",
+             left:"50vw",
+             transform:"translate(-50%,-50%)",
+             width:"55%",
+             zIndex:9999,
+             background:"#0f172a",
+             border:"2px solid #60a5fa",
+             borderRadius:"12px",
+             padding:"10px",
+             maxHeight:"180px",
+             overflowY:"auto",
+             boxShadow:"0 10px 25px rgba(0,0,0,0.35)"
+        }}
+          >
+<div
+  style={{
+    fontWeight:"bold",
+    fontSize:"13px",
+    marginBottom:"8px",
+    textAlign:"center",
+    color:"#93c5fd"
+  }}
+>
+  👤 {selectedPlayer.playerName}
+</div>
+            {Object.entries( selectedPlayer.categories
+            ).map(([cat,score]) => (
 
+              <div
+                key={cat}
+                style={{
+                  display:"flex",
+                  justifyContent:"space-between",
+                  padding:"4px 0",
+                  fontSize:"12px"
+                }}
+              >
+                <span>{cat}</span>
+
+                <span>⭐ {score}</span>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        )}
+      </>
       ))}
-{selectedPlayer && (
 
-  <div
-    style={{
-      marginTop:"15px",
-      background:"rgba(255,255,255,0.06)",
-      borderRadius:"12px",
-      padding:"12px"
-    }}
-  >
-
-    <div
-      style={{
-        display:"flex",
-        justifyContent:"space-between",
-        marginBottom:"10px"
-      }}
-    >
-
-      <b>
-        {selectedPlayer.playerName}
-      </b>
-
-      <span
-        onClick={() =>
-          setSelectedPlayer(null)
-        }
-        style={{
-          cursor:"pointer"
-        }}
-      >
-        ❌
-      </span>
-
-    </div>
-
-    {Object.entries(
-      selectedPlayer.categories
-    ).map(([cat,score]) => (
-
-      <div
-        key={cat}
-        style={{
-          display:"flex",
-          justifyContent:"space-between",
-          padding:"4px 0",
-          fontSize:"12px"
-        }}
-      >
-
-        <span>{cat}</span>
-
-        <span>
-          ⭐ {score}
-        </span>
-
-      </div>
-
-    ))}
-
-  </div>
-
-)}
       {/* CURRENT PLAYER */}
       {(() => {
 
