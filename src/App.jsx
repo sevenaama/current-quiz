@@ -2541,15 +2541,16 @@ every Saturday.
         </h3>
 <div
   style={{
-    position:"relative"
+    display:"flex",
+    alignItems:"center",
+    gap:"6px"
   }}
 >
   <input
     placeholder="🔍"
+    maxLength={8}
     value={searchPlayer}
-    onChange={(e)=>
-      setSearchPlayer(e.target.value)
-    }
+    onChange={(e)=> setSearchPlayer(e.target.value)}
     onFocus={()=> setShowSearch(true)}
     onBlur={()=>{
       if(!searchPlayer){
@@ -2558,9 +2559,6 @@ every Saturday.
     }}
 
     style={{
-      position:"absolute",
-      right:"0",
-      top:"2px",
       background:"rgba(255,255,255,0.08)",
       color:"white",
       border:"1px solid rgba(255,255,255,0.08)",
