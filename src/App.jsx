@@ -2503,7 +2503,7 @@ every Saturday.
         backdropFilter:"blur(16px)",
         border:"1px solid rgba(255,255,255,0.08)",
         boxShadow:"0 10px 35px rgba(0,0,0,0.45)",
-        width:"50%",
+        width:"65%",
         maxWidth:"430px",
         height:"75%",
         overflowY:"auto",
@@ -2548,7 +2548,7 @@ every Saturday.
 >
   <input
     placeholder="🔍"
-    maxLength={8}
+    maxLength={12}
     value={searchPlayer}
     onChange={(e)=> setSearchPlayer(e.target.value)}
     onFocus={()=> setShowSearch(true)}
@@ -2562,7 +2562,8 @@ every Saturday.
       background:"rgba(255,255,255,0.08)",
       color:"white",
       border:"1px solid rgba(255,255,255,0.08)",
-      width:showSearch ? "70px":"22px",
+      width:"70px",
+     opacity: showSearch ? 1 : 0.7,
       padding:"2px 4px",
       fontSize:"11px",
       borderRadius:"8px",
