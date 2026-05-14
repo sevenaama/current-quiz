@@ -368,16 +368,11 @@ async function loadOverallLeaderboard(){
       if(!bestScores[playerId]){
 
         bestScores[playerId] = {
-
           playerName:
-            d.playerName || "Player",
-
+          d.playerName || "Player",
           playerId,
-
           categories:{},
-
           totalScore:0
-
         };
 
       }
@@ -463,6 +458,7 @@ async function loadOverallLeaderboard(){
   const [searchPlayer,setSearchPlayer] = useState("");
   const [showSearch,setShowSearch] = useState(false);
   const [overallLeaders,setOverallLeaders] = useState([]);
+  const [selectedPlayer,setSelectedPlayer] = useState(null);
   const mainGroups = ["Today","This Week","Previous Week","This Month"];
 
 const monthGroups = ["वैशाख","जेठ","असार","साउन","भाद्र","अशोज","कार्तिक","मंसिर","पौष","माघ","फागुन","चैत","अघिल्लो वर्ष"];
@@ -831,11 +827,8 @@ useEffect(()=>{
 
   <div
     onClick={()=>{
-
       setIsRenameMode(true);
-
       setNameInput(playerName);
-
       setShowNameModal(true);
     }}
 
@@ -2477,10 +2470,14 @@ every Saturday.
     </div>
   </div>
 )}
-
+{/* overall leaderboard */}
 {showOverall && (
   <div
-   onClick={() => setShowOverall(false)}
+onClick={()=>{
+setShowOverall(false);
+setSearchPlayer("");
+setShowSearch(false);
+}}
     style={{
       position:"fixed",
       top:0,
@@ -2573,9 +2570,11 @@ every Saturday.
   />
 </div>
         <button
-          onClick={()=>
-          setShowOverall(false)
-          }
+         onClick={() => {
+         setShowOverall(false);
+         setSearchPlayer("");
+         setShowSearch(false);
+        }}
           style={{
               background:"rgba(255,255,255,0.08)",
               color:"white",
@@ -2646,13 +2645,15 @@ every Saturday.
 
           {/* NAME */}
           <div
+           onClick={() => setSelectedPlayer(p)}
             style={{
               overflow:"hidden",
               textOverflow:"ellipsis",
               whiteSpace:"nowrap",
               fontSize:"12px",
               fontWeight:"600",
-              minWidth:0
+              minWidth:0,
+              cursor:"pointer"
             }}
           >
             {p.playerName}
@@ -2673,7 +2674,69 @@ every Saturday.
         </div>
 
       ))}
+{selectedPlayer && (
 
+  <div
+    style={{
+      marginTop:"15px",
+      background:"rgba(255,255,255,0.06)",
+      borderRadius:"12px",
+      padding:"12px"
+    }}
+  >
+
+    <div
+      style={{
+        display:"flex",
+        justifyContent:"space-between",
+        marginBottom:"10px"
+      }}
+    >
+
+      <b>
+        {selectedPlayer.playerName}
+      </b>
+
+      <span
+        onClick={() =>
+          setSelectedPlayer(null)
+        }
+        style={{
+          cursor:"pointer"
+        }}
+      >
+        ❌
+      </span>
+
+    </div>
+
+    {Object.entries(
+      selectedPlayer.categories
+    ).map(([cat,score]) => (
+
+      <div
+        key={cat}
+        style={{
+          display:"flex",
+          justifyContent:"space-between",
+          padding:"4px 0",
+          fontSize:"12px"
+        }}
+      >
+
+        <span>{cat}</span>
+
+        <span>
+          ⭐ {score}
+        </span>
+
+      </div>
+
+    ))}
+
+  </div>
+
+)}
       {/* CURRENT PLAYER */}
       {(() => {
 
