@@ -796,6 +796,9 @@ useEffect(()=>{
    <div
   style={{
     minHeight: "100dvh",
+    width:"100%",
+    maxWidth:"100vw",
+    overflowX:"hidden",
     display: "flex",
     flexDirection: "column",
     background: "#1e3a8a",
@@ -2478,6 +2481,7 @@ onClick={()=>{
 setShowOverall(false);
 setSearchPlayer("");
 setShowSearch(false);
+setSelectedPlayer(null);
 }}
     style={{
       position:"fixed",
@@ -2496,7 +2500,7 @@ setShowSearch(false);
     <div
      onClick={(e) => e.stopPropagation()}
       style={{
-        background:"rgba(15,23,42,0.96)",
+        background:"#0f172a",
         color:"white",
         backdropFilter:"blur(16px)",
         border:"1px solid rgba(255,255,255,0.08)",
@@ -2518,7 +2522,7 @@ setShowSearch(false);
           position:"sticky",
           top:0,
           zIndex:10,
-          background:"rgba(15,23,42,0.96)",
+          background:"#0f172a",
           backdropFilter:"blur(10px)",
           borderBottom:"1px solid rgba(255,255,255,0.08)",
           paddingBottom:"10px",
@@ -2575,6 +2579,7 @@ setShowSearch(false);
          setShowOverall(false);
          setSearchPlayer("");
          setShowSearch(false);
+         setSelectedPlayer(null);
         }}
           style={{
               background:"rgba(255,255,255,0.08)",
@@ -2606,10 +2611,9 @@ setShowSearch(false);
   )
   .slice(0,20)
   .map((p,i)=>(
-  <>
+    <React.Fragment key={p.playerId}>
     
     <div
-      key={p.playerId}
 
   onClick={() => {
 
@@ -2637,19 +2641,8 @@ setShowSearch(false);
   zIndex:20,
   cursor:"pointer",
 
-  background:
-    i===0
-      ? "linear-gradient(135deg,#f59e0b,#facc15)"
-    : i===1
-      ? "linear-gradient(135deg,#94a3b8,#e2e8f0)"
-    : i===2
-      ? "linear-gradient(135deg,#fb923c,#fdba74)"
-    : "rgba(255,255,255,0.06)",
-
-  color:
-    i < 3
-      ? "#111827"
-      : "white"
+ background:"rgba(255,255,255,0.06)",
+color:"white",
 }}
         >
 
@@ -2697,7 +2690,7 @@ setShowSearch(false);
            style={{
              position:"sticky",
              top:"35%",
-             left:"50vw",
+             left:"50%",
              transform:"translate(-50%,-50%)",
              width:"55%",
              zIndex:9999,
@@ -2744,7 +2737,7 @@ setShowSearch(false);
           </div>
 
         )}
-      </>
+      </React.Fragment>
       ))}
 
       {/* CURRENT PLAYER */}
@@ -2887,6 +2880,7 @@ setShowSearch(false);
   )}
 
   <input
+    maxLength={12}
     value={nameInput}
     onChange={(e)=>
       setNameInput(e.target.value)
@@ -2916,13 +2910,14 @@ setShowSearch(false);
       if(isRenameMode){
 
         await renamePlayer(
-          nameInput
-        );
-        updatePlayerScores(nameInput); 
-
+  nameInput.trim().slice(0,12)
+);
+        updatePlayerScores(
+  nameInput.trim().slice(0,12)
+);
         setPlayerName(
-          nameInput
-        );
+  nameInput.trim().slice(0,12)
+);
 
         setIsRenameMode(false);
 
@@ -2933,11 +2928,11 @@ setShowSearch(false);
 
       // create new player
       await createPlayer(
-        nameInput
-      );
+  nameInput.trim().slice(0,12)
+);
 
       setPlayerName(
-        nameInput
+        nameInput.trim().slice(0,12)
       );
 
       setShowNameModal(false);
@@ -3018,9 +3013,14 @@ borderTop: "1px solid rgba(255,255,255,0.2)",
   </div>
 
   {/* LEFT UPDATE */}
-  <div>
-    Update: {lastUpdate}
-  </div>
+  <div
+  style={{
+    fontSize:"12px",
+    opacity:0.8
+  }}
+>
+  Update: {lastUpdate}
+</div>
 
   {/* INVITE (mid-right) */}
 <div style={{

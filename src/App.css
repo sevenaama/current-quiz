@@ -15,4 +15,13 @@
       0 0 10px rgba(124,58,237,0.5);
   }
 }
-html, body, #root{ overflow-x: hidden; }
+html, body, #root{
+ margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  touch-action: manipulation; }
+  * {
+  box-sizing: border-box;
+}
