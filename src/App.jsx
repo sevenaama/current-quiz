@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
 import SplashScreen from "./components/SplashScreen";
-import { correctSound, wrongSound, warningSound } from "./sounds/sound";
+import { correctSound, wrongSound, warningSound, winSound,loseSound } from "./sounds/sound";
 import introFile from "./assets/intro.mp3";
 import { db } from "./firebase";
 import { generateAutoName, createPlayer, loadPlayer, renamePlayer } from "./player";
@@ -711,12 +711,35 @@ useEffect(()=>{
 
     warningSound.currentTime = 0;
 
-    warningSound.play()
-    .catch(()=>{});
+    setTimeout(()=>{
+
+      warningSound.play()
+      .catch(()=>{});
+
+    },100);
 
   }
 
 },[time]);
+useEffect(() => {
+
+  if(screen === "result"){
+
+    if(score >= questions.length * 0.7){
+
+      winSound.currentTime = 0;
+      winSound.play();
+
+    } else {
+
+      loseSound.currentTime = 0;
+      loseSound.play();
+
+    }
+
+  }
+
+}, [screen]);
 
 function answer(opt){
 
@@ -1419,6 +1442,7 @@ flexDirection: "column",
     paddingBottom: "80px",
     overflowX:"hidden",
     position:"relative",
+    animation:"resultFade 0.5s ease"
   }}>
     
    {/* 🏆 Top left Card */}
@@ -1441,7 +1465,8 @@ flexDirection: "column",
 
   textAlign:"left",
 
-  display:"inline-block"
+  display:"inline-block",
+  animation:"popCard 0.4s ease"
 }}>
 
   <div style={{
@@ -1451,6 +1476,15 @@ flexDirection: "column",
     whiteSpace:"nowrap"
   }}>
     📂 {week}
+  </div>
+<div style={{
+    marginTop:"2px",
+    color:"#facc15",
+    fontWeight:"bold",
+    fontSize:"10px",
+    whiteSpace:"nowrap"
+  }}>
+    🏆 #{finalRank}
   </div>
 
   <div style={{
@@ -1462,34 +1496,15 @@ flexDirection: "column",
   </div>
 
   <div style={{
-    marginTop:"2px",
-    color:"#facc15",
-    fontWeight:"bold",
-    fontSize:"10px",
-    whiteSpace:"nowrap"
-  }}>
-    🏆 #{finalRank}
-  </div>
-
+  marginTop:"2px",
+  fontSize:"10px",
+  opacity:0.85,
+  whiteSpace:"nowrap"
+}}>
+  ⏱ {totalTimeUsed}s
 </div>
 
-    {/* 📊 Progress Bar */}
-    <div style={{
-      width: "100%",
-      maxWidth: "280px",
-      height: "10px",
-      background: "#334155",
-      borderRadius: "10px",
-      overflow: "hidden",
-      marginBottom: "12px"
-    }}>
-      <div style={{
-        width: `${(score / questions.length) * 100}%`,
-        height: "100%",
-        background: "#22c55e",
-        transition: "width 0.6s ease"
-      }} />
-    </div>
+</div>
 
     {/* 🧠 Performance Message */}
     <div style={{
@@ -1499,9 +1514,9 @@ flexDirection: "column",
       {score === questions.length
         ? "Perfect 🎯"
         : score > questions.length * 0.7
-        ? "Great Job 🔥"
+        ? "Average 🔥"
         : score > questions.length * 0.4
-        ? "Good 👍"
+        ? "Under average 👍"
         : "Try Again 😅"}
     </div>
 
@@ -1565,7 +1580,7 @@ flexDirection: "column",
 {/* 🏆 Leaderboard */}
 <div style={{
 
-  width:"85%",
+  width:"75%",
   maxWidth:"330px",
 
   overflow:"hidden",
@@ -1580,7 +1595,8 @@ flexDirection: "column",
 
   padding:"6px",
 
-  backdropFilter:"blur(10px)"
+  backdropFilter:"blur(10px)",
+  animation:"popCard 0.45s ease"
 }}>
 
   {/* Title */}
@@ -1603,7 +1619,7 @@ flexDirection: "column",
     height:"165px",
     overflowY:"auto",
     overflowX:"hidden",
-    width:"95%",
+    width:"100%",
     display:"flex",
     flexDirection:"column",
     gap:"4px",
@@ -1675,7 +1691,7 @@ flexDirection: "column",
           background:"#2563eb",
           padding:"3px 6px",
           borderRadius:"999px",
-          fontSize:"12px",
+          fontSize:"10px",
           fontWeight:"bold",
           textAlign:"center"
         }}> ⭐{p.score}
@@ -1707,7 +1723,7 @@ flexDirection: "column",
       alignItems:"center",
       gap:"4px",
       marginTop:"8px",
-      width:"100%",
+      width:"95%",
       boxSizing:"border-box",
       background:"rgba(34,197,94,0.18)",
       padding:"3px 6px",
@@ -1736,7 +1752,7 @@ flexDirection: "column",
         background:"#16a34a",
         padding:"3px 6px",
         borderRadius:"999px",
-        fontSize:"12px",
+        fontSize:"10px",
         fontWeight:"bold",
         textAlign:"center"
       }}> ⭐{score}
@@ -1757,48 +1773,53 @@ flexDirection: "column",
 </div>
 
  {/* 🔘 Buttons */}
-        <div style={{
+<div style={{
   width: "100%",
   maxWidth: "360px",
-  margin: "12px auto 0 auto",
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(90px, 1fr))",
-  gap: "6px"
+  margin: "28px auto 0 auto", // 👈 तल सारियो
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: "14px",
+  flexWrap:"wrap"
 }}>
 
   {/* 🔙 Back */}
   <button
     onClick={()=>setScreen("home")}
     style={{
-      width: "100%",
-      padding: "6px 4px)",
-      fontSize: "12px",
-      borderRadius: "8px",
+      width: "58px",
+      height: "58px",
+      borderRadius: "50%",
+      border: "none",
       background: "#facc15",
       color: "black",
-      boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+      fontSize: "12px",
+      fontWeight:"bold",
+      boxShadow: "0 3px 10px rgba(0,0,0,0.28)",
       transition: "all 0.15s ease"
     }}
   >
-    ⬅ Back
+    Back
   </button>
 
   {/* 🔁 Play */}
   <button
     onClick={()=>start(week)}
     style={{
-      width: "100%",
-      padding: "6px 4px)",
-      fontSize: "12px",
-      borderRadius: "8px",
+      width: "70px",
+      height: "70px",
+      borderRadius: "50%",
+      border: "none",
       background: "white",
       color: "black",
-      fontWeight: "600",
-      boxShadow: "0 3px 8px rgba(0,0,0,0.3)",
+      fontSize: "13px",
+      fontWeight: "700",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.35)",
       transition: "all 0.15s ease"
     }}
   >
-    🔁 Play
+    Play Again
   </button>
 
   {/* ⏭ Next */}
@@ -1809,17 +1830,19 @@ flexDirection: "column",
       start(nextGroup);
     }}
     style={{
-      width: "100%",
-      padding: "6px 4px)",
-      fontSize: "12px",
-      borderRadius: "8px",
+      width: "58px",
+      height: "58px",
+      borderRadius: "50%",
+      border: "none",
       background: "#22c55e",
       color: "white",
-      boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+      fontSize: "12px",
+      fontWeight:"bold",
+      boxShadow: "0 3px 10px rgba(0,0,0,0.28)",
       transition: "all 0.15s ease"
     }}
   >
-    ➡ Next
+    NEXT
   </button>
 
 </div>
