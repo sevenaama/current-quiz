@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
+import SplashScreen from "./components/SplashScreen";
+import { correctSound, wrongSound, warningSound } from "./sounds/sound";
+import introFile from "./assets/intro.mp3";
 import { db } from "./firebase";
 import { generateAutoName, createPlayer, loadPlayer, renamePlayer } from "./player";
 import { saveScore,loadTopScores } from "./leaderboard";
 import { doc, setDoc, getDoc, getDocs, collection, updateDoc } from "firebase/firestore";
-
+const introSound = new Audio(introFile);
 export default function QuizApp() {
   async function updatePlayerScores(newName){
 
@@ -431,6 +434,7 @@ async function loadOverallLeaderboard(){
 
 }
   const [screen, setScreen] = useState("home");
+  const [showSplash,setShowSplash] = useState(true);
   const [lastUpdate, setLastUpdate] = useState("-");
   const [openCategory, setOpenCategory] = useState(null);
   const [week, setWeek] = useState("वैशाख");
@@ -475,6 +479,7 @@ const eventGroups = ["पुरस्कार","निधन","सम्मे�
         .catch(()=>{});
     }
   },[]);
+
   useEffect(()=>{
 
 setupPlayer();
@@ -668,12 +673,14 @@ function handleSelect(group){
   setOpenCategory(null);
 }
   function next(){
+  warningSound.pause();
+  warningSound.currentTime = 0;
 
   if(index + 1 < questions.length){
 
     setIndex(i => i + 1);
 
-    setTime(15);
+    setTime(20);
 
   } else {
 
@@ -696,16 +703,59 @@ function handleSelect(group){
   }
 
 }
+useEffect(()=>{
 
-  function answer(opt){
-    if(selected!==null) return;
-    setSelected(opt);
-    setAttempted(a=>a+1);
-    if(opt===questions[index].a) setScore(s=>s+1);
-    setTotalTimeUsed( t => t + (15 - time)
-);
-    setTimeout(()=>{ setSelected(null); next(); },700);
+  if(Number(time) === 5){
+
+    warningSound.pause();
+
+    warningSound.currentTime = 0;
+
+    warningSound.play()
+    .catch(()=>{});
+
   }
+
+},[time]);
+
+function answer(opt){
+
+  if(selected!==null)
+    return;
+
+  setSelected(opt);
+
+  setAttempted(a=>a+1);
+
+  if(opt===questions[index].a){
+
+    correctSound.currentTime = 0;
+
+    correctSound.play();
+
+    setScore(s=>s+1);
+
+  } else {
+
+    wrongSound.currentTime = 0;
+
+    wrongSound.play();
+
+  }
+
+  setTotalTimeUsed(
+    t => t + (20 - time)
+  );
+
+  setTimeout(()=>{
+
+    setSelected(null);
+
+    next();
+
+  },700);
+
+}
 
   function addQuestion(){
     setData(prev=> ({...prev, [week]: [...(prev[week]||[]), JSON.parse(JSON.stringify(emptyQ))]}));
@@ -791,6 +841,31 @@ useEffect(()=>{
   }
 }, 
 [editorOpen]);
+if(showSplash){
+
+  return(
+
+    <SplashScreen
+
+      onStart={()=>{
+
+        introSound.currentTime = 0;
+
+        introSound.play();
+
+        setTimeout(()=>{
+
+          setShowSplash(false);
+
+        },1200);
+
+      }}
+
+    />
+
+  );
+
+}
 
   return (
    <div
@@ -807,7 +882,7 @@ useEffect(()=>{
   }}
 >
      
-     <div style={{
+ <div style={{
   display: "flex",
   alignItems: "center",
   justifyContent: "center",

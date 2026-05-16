@@ -15,6 +15,62 @@
       0 0 10px rgba(124,58,237,0.5);
   }
 }
+/* 🔽 SPLASH SCREEN ANIMATION */
+
+@keyframes logoPop{
+
+  0%{
+    transform:scale(0.3);
+    opacity:0;
+  }
+
+  70%{
+    transform:scale(1.12);
+  }
+
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+}
+
+@keyframes titleFade{
+
+  0%{
+    opacity:0;
+    transform:translateY(25px);
+  }
+
+  100%{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+/* 🔽 START BUTTON */
+
+@keyframes startPulse{
+
+  0%{
+    transform:scale(1);
+    box-shadow:
+      0 0 12px rgba(37,99,235,0.5);
+  }
+
+  50%{
+    transform:scale(1.08);
+    box-shadow:
+      0 0 28px rgba(6,182,212,0.95);
+  }
+
+  100%{
+    transform:scale(1);
+    box-shadow:
+      0 0 12px rgba(37,99,235,0.5);
+  }
+
+}
 html, body, #root{
  margin: 0;
   padding: 0;
