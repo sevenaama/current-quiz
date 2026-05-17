@@ -436,6 +436,7 @@ async function loadOverallLeaderboard(){
 }
   const [screen, setScreen] = useState("home");
   const [showSplash,setShowSplash] = useState(true);
+  const [showSharePopup,setShowSharePopup] = useState(false);
   const [lastUpdate, setLastUpdate] = useState("-");
   const [openCategory, setOpenCategory] = useState(null);
   const [week, setWeek] = useState("वैशाख");
@@ -785,6 +786,13 @@ useEffect(()=>{
 useEffect(() => {
 
   if(screen === "result"){
+    setShowSharePopup(true);
+
+setTimeout(()=>{
+
+  setShowSharePopup(false);
+
+},7000);
 
     if(score >= questions.length * 0.7){
 
@@ -806,7 +814,6 @@ function answer(opt){
 
   if(selected!==null)
     return;
-
   setSelected(opt);
 
   setAttempted(a=>a+1);
@@ -1533,7 +1540,7 @@ flexDirection: "column",
   textAlign:"left",
 
   display:"inline-block",
-  animation:"popCard 0.4s ease"
+  animation:"popCard 1.2s ease-in-out infinite",
 }}>
 
   <div style={{
@@ -1883,7 +1890,8 @@ flexDirection: "column",
       fontSize: "13px",
       fontWeight: "700",
       boxShadow: "0 4px 12px rgba(0,0,0,0.35)",
-      transition: "all 0.15s ease"
+      transition: "all 0.15s ease",
+      animation: "startPulse 1.8s infinite",
     }}
   >
     Play Again
