@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
 import SplashScreen from "./components/SplashScreen";
+import SharePopup from "./components/SharePopup";
 import { correctSound, wrongSound, warningSound, winSound,loseSound } from "./sounds/sound";
 import introFile from "./assets/intro.mp3";
 import { db } from "./firebase";
@@ -479,6 +480,26 @@ const eventGroups = ["पुरस्कार","निधन","सम्मे�
         .catch(()=>{});
     }
   },[]);
+  useEffect(()=>{
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const category =
+    params.get("category");
+
+  if(
+    category &&
+    defaultGroups.includes(category)
+  ){
+
+    start(category);
+
+  }
+
+},[]);
 
   useEffect(()=>{
 
@@ -503,7 +524,42 @@ setupPlayer();
     alert("Link Copied!");
   }
 }
+async function shareCategoryResult(){
 
+  const shareUrl =
+`${window.location.origin}?category=${encodeURIComponent(week)}`;
+
+  try{
+
+    await navigator.share({
+
+      title:
+        `${week} Quiz Challenge`,
+
+      text:
+`🔥 I scored ${score}/${questions.length}
+in ${week} Quiz!
+
+🏆 Rank #${finalRank}
+⏱ ${totalTimeUsed}s
+
+Can you beat me? 😎`,
+
+      url: shareUrl
+
+    });
+
+  } catch(e){
+
+    navigator.clipboard.writeText(
+      shareUrl
+    );
+
+    alert("Link copied!");
+
+  }
+
+}
  async function handleInvite(){
   const inviteLink = window.location.href;
 
@@ -713,6 +769,10 @@ useEffect(()=>{
 
     setTimeout(()=>{
 
+      warningSound.muted = false;
+
+      warningSound.volume = 0.5;
+
       warningSound.play()
       .catch(()=>{});
 
@@ -721,6 +781,7 @@ useEffect(()=>{
   }
 
 },[time]);
+
 useEffect(() => {
 
   if(screen === "result"){
@@ -1307,7 +1368,8 @@ flexDirection: "column",
     </div>
   </div>
 )}
-    {/* ❓ screen playing */}
+  
+  {/* ❓ screen playing */}
  {screen==="playing" && (
   <div style={{
     flex: 1,
@@ -1316,7 +1378,8 @@ flexDirection: "column",
     display: "flex",
     flexDirection: "column",
     alignItems: "stretch",
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
+    animation:"resultFade 0.35s ease",
   }}>
 
 {/* 🔝 Top bar (group | question center | timer right) */}
@@ -1365,7 +1428,8 @@ flexDirection: "column",
       fontSize: "clamp(18px, 5vw, 24px)",
       marginBottom: "15px",
       maxWidth: "90%",
-    margin: "0 auto"
+    margin: "0 auto",
+    animation:"popCard 0.35s ease",
     }}>
       {questions[index]?.q?.en}
     </div>
@@ -1400,7 +1464,8 @@ flexDirection: "column",
             textAlign: "center",
             background: bg,
             color: color,
-            border: "none"
+            border: "none",
+            transition:"all 0.15s ease",
           }}
         >
           {o}
@@ -1412,14 +1477,16 @@ flexDirection: "column",
   width: "100%",
   display: "flex",
   justifyContent: "center",
-  marginTop: "10px"
+  marginTop: "10px",
+   cursor:"pointer"
 }}>
   <div style={{
     display: "flex",
     gap: "20px",
     background: "rgba(0,0,0,0.3)",
     padding: "10px 18px",
-    borderRadius: "8px"
+    borderRadius: "8px",
+    cursor:"pointer"
   }}>
     <button onClick={()=>setScreen("home")}>Back</button>
     <button onClick={next}>Skip</button>
@@ -1723,7 +1790,7 @@ flexDirection: "column",
       alignItems:"center",
       gap:"4px",
       marginTop:"8px",
-      width:"95%",
+      width:"100%",
       boxSizing:"border-box",
       background:"rgba(34,197,94,0.18)",
       padding:"3px 6px",
@@ -1844,7 +1911,13 @@ flexDirection: "column",
   >
     NEXT
   </button>
+<SharePopup
 
+  show={showSharePopup}
+
+  onShare={shareCategoryResult}
+
+/>
 </div>
         </div>
       )}
@@ -3094,8 +3167,9 @@ borderTop: "1px solid rgba(255,255,255,0.2)",
   <div style={{
     position: "absolute",
     left: "50%",
-    transform: "translateX(-50%)"
-  }}>
+    transform: "translateX(-50%)",
+     bottom: "10px"
+       }}>
     <span
   onClick={()=>{
     window.open(
