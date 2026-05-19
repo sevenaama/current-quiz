@@ -69,7 +69,7 @@ borderTop: "1px solid rgba(255,255,255,0.2)",
 {/* SHARE (right edge) */}
 <div style={{
    position: "absolute",
-   right: "0%",
+   right: "10%",
    bottom: "10px",
   display: "flex",
   gap: "12px"

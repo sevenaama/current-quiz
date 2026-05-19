@@ -6,7 +6,6 @@ import HomeScreen from "./screens/HomeScreen";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import PlayingScreen from "./screens/PlayingScreen";
-import ResultScreen from "./screens/ResultScreen";
 import SplashScreen from "./components/SplashScreen";
 import AppModal from "./components/AppModal";
 import NameModal from "./components/NameModal";
@@ -24,7 +23,11 @@ const EditorModal = lazy(() =>
 const OverallLeaderboard = lazy(() =>
   import("./components/OverallLeaderboard")
 );
-const introSound = new Audio(introFile);
+
+const ResultScreen = lazy(() =>
+  import("./screens/ResultScreen")
+);
+
 export default function QuizApp() {
   async function updatePlayerScores(newName){
 
@@ -995,21 +998,24 @@ if(showSplash){
 
     <SplashScreen
 
-      onStart={()=>{
+  onStart={()=>{
 
-        introSound.currentTime = 0;
+    const introSound =
+      new Audio(introFile);
 
-        introSound.play();
+    introSound.currentTime = 0;
 
-        setTimeout(()=>{
+    introSound.play();
 
-          setShowSplash(false);
+    setTimeout(()=>{
 
-        },1200);
+      setShowSplash(false);
 
-      }}
+    },1200);
 
-    />
+  }}
+
+/>
 
   );
 
@@ -1069,22 +1075,26 @@ if(showSplash){
   next={next}
 />
 
+<Suspense fallback={null}>
+
   <ResultScreen
-  screen={screen}
-  week={week}
-  finalRank={finalRank}
-  score={score}
-  questions={questions}
-  totalTimeUsed={totalTimeUsed}
-  attempted={attempted}
-  topScores={topScores}
-  playerName={playerName}
-  start={start}
-  setScreen={setScreen}
-  defaultGroups={defaultGroups}
-  showSharePopup={showSharePopup}
-  shareCategoryResult={shareCategoryResult}
-/>
+    screen={screen}
+    week={week}
+    finalRank={finalRank}
+    score={score}
+    questions={questions}
+    totalTimeUsed={totalTimeUsed}
+    attempted={attempted}
+    topScores={topScores}
+    playerName={playerName}
+    start={start}
+    setScreen={setScreen}
+    defaultGroups={defaultGroups}
+    showSharePopup={showSharePopup}
+    shareCategoryResult={shareCategoryResult}
+  />
+
+</Suspense>
 
 <Suspense fallback={null}>
 
