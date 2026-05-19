@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import "./App.css";
 import SplashScreen from "./components/SplashScreen";
 import SharePopup from "./components/SharePopup";
@@ -792,7 +793,7 @@ setTimeout(()=>{
 
   setShowSharePopup(false);
 
-},7000);
+},12000);
 
     if(score >= questions.length * 0.7){
 
@@ -3202,7 +3203,7 @@ borderTop: "1px solid rgba(255,255,255,0.2)",
   Update: {lastUpdate}
 </div>
 
-  {/* INVITE (mid-right) */}
+  {/* INVITE */}
 <div style={{
   position: "absolute",
   right: "25%",
@@ -3218,11 +3219,11 @@ borderTop: "1px solid rgba(255,255,255,0.2)",
 
 {/* SHARE (right edge) */}
 <div style={{
-  position: "absolute",
-  right: "12%",
+   position: "absolute",
+   right: "0%",
    bottom: "10px",
-    display: "flex",
-    gap: "12px"
+  display: "flex",
+  gap: "12px"
 }}>
   <span onClick={handleShare} style={{cursor:"pointer"}}>
     Share
@@ -3230,6 +3231,7 @@ borderTop: "1px solid rgba(255,255,255,0.2)",
 </div>
 
 </div>
+<Analytics />
 </div>
   );
 }
