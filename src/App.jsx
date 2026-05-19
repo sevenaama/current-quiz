@@ -1,15 +1,29 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, lazy, Suspense } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import "./App.css";
+import HomeScreen from "./screens/HomeScreen";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import PlayingScreen from "./screens/PlayingScreen";
+import ResultScreen from "./screens/ResultScreen";
 import SplashScreen from "./components/SplashScreen";
-import SharePopup from "./components/SharePopup";
+import AppModal from "./components/AppModal";
+import NameModal from "./components/NameModal";
 import { correctSound, wrongSound, warningSound, winSound,loseSound } from "./sounds/sound";
 import introFile from "./assets/intro.mp3";
 import { db } from "./firebase";
 import { generateAutoName, createPlayer, loadPlayer, renamePlayer } from "./player";
 import { saveScore,loadTopScores } from "./leaderboard";
 import { doc, setDoc, getDoc, getDocs, collection, updateDoc } from "firebase/firestore";
+
+const EditorModal = lazy(() =>
+  import("./components/EditorModal")
+);
+
+const OverallLeaderboard = lazy(() =>
+  import("./components/OverallLeaderboard")
+);
 const introSound = new Audio(introFile);
 export default function QuizApp() {
   async function updatePlayerScores(newName){
@@ -84,18 +98,18 @@ export default function QuizApp() {
 
     querySnapshot.forEach((docSnap) => {
 
-  if(docSnap.data().updatedAt){
+      if(docSnap.data().updatedAt){
 
-    setLastUpdate(
-      docSnap.data().updatedAt
-    );
+        setLastUpdate(
+          docSnap.data().updatedAt
+        );
 
-  }
+      }
 
-  loadedData[docSnap.id] =
-    docSnap.data().questions || [];
+      loadedData[docSnap.id] =
+        docSnap.data().questions || [];
 
-});
+    });
 
     return loadedData;
 
@@ -105,6 +119,37 @@ export default function QuizApp() {
 
     return null;
   }
+}
+
+async function loadSingleCategory(category){
+
+  try {
+
+    const snap = await getDoc(
+      doc(db, "quiz", category)
+    );
+
+    if(snap.exists()){
+
+      return (
+        snap.data().questions || []
+      );
+
+    }
+
+    return [];
+
+  } catch(e){
+
+    console.log(
+      "single load error",
+      e
+    );
+
+    return [];
+
+  }
+
 }
 async function autoMoveBySchedule(allData){
 
@@ -509,6 +554,41 @@ const eventGroups = ["पुरस्कार","निधन","सम्मे�
 setupPlayer();
 
 },[]);
+useEffect(()=>{
+
+  async function loadUpdate(){
+
+    try {
+
+      const snap = await getDoc(
+        doc(db, "quiz", "Today")
+      );
+
+      if(
+        snap.exists() &&
+        snap.data().updatedAt
+      ){
+
+        setLastUpdate(
+          snap.data().updatedAt
+        );
+
+      }
+
+    } catch(e){
+
+      console.log(
+        "update load error",
+        e
+      );
+
+    }
+
+  }
+
+  loadUpdate();
+
+},[]);
 
  async function handleShare(){
   try{
@@ -602,25 +682,8 @@ Can you beat me? 😎`,
 
   const emptyQ = { q:{en:""}, options:["","","",""], a:"" };
 
-  const sampleQuestions = [
-    { q:{en:"नेपालको राजधानी कहाँ हो?"}, options:["काठमाडौं","दिल्ली","टोकियो","लन्डन"], a:"काठमाडौं" },
-    { q:{en:"2+2 कति हुन्छ?"}, options:["3","4","5","6"], a:"4" },
-    { q:{en:"सूर्य कुन दिशाबाट उदाउँछ?"}, options:["पूर्व","पश्चिम","उत्तर","दक्षिण"], a:"पूर्व" }
-  ];
+ const [data, setData] = useState({});
 
- const [data, setData] = useState(() => {
-  const init = {};
-
-  defaultGroups.forEach(g => {
-    init[g] = sampleQuestions.map(q => ({
-      q: { en: q.q.en },
-      options: [...q.options],
-      a: q.a
-    }));
-  });
-
-  return init;
-});
 const questions = data[week] || [];
 const currentPlayerId =
  localStorage.getItem("playerId");
@@ -639,25 +702,15 @@ const finalRank =
     ? playerRank
 
     : "--";
+    
+  async function start(w){
+    const loadedQuestions =
+    await loadSingleCategory(w);
 
-useEffect(() => {
-
-  loadQuizData().then(async (res) => {
-
-    if(res && typeof res === "object"){
-
-      const updatedData =
-        await autoMoveBySchedule(res);
-
-      setData(updatedData);
-
-    }
-
-  });
-
-}, []);
-
-  function start(w){
+  setData(prev => ({
+    ...prev,
+    [w]: loadedQuestions
+  }));
     setWeek(w);
     setIndex(0);
     setScore(0);
@@ -812,6 +865,7 @@ setTimeout(()=>{
 
 }, [screen]);
 
+
 function answer(opt){
 
   if(selected!==null)
@@ -890,6 +944,7 @@ useEffect(()=>{
 
   return ()=>document.removeEventListener("mousedown", handleClickOutside);
 },[]);
+
 
   useEffect(()=>{
     if(screen!=="playing") return;
@@ -974,2264 +1029,129 @@ if(showSplash){
     paddingBottom: "0px"
   }}
 >
-     
- <div style={{
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "12px",
-  background: "#1e40af",
-  color: "white",
-  position: "sticky",
-  top: 0,
-  zIndex: 1000
-}}>
-
-{/* 👤 Left: Player */}
-<div style={{
-  position: "absolute",
-  left: "10px",
-  fontSize: "14px",
-  lineHeight:"1.4",
-  maxWidth:"120px"
-}}>
-
-  <div
-    onClick={()=>{
-      setIsRenameMode(true);
-      setNameInput(playerName);
-      setShowNameModal(true);
-    }}
-
-    style={{
-      cursor:"pointer",
-      display:"inline-block",
-      overflow:"hidden",
-      textOverflow:"ellipsis",
-      whiteSpace:"nowrap"
-    }}
-  >
-    {playerAvatar} {playerName || "Player"}
-  </div>
-<div
-
-  onClick={async ()=>{
-
-    await loadOverallLeaderboard();
-
-    setShowOverall(true);
-
-  }}
-  style={{
-    fontSize:"12px",
-    opacity:0.8,
-    marginTop:"2px",
-    cursor:"pointer"
-  }}>
-    👥 {
-
-      users >= 1000
-
-        ? (users / 1000).toFixed(1) + "K"
-
-        : users
-    }
-  </div>
-
-</div>
-
-  {/* 📚 Center: Smart Animated Title */}
-<div
-  onClick={()=>setScreen("home")}
-  style={{
-    fontSize: "clamp(22px, 6vw, 34px)",
-    fontWeight: "900",
-    textAlign: "center",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "10px",
-    cursor: "pointer",
-
-    padding: "8px 16px",
-    borderRadius: "14px",
-
-    background:
-      "linear-gradient(90deg,#2563eb,#7c3aed)",
-
-    color: "white",
-
-    boxShadow:
-      "0 0 18px rgba(124,58,237,0.6)",
-
-    transition: "0.3s ease",
-
-    transform: "scale(1)",
-
-    animation:
-      "pulseTitle 2s infinite"
-  }}
-
-  onMouseEnter={(e)=>{
-    e.currentTarget.style.transform =
-      "scale(1.08)";
-  }}
-
-  onMouseLeave={(e)=>{
-    e.currentTarget.style.transform =
-      "scale(1)";
-  }}
->
-
-  <span style={{
-    fontSize:"1.2em"
-  }}>
-    📚
-  </span>
-
-  <span>
-    Current Quiz
-  </span>
-
-</div>
-
- {/* ☰ Right: Menu */}
-<div
-  onMouseDown={(e)=>{
-  e.stopPropagation();
-  setShowMenu(prev => !prev);
-  }}
-  style={{
-    position: "absolute",
-    right: "10px",
-
-    width: "42px",
-    height: "42px",
-
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-
-    fontSize: "24px",
-    fontWeight: "bold",
-
-    cursor: "pointer",
-
-    borderRadius: "12px",
-
-    background: showMenu
-      ? "#2563eb"
-      : "rgba(255,255,255,0.15)",
-
-    color: "white",
-
-    boxShadow:
-      "0 2px 8px rgba(0,0,0,0.25)",
-
-    transition: "all 0.2s ease",
-
-    backdropFilter: "blur(6px)"
-  }}
-
->
-  {showMenu ? "✕" : "☰"}
-</div>
-  {/* MENU */}
-       {showMenu && (
-  <div
-    ref={menuRef}
-    style={{
-      position: "absolute",
-      top: "70px",
-      right: "10px",
-      background: "white",
-      color: "black",
-      padding: "8px",
-      fontSize: "12px",
-      borderRadius: "8px",
-      boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-      zIndex: 9999,
-
-      maxHeight: "70vh",
-      overflowY: "auto"
-    }}
-  >
-    <div onClick={()=>{setModal("password"); setShowMenu(false);}}style={{
-    padding:"12px",
-    cursor:"pointer",
-    borderBottom:"1px solid #ddd"
-  }}>
-  Edit Questions
-</div>
-  <div onClick={()=>{setModal("feedback"); setShowMenu(false);}}style={{
-    padding:"12px",
-    cursor:"pointer",
-    borderBottom:"1px solid #ddd"
-  }}>
-  Feedback
-</div>
-   <div onClick={()=>{setModal("contact"); setShowMenu(false);}}style={{
-    padding:"12px",
-    cursor:"pointer",
-    borderBottom:"1px solid #ddd"
-  }}>Contact</div>
-<div onClick={()=>{setModal("rules"); setShowMenu(false);}}style={{
-    padding:"12px",
-    cursor:"pointer",
-    borderBottom:"1px solid #ddd"
-  }}>Rules</div>
-    <div onClick={()=>{
-       navigator.clipboard.writeText(
-    window.location.href
-  );
-      setShowMenu(false);
-    }}style={{
-    padding:"12px",
-    cursor:"pointer",
-    borderBottom:"1px solid #ddd"
-  }}>Copy Link</div>
-  </div>
-)}
-</div>
-
-  {/* MAIN DASHBOARD GRID */}
-{screen==="home" && (
-  <div style={{ padding: "10px",
-               paddingBottom: "56px",
-    position: "relative" ,
-         display: "flex",
-flexDirection: "column",
-    flex: 1,
-               minHeight: 0
-  }}>
-
-    {/* 🔝 BUTTONS */}
-    <div style={{
-      display:"flex",
-      gap:"8px",
-      marginBottom:"10px",
-    flexShrink:0
-    }}>
-      {/* MONTH */}
-      <div 
-        className="dropdown-btn"
-       onClick={(e)=>{
-    e.stopPropagation();setOpenCategory(openCategory==="month" ? null : "month");}}
-        style={{
-          background:"#7c3aed",
-          padding:"8px 12px",
-          borderRadius:"6px",
-          cursor:"pointer"
-        }}
-      >
-        Month {openCategory==="month" ? "▲" : "▼"}
-      </div>
-
-      {/* EVENT */}
-      <div
-         className="dropdown-btn"
-        onClick={(e)=>{
-    e.stopPropagation();setOpenCategory(openCategory==="event" ? null : "event");}}
-        style={{
-          background:"#dc2626",
-          padding:"8px 12px",
-          borderRadius:"6px",
-          cursor:"pointer"
-        }}
-      >
-        Event {openCategory==="event" ? "▲" : "▼"}
-      </div>
-
-      {/* OTHER */}
-      <div
-         className="dropdown-btn"
-       onClick={(e)=>{
-    e.stopPropagation();setOpenCategory(openCategory==="other" ? null : "other");}}
-        style={{
-          background:"#16a34a",
-          padding:"8px 12px",
-          borderRadius:"6px",
-          cursor:"pointer"
-        }}
-      >
-        Other {openCategory==="other" ? "▲" : "▼"}
-      </div>
-    </div>
-
-    {/* 🟣 MONTH */}
-    {openCategory==="month" && (
-      <div
-         className="dropdown"
-        style={{
-    position:"absolute",
-    top:"50px",
-    left:"0",
-    width:"115px",
-    maxHeight:"70vh",
-    overflowY:"auto",
-    display:"flex",
-    flexDirection:"column",
-    gap:"6px",
-    padding:"5px",
-    background:"#1e40af",
-    borderRadius:"8px",
-     cursor:"pointer",
-    zIndex:999
-      }}>
-        {monthGroups.map(m=>(
-          <div key={m} onClick={()=>handleSelect(m)}
-            style={{background:"#a78bfa",padding:"10px",borderRadius:"6px"}}>
-            {m}
-          </div>
-        ))}
-      </div>
-    )}
-
-  {/* 🔴 EVENT */}
-{openCategory==="event" && (
-  <div
-     className="dropdown"
-    style={{
-      position:"absolute",
-      top:"50px",
-      left:"0",
-      width:"115px",
-      maxHeight:"70vh",
-      overflowY:"auto",
-      display:"flex",
-      flexDirection:"column",
-      gap:"6px",
-      padding:"5px",
-      background:"#1e40af",
-      borderRadius:"8px",
-       cursor:"pointer",
-      zIndex:999
-    }}
-  >
-    {eventGroups.map(m=>(
-      <div key={m} onClick={()=>handleSelect(m)}
-        style={{background:"#f87171",padding:"10px",borderRadius:"6px"}}>
-        {m}
-      </div>
-    ))}
-  </div>
-)}
-
-    {/* 🟢 OTHER */}
-    {openCategory==="other" && (
-     <div 
-         className="dropdown"
-       style={{
-    position:"absolute",
-    top:"50px",
-    left:"0",
-    width:"125px",
-    maxHeight:"70vh",
-    overflowY:"auto",
-    display:"flex",
-    flexDirection:"column",
-    gap:"6px",
-    padding:"5px",
-    background:"#1e40af",
-    borderRadius:"8px",
-     cursor:"pointer",
-    zIndex:999
-      }}>
-        {otherGroups.map(m=>(
-          <div key={m} onClick={()=>handleSelect(m)}
-            style={{background:"#4ade80",padding:"10px",borderRadius:"6px"}}>
-            {m}
-          </div>
-        ))}
-      </div>
-    )}
-
-    {/* 🟦 MAIN BUTTONS (FIXED POSITION) */}
-  <div style={{
-  display:"grid",
-  gridTemplateRows:"repeat(4, 1fr)",
-  gap:"10px",
-  flex: 1
-    }}>
-      {mainGroups.map(m=>(
-        <div key={m}
-          onClick={()=>start(m)}
-         style={{
-  background:"#2563eb",
-  textAlign:"center",
-  borderRadius:"14px",
-  fontWeight:"bold",
-  cursor:"pointer",
-  boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
-  width:"100%",
-  height:"100%",
-  display:"flex",
-  alignItems:"center",
-  justifyContent:"center",
-  fontSize:"clamp(18px, 5vw, 22px)",
-  maxWidth:"none"
-         }}>
-          {m}
-        </div>
-      ))}
-    </div>
-  </div>
-)}
-  
-  {/* ❓ screen playing */}
- {screen==="playing" && (
-  <div style={{
-    flex: 1,
-    padding: "15px",
-    paddingBottom: "80px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "stretch",
-    justifyContent: "flex-start",
-    animation:"resultFade 0.35s ease",
-  }}>
-
-{/* 🔝 Top bar (group | question center | timer right) */}
-<div style={{
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  width: "100%",
-  maxWidth: "400px",
-  margin: "0 auto 10px auto",
-  position: "relative"
-}}>
-
-  {/* 📂 Left: Current Group */}
-  <div style={{
-    fontSize: "14px",
-    fontWeight: "bold",
-    opacity: 0.9
-  }}>
-    📂 {week}
-  </div>
-
-  {/* 🔢 Center: Question count */}
-  <div style={{
-    position: "absolute",
-    left: "50%",
-    transform: "translateX(-50%)",
-    fontSize: "13px"
-  }}>
-    Q {index+1} / {questions.length}
-  </div>
-
-  {/* ⏱ Right: Timer */}
-  <div style={{
-    fontWeight: "bold",
-    fontSize: "18px"
-  }}>
-    {time}s
-  </div>
-
-</div>
-
-    {/* ❓ Question */}
-    <div style={{
-      textAlign: "center",
-      fontSize: "clamp(18px, 5vw, 24px)",
-      marginBottom: "15px",
-      maxWidth: "90%",
-    margin: "0 auto",
-    animation:"popCard 0.35s ease",
-    }}>
-      {questions[index]?.q?.en}
-    </div>
-
-    {/* 🔘 Options */}
-    {questions[index]?.options.map((o,i)=>{
-      let bg = "#ffffff";
-      let color = "#000";
-
-      if(selected!==null){
-        if(o===questions[index].a){
-          bg = "#22c55e";
-          color = "white";
-        }
-        else if(o===selected){
-          bg = "#ef4444";
-          color = "white";
-        }
-      }
-
-      return (
-        <button
-          key={i}
-          onClick={()=>answer(o)}
-          style={{
-            width: "90%",
-            maxWidth: "400px",
-            margin: "5px auto",
-            padding: "clamp(12px, 4vw, 18px)",
-            fontSize: "clamp(14px, 4vw, 18px)",
-            borderRadius: "8px",
-            textAlign: "center",
-            background: bg,
-            color: color,
-            border: "none",
-            transition:"all 0.15s ease",
-          }}
-        >
-          {o}
-        </button>
-      );
-    })}
-{/* Bottom Controls */}
-<div style={{
-  width: "100%",
-  display: "flex",
-  justifyContent: "center",
-  marginTop: "10px",
-   cursor:"pointer"
-}}>
-  <div style={{
-    display: "flex",
-    gap: "20px",
-    background: "rgba(0,0,0,0.3)",
-    padding: "10px 18px",
-    borderRadius: "8px",
-    cursor:"pointer"
-  }}>
-    <button onClick={()=>setScreen("home")}>Back</button>
-    <button onClick={next}>Skip</button>
-  </div>
-</div>
-
-</div>
-)}
-  {screen==="result" && (
-  <div style={{
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    textAlign: "center",
-    width: "100%",
-    padding: "clamp(16px, 4vw, 24px)",
-    paddingTop: "20px",
-    paddingBottom: "80px",
-    overflowX:"hidden",
-    position:"relative",
-    animation:"resultFade 0.5s ease"
-  }}>
-    
-   {/* 🏆 Top left Card */}
-<div style={{
-  position:"absolute",
-  top:"8px",
-  left:"8px",
-
-  background:"rgba(255,255,255,0.10)",
-
-  backdropFilter:"blur(8px)",
-
-  padding:"6px 8px",
-
-  borderRadius:"10px",
-
-  border:"1px solid rgba(255,255,255,0.12)",
-
-  boxShadow:"0 2px 8px rgba(0,0,0,0.2)",
-
-  textAlign:"left",
-
-  display:"inline-block",
-  animation:"popCard 1.2s ease-in-out infinite",
-}}>
-
-  <div style={{
-    fontSize:"10px",
-    opacity:0.8,
-    marginBottom:"2px",
-    whiteSpace:"nowrap"
-  }}>
-    📂 {week}
-  </div>
-<div style={{
-    marginTop:"2px",
-    color:"#facc15",
-    fontWeight:"bold",
-    fontSize:"10px",
-    whiteSpace:"nowrap"
-  }}>
-    🏆 #{finalRank}
-  </div>
-
-  <div style={{
-    fontWeight:"bold",
-    fontSize:"12px",
-    whiteSpace:"nowrap"
-  }}>
-    ⭐ {score}/{questions.length}
-  </div>
-
-  <div style={{
-  marginTop:"2px",
-  fontSize:"10px",
-  opacity:0.85,
-  whiteSpace:"nowrap"
-}}>
-  ⏱ {totalTimeUsed}s
-</div>
-
-</div>
-
-    {/* 🧠 Performance Message */}
-    <div style={{
-      fontSize: "clamp(15px, 4vw, 18px)",
-      marginBottom: "12px"
-    }}>
-      {score === questions.length
-        ? "Perfect 🎯"
-        : score > questions.length * 0.7
-        ? "Average 🔥"
-        : score > questions.length * 0.4
-        ? "Under average 👍"
-        : "Try Again 😅"}
-    </div>
-
-    {/* 📋 Stats Grid */}
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: "6px",
-      width: "100%",
-      maxWidth: "240px",
-      fontSize: "13px",
-      marginBottom: "16px"
-    }}>
-
-      <div style={{
-        background:"#c210b3",
-        padding:"6px",
-        borderRadius:"6px"
-      }}>
-        <div style={{opacity:0.7}}>Total</div>
-        <div style={{fontWeight:"bold"}}>
-          {questions.length}
-        </div>
-      </div>
-
-      <div style={{
-        background:"#0b2bdd",
-        padding:"6px",
-        borderRadius:"6px"
-      }}>
-        <div style={{opacity:0.7}}>Attempted</div>
-        <div style={{fontWeight:"bold"}}>
-          {attempted}
-        </div>
-      </div>
-
-      <div style={{
-        background:"#11ee62",
-        padding:"6px",
-        borderRadius:"6px"
-      }}>
-        <div style={{opacity:0.8}}>Right</div>
-        <div style={{fontWeight:"bold"}}>
-          {score}
-        </div>
-      </div>
-
-      <div style={{
-        background:"#dc2626",
-        padding:"6px",
-        borderRadius:"6px"
-      }}>
-        <div style={{opacity:0.8}}>Wrong</div>
-        <div style={{fontWeight:"bold"}}>
-          {attempted - score}
-        </div>
-      </div>
-
-    </div>
-
-{/* 🏆 Leaderboard */}
-<div style={{
-
-  width:"75%",
-  maxWidth:"330px",
-
-  overflow:"hidden",
-
-  boxSizing:"border-box",
-
-  marginTop:"10px",
-
-  background:"rgba(255,255,255,0.08)",
-
-  borderRadius:"14px",
-
-  padding:"6px",
-
-  backdropFilter:"blur(10px)",
-  animation:"popCard 0.45s ease"
-}}>
-
-  {/* Title */}
-  <div style={{
-
-    fontSize:"17px",
-
-    fontWeight:"bold",
-
-    marginBottom:"10px",
-
-    textAlign:"center"
-  }}>
-    🏆 Top Players
-  </div>
-
-  {/* Scroll Area */}
-  <div style={{
-
-    height:"165px",
-    overflowY:"auto",
-    overflowX:"hidden",
-    width:"100%",
-    display:"flex",
-    flexDirection:"column",
-    gap:"4px",
-    paddingRight:"2px",
-    scrollbarWidth:"thin",
-  }}>
-
-    {topScores.slice(0,10).map((p,i)=>(
-
-      <div
-        key={p.id}
-
-        style={{
-
-          display:"grid",
-          gridTemplateColumns:"38px 1fr 52px 52px",
-          alignItems:"center",
-          minHeight:"36px",
-          gap:"4px",
-          width:"100%",
-          boxSizing:"border-box",
-          overflow:"hidden",
-          background:
-            i===0
-              ? "rgba(250,204,21,0.18)"
-            : i===1
-              ? "rgba(226,232,240,0.14)"
-            : i===2
-              ? "rgba(251,146,60,0.14)"
-            : p.playerName === playerName
-              ? "rgba(34,197,94,0.18)"
-              : "rgba(255,255,255,0.06)",
-
-          boxShadow:
-            i===0
-              ? "0 0 10px rgba(250,204,21,0.25)"
-              : "none",
-          padding:"6px",
-          borderRadius:"10px",
-          fontSize:"10px"
-        }}
-      >
-
-        {/* Rank */}
-        <div style={{
-          fontWeight:"bold",
-          fontSize:"12px"
-        }}>
-          {i===0 ? "🥇" :
-           i===1 ? "🥈" :
-           i===2 ? "🥉" :
-           `#${i+1}`}
-        </div>
-
-        {/* Name */}
-        <div style={{
-
-          overflow:"hidden",
-
-          textOverflow:"ellipsis",
-
-          whiteSpace:"nowrap"
-        }}>
-          {p.playerName}
-        </div>
-
-        {/* Score */}
-        <div style={{
-          background:"#2563eb",
-          padding:"3px 6px",
-          borderRadius:"999px",
-          fontSize:"10px",
-          fontWeight:"bold",
-          textAlign:"center"
-        }}> ⭐{p.score}
-        </div>
-
-        {/* Time */}
-        <div style={{
-          fontSize:"10px",
-          opacity:0.8,
-          textAlign:"right"
-        }}>
-          ⏱ {p.timeUsed || 0}s
-        </div>
-
-      </div>
-    ))}
-
-  </div>
-
-  {/* Sticky Current Player */}
-  {!topScores
-    .slice(0,10)
-    .some(p => p.playerName === playerName) && (
-
-    <div style={{
-
-      display:"grid",
-      gridTemplateColumns:"38px 1fr 52px 52px",
-      alignItems:"center",
-      gap:"4px",
-      marginTop:"8px",
-      width:"100%",
-      boxSizing:"border-box",
-      background:"rgba(34,197,94,0.18)",
-      padding:"3px 6px",
-      borderRadius:"10px",
-      fontSize:"10px"
-    }}>
-
-      {/* Rank */}
-      <div style={{
-        fontWeight:"bold"
-      }}>
-        #{finalRank}
-      </div>
-
-      {/* Name */}
-      <div style={{
-        overflow:"hidden",
-        textOverflow:"ellipsis",
-        whiteSpace:"nowrap"
-      }}>
-        You
-      </div>
-
-      {/* Score */}
-      <div style={{
-        background:"#16a34a",
-        padding:"3px 6px",
-        borderRadius:"999px",
-        fontSize:"10px",
-        fontWeight:"bold",
-        textAlign:"center"
-      }}> ⭐{score}
-      </div>
-
-      {/* Time */}
-      <div style={{
-        fontSize:"11px",
-        opacity:0.8,
-        textAlign:"right"
-      }}>
-        ⏱ {totalTimeUsed}s
-      </div>
-
-    </div>
-  )}
-
-</div>
-
- {/* 🔘 Buttons */}
-<div style={{
-  width: "100%",
-  maxWidth: "360px",
-  margin: "28px auto 0 auto", // 👈 तल सारियो
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  gap: "14px",
-  flexWrap:"wrap"
-}}>
-
-  {/* 🔙 Back */}
-  <button
-    onClick={()=>setScreen("home")}
-    style={{
-      width: "58px",
-      height: "58px",
-      borderRadius: "50%",
-      border: "none",
-      background: "#facc15",
-      color: "black",
-      fontSize: "12px",
-      fontWeight:"bold",
-      boxShadow: "0 3px 10px rgba(0,0,0,0.28)",
-      transition: "all 0.15s ease"
-    }}
-  >
-    Back
-  </button>
-
-  {/* 🔁 Play */}
-  <button
-    onClick={()=>start(week)}
-    style={{
-      width: "70px",
-      height: "70px",
-      borderRadius: "50%",
-      border: "none",
-      background: "white",
-      color: "black",
-      fontSize: "13px",
-      fontWeight: "700",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.35)",
-      transition: "all 0.15s ease",
-      animation: "startPulse 1.8s infinite",
-    }}
-  >
-    Play Again
-  </button>
-
-  {/* ⏭ Next */}
-  <button
-    onClick={()=>{
-      const idx = defaultGroups.indexOf(week);
-      const nextGroup = defaultGroups[(idx+1) % defaultGroups.length];
-      start(nextGroup);
-    }}
-    style={{
-      width: "58px",
-      height: "58px",
-      borderRadius: "50%",
-      border: "none",
-      background: "#22c55e",
-      color: "white",
-      fontSize: "12px",
-      fontWeight:"bold",
-      boxShadow: "0 3px 10px rgba(0,0,0,0.28)",
-      transition: "all 0.15s ease"
-    }}
-  >
-    NEXT
-  </button>
-<SharePopup
-
-  show={showSharePopup}
-
-  onShare={shareCategoryResult}
-
-/>
-</div>
-        </div>
-      )}
-
-   {editorOpen && (
-  <div
-    style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      background: "rgba(0,0,0,0.7)",
-      zIndex: 2147483647,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }}
-  >
-
-    <div
-      style={{
-        background: "white",
-        color: "black",
-        width: "95%",
-        maxWidth: "500px",
-        maxHeight: "90vh",
-        borderRadius: "10px",
-        display: "flex",
-        flexDirection: "column"
-      }}
-    >
-
-      {/* HEADER */}
-      <div style={{padding:"10px", borderBottom:"1px solid #ddd", display:"flex", justifyContent:"space-between"}}>
-        <div>
-          <b>Edit:</b>
-          <select value={week} onChange={(e)=>setWeek(e.target.value)}>
-            {defaultGroups.map(g=> (
-              <option key={g} value={g}>{g}</option>
-            ))}
-          </select>
-        </div>
-        <button onClick={()=>setEditorOpen(false)}>Close</button>
-      </div>
-
-      {/* BODY */}
-      <div style={{padding:"10px", overflowY:"auto"}}>
-        {questions.map((q,i)=>(
-          <div key={i} style={{border:"1px solid #ddd", padding:"10px", margin:"8px 0"}}>
-            <input
-  placeholder="Question"
-  value={q.q?.en || ""}
-
-  onChange={e=>
-    updateQ(
-      i,
-      "q",
-      e.target.value
-    )
-  }
-
-  onKeyDown={(e)=>{
-
-    const inputs =
-      Array.from(
-        document.querySelectorAll(
-          "input"
-        )
-      );
-
-    const index =
-      inputs.indexOf(e.target);
-
-    if(e.key === "ArrowDown"){
-
-      e.preventDefault();
-
-      inputs[index + 1]?.focus();
-    }
-
-    if(e.key === "ArrowUp"){
-
-      e.preventDefault();
-
-      inputs[index - 1]?.focus();
-    }
-
-  }}
-
-  style={{
-    width:"100%",
-    marginBottom:"5px"
-  }}
+<Header
+  playerAvatar={playerAvatar}
+  playerName={playerName}
+  setIsRenameMode={setIsRenameMode}
+  setNameInput={setNameInput}
+  setShowNameModal={setShowNameModal}
+  users={users}
+  loadOverallLeaderboard={loadOverallLeaderboard}
+  setShowOverall={setShowOverall}
+  showMenu={showMenu}
+  setShowMenu={setShowMenu}
+  menuRef={menuRef}
+  setModal={setModal}
+  setScreen={setScreen}
+/>     
+
+ <HomeScreen
+  screen={screen}
+  openCategory={openCategory}
+  setOpenCategory={setOpenCategory}
+  monthGroups={monthGroups}
+  eventGroups={eventGroups}
+  otherGroups={otherGroups}
+  mainGroups={mainGroups}
+  handleSelect={handleSelect}
+  start={start}
 />
 
-            {q.options.map((o,oi)=>(
-             <input
-  key={oi}
-  placeholder={`Option ${oi+1}`}
-  value={o || ""}
-
-  onChange={e=>
-    updateQ(
-      i,
-      "opt",
-      e.target.value,
-      oi
-    )
-  }
-
-  onKeyDown={(e)=>{
-
-    const inputs =
-      Array.from(
-        document.querySelectorAll(
-          "input"
-        )
-      );
-
-    const index =
-      inputs.indexOf(e.target);
-
-    if(e.key === "ArrowDown"){
-
-      e.preventDefault();
-
-      inputs[index + 1]?.focus();
-    }
-
-    if(e.key === "ArrowUp"){
-
-      e.preventDefault();
-
-      inputs[index - 1]?.focus();
-    }
-
-  }}
-
-  style={{
-    width:"100%",
-    marginBottom:"5px"
-  }}
+<PlayingScreen
+  screen={screen}
+  week={week}
+  index={index}
+  questions={questions}
+  time={time}
+  selected={selected}
+  answer={answer}
+  setScreen={setScreen}
+  next={next}
 />
-            ))}
 
-            <input
-  placeholder="Correct answer"
-  value={q.a || ""}
-
-  onChange={e=>
-    updateQ(
-      i,
-      "a",
-      e.target.value
-    )
-  }
-
-  onKeyDown={(e)=>{
-
-    const inputs =
-      Array.from(
-        document.querySelectorAll(
-          "input"
-        )
-      );
-
-    const index =
-      inputs.indexOf(e.target);
-
-    if(e.key === "ArrowDown"){
-
-      e.preventDefault();
-
-      inputs[index + 1]?.focus();
-    }
-
-    if(e.key === "ArrowUp"){
-
-      e.preventDefault();
-
-      inputs[index - 1]?.focus();
-    }
-     if(e.key === "Enter"){
-
-    e.preventDefault();
-
-    document
-      .getElementById(
-        "submitBtn"
-      )
-      ?.click();
-
-  }
-
-  }}
-
-  style={{
-    width:"100%",
-    marginBottom:"5px"
-  }}
+  <ResultScreen
+  screen={screen}
+  week={week}
+  finalRank={finalRank}
+  score={score}
+  questions={questions}
+  totalTimeUsed={totalTimeUsed}
+  attempted={attempted}
+  topScores={topScores}
+  playerName={playerName}
+  start={start}
+  setScreen={setScreen}
+  defaultGroups={defaultGroups}
+  showSharePopup={showSharePopup}
+  shareCategoryResult={shareCategoryResult}
 />
-<select
-  id={`copy-${i}`}
-  style={{
-    marginRight:"6px"
-  }}
->
 
-  {defaultGroups.map(g=>(
-
-    <option
-      key={g}
-      value={g}
-    >
-      {g}
-    </option>
-
-  ))}
-
-</select>
-
-<button
-  onClick={()=>{
-
-    const targetGroup =
-      document.getElementById(
-        `copy-${i}`
-      ).value;
-
-    // same group avoid
-    if(targetGroup === week){
-
-      alert(
-        "Same group selected"
-      );
-
-      return;
-    }
-
-    // duplicate avoid
-    const alreadyExists =
-
-      (data[targetGroup] || [])
-      .some(
-
-        item =>
-
-          item.q.en ===
-          q.q.en
-
-      );
-
-    if(alreadyExists){
-
-      alert(
-        "Question already exists"
-      );
-
-      return;
-    }
-
-    const copiedQuestion =
-
-      JSON.parse(
-        JSON.stringify(q)
-      );
-
-    setData(prev=>({
-
-      ...prev,
-
-      [targetGroup]: [
-
-        ...(prev[targetGroup] || []),
-
-        copiedQuestion
-
-      ]
-
-    }));
-    saveSingleCategory(
-  targetGroup,
-  [
-    ...(data[targetGroup] || []),
-    copiedQuestion
-  ]
-);
-
-    alert(
-      `Copied to ${targetGroup}`
-    );
-
-  }}
->
-  Copy
-</button>
-
-            <button onClick={()=>deleteQuestion(i)}>Delete</button>
-          </div>
-        ))}
-      </div>
-
-      {/* FOOTER */}
-<div style={{padding:"10px", borderTop:"1px solid #ddd"}}>
-
-  <button onClick={addQuestion}>+ Add</button>
-<button
-  id="submitBtn"
-  onKeyDown={(e)=>{
-
-    if(e.key === "Enter"){
-
-      e.preventDefault();
-
-      e.target.click();
-
-    }
-
-  }}
-   onClick={async ()=>{
-
-  const list = data[week];
-
-  for(const q of list){
-
-    // question empty
-    if(!q.q?.en?.trim()){
-
-      alert("Question empty");
-      return;
-    }
-
-    // option empty
-    if(
-      q.options.some(
-        op => !op.trim()
-      )
-    ){
-
-      alert(
-        "All 4 options required"
-      );
-
-      return;
-    }
-
-    // answer empty
-    if(!q.a?.trim()){
-
-      alert(
-        "Correct answer required"
-      );
-
-      return;
-    }
-
-    // answer must match option
-    if(
-      !q.options.some(
-  op =>
-    op.trim() === q.a.trim()
-)
-    ){
-
-      alert(
-        "Correct answer must match one option"
-      );
-
-      return;
-    }
-
-  }
-
-  await saveSingleCategory(
-    week,
-    data[week]
-  );
-
-  setSavedMsg(true);
-
-  setTimeout(
-    ()=>setSavedMsg(false),
-    2000
-  );
-
-}}>
-  Submit
-</button>
-
-  <button onClick={()=>{
-    setEditorOpen(false);
-    setScreen("home");
-  }}>
-    Back
-  </button>
-
-  {savedMsg && <div>✔ Saved</div>}
-
-  <div style={{marginTop:"15px"}}>
-
-    <button
-      onClick={()=>
-        moveQuestions(
-          "Today",
-          "This Week"
-        )
-      }
-    >
-      Today → This Week
-    </button>
-
-    <button
-      onClick={()=>
-        moveQuestions(
-          "This Week",
-          "Previous Week"
-        )
-      }
-    >
-      This Week → Previous Week
-    </button>
-
-    <button
-      onClick={()=>
-        moveQuestions(
-          "Previous Week",
-          "This Month"
-        )
-      }
-    >
-      Previous Week → This Month
-    </button>
-
-  </div>
-
-</div>
-
-</div>
-</div>
-)}
-     {modal && (
-  <div
-    style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      background: "rgba(0,0,0,0.7)",
-      zIndex: 2147483648,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }}
-  >
-    <div style={{
-      background: "white",
-      color: "black",
-      padding: "20px",
-      borderRadius: "10px",
-      width: "90%",
-      maxWidth: "400px"
-    }}>
-      
-      <div style={{display:"flex", justifyContent:"space-between"}}>
-        <b>{modal}</b>
-        <button onClick={()=>setModal(null)}>Close</button>
-      </div>
-
-      {modal==="contact" && (
-  <div style={{
-    marginTop:"12px",
-    lineHeight:"1.8",
-    fontSize:"15px",
-
-    maxHeight:"60vh",
-  overflowY:"auto",
-  paddingRight:"6px"
-  }}>
-
-    <div>
-      📧 <b>Email:</b><br/>
-
-      <a
-        href="mailto:currentquiz@gmail.com"
-        style={{
-          color:"#2563eb"
-        }}
-      >
-        currentquiz@gmail.com
-      </a>
-
-    </div>
-
-    <br/>
-
-    <div>
-      💬 <b>Facebook:</b><br/>
-
-      <a
-        href="https://www.facebook.com/noticesbank"
-        target="_blank"
-        rel="noreferrer"
-        style={{
-          color:"#2563eb"
-        }}
-      >
-        Current Quiz Nepal
-      </a>
-
-    </div>
-
-    <br/>
-
-    <div>
-      📞 <b>Phone:</b><br/>
-
-      <a
-        href="tel:+9779768997522"
-        style={{
-          color:"#2563eb"
-        }}
-      >
-        +977 9768997522
-      </a>
-
-    </div>
-
-    <br/>
-
-   <div>
-  📱 <b>Support:</b><br/>
-
-  <a
-    href="https://wa.me/9779768997522"
-    target="_blank"
-    rel="noreferrer"
-    style={{
-      color:"#2563eb"
-    }}
-  >
-    Chat on WhatsApp
-  </a>
-
-</div>
-</div>
-)}
-      {modal==="rules" && (
-  <div
-    style={{
-      marginTop:"14px",
-  lineHeight:"1.9",
-  fontSize:"15px",
-  color:"#111827",
-
-  maxHeight:"60vh",
-  overflowY:"auto",
-  paddingRight:"6px"
-    }}
-  >
-
-    📖 Current Quiz contains important
-    current questions for all public
-    service groups and levels.
-
-    <br/><br/>
-
-    📚 <b>Today:</b><br/>
-    New questions are added daily after 8 PM
-    and stay for 24 hours.
-
-    <br/><br/>
-
-    📅 <b>This Week:</b><br/>
-    Weekly questions remain until
-    Saturday 7 PM.
-
-    <br/><br/>
-
-    🗓 <b>This Month:</b><br/>
-    Weekly questions move here every
-    Saturday after 6 PM.
-
-    <br/><br/>
-
-    🏆 <b>Weekly Challenge:</b><br/>
-    Winners may receive prizes.
-    Available only in the This Week group.
-
-    <br/><br/>
-
-    📢 More updates and rules will be
-shared on
-
-<a
-  href="https://www.facebook.com/noticesbank"
-  target="_blank"
-  rel="noreferrer"
-  style={{
-    color:"#2563eb",
-    fontWeight:"bold",
-    textDecoration:"none"
-  }}
->
-  Facebook
-</a>
-
-every Saturday.
-
-    <br/><br/>
-
-    🎯 Play fairly and enjoy learning!
-
-  </div>
-)}
-      {modal==="feedback" && (
-  <div
-    style={{
-      marginTop:"14px",
-      lineHeight:"2",
-      fontSize:"15px",
-
-      maxHeight:"60vh",
-      overflowY:"auto",
-      paddingRight:"6px"
-    }}
-  >
-
-    💬 Send your feedback, suggestions,
-    or report problems using the options below.
-
-    <br/><br/>
-
-    📱 <b>WhatsApp:</b><br/>
-
-    <a
-      href="https://wa.me/9779768997522"
-      target="_blank"
-      rel="noreferrer"
-      style={{
-        color:"#2563eb",
-        fontWeight:"bold",
-        textDecoration:"none"
-      }}
-    >
-      Send on WhatsApp
-    </a>
-
-    <br/><br/>
-
-    💬 <b>Messenger:</b><br/>
-
-    <a
-      href="https://m.me/noticesbank"
-      target="_blank"
-      rel="noreferrer"
-      style={{
-        color:"#2563eb",
-        fontWeight:"bold",
-        textDecoration:"none"
-      }}
-    >
-      Send on Messenger
-    </a>
-
-    <br/><br/>
-
-    📧 <b>Email:</b><br/>
-
-    <a
-      href="mailto:currentquiz@gmail.com"
-      style={{
-        color:"#2563eb",
-        fontWeight:"bold",
-        textDecoration:"none"
-      }}
-    >
-      currentquiz@gmail.com
-    </a>
-
-    <br/><br/>
-
-    ❤️ Thank you for supporting
-    Current Quiz!
-
-  </div>
-)}
-      {modal==="password" && (
-  <div>
-    <input
-      type="password"
-      placeholder="Enter password"
-      value={enteredPassword}
-      onChange={(e)=>setEnteredPassword(e.target.value)}
-      style={{
-  width:"100%",
-  maxWidth:"300px",
-  padding:"10px",
-  marginTop:"10px",
-  marginLeft:"auto",
-  marginRight:"auto",
-  display:"block"
-}}
-    />
-
-    <button
-      onClick={()=>{
-        if(enteredPassword==="6420"){
-          setModal(null);
-          setEditorOpen(true);
-          setEnteredPassword("");
-        } else {
-          alert("Wrong password");
-        }
-      }}
-      style={{marginTop:"10px"}}
-    >
-      Unlock
-    </button>
-  </div>
-)}
-
-    </div>
-  </div>
-)}
-
-{/* overall leaderboard */}
-{showOverall && (
-  <div
-onClick={()=>{
-setShowOverall(false);
-setSearchPlayer("");
-setShowSearch(false);
-setSelectedPlayer(null);
-}}
-    style={{
-      position:"fixed",
-      top:0,
-      left:0,
-      width:"100%",
-      height:"100%",
-      background:"rgba(0,0,0,0.55)",
-      zIndex:999999,
-      display:"flex",
-      alignItems:"flex-end",
-      justifyContent:"flex-start"
-    }}
-  >
-
-    <div
-     onClick={(e) => e.stopPropagation()}
-      style={{
-        background:"#0f172a",
-        color:"white",
-        backdropFilter:"blur(16px)",
-        border:"1px solid rgba(255,255,255,0.08)",
-        boxShadow:"0 10px 35px rgba(0,0,0,0.45)",
-        width:"65%",
-        maxWidth:"430px",
-        height:"75%",
-        overflowY:"auto",
-        borderTopLeftRadius:"20px",
-        borderTopRightRadius:"20px",
-        padding:"15px",
-        marginBottom:"65px",
-      }}
-    >
-
-      {/* HEADER */}
-      <div
-        style={{
-          position:"sticky",
-          top:0,
-          zIndex:10,
-          background:"#0f172a",
-          backdropFilter:"blur(10px)",
-          borderBottom:"1px solid rgba(255,255,255,0.08)",
-          paddingBottom:"10px",
-          display:"flex",
-          justifyContent:"space-between",
-          alignItems:"center",
-          marginBottom:"15px"
-        }}
-      >
-
-        <h3
-          style={{
-            margin:0,
-            fontSize:"20px"
-          }}
-        >
-          🏆 Overall
-        </h3>
-<div
-  style={{
-    display:"flex",
-    alignItems:"center",
-    gap:"6px"
-  }}
->
-  <input
-    placeholder="🔍"
-    maxLength={12}
-    value={searchPlayer}
-    onChange={(e)=> setSearchPlayer(e.target.value)}
-    onFocus={()=> setShowSearch(true)}
-    onBlur={()=>{
-      if(!searchPlayer){
-        setShowSearch(false);
-      }
-    }}
-
-    style={{
-      background:"rgba(255,255,255,0.08)",
-      color:"white",
-      border:"1px solid rgba(255,255,255,0.08)",
-      width:"70px",
-     opacity: showSearch ? 1 : 0.7,
-      padding:"2px 4px",
-      fontSize:"11px",
-      borderRadius:"8px",
-      outline:"none",
-      transition:"0.25s"
-    }}
+<Suspense fallback={null}>
+
+  <OverallLeaderboard
+    showOverall={showOverall}
+    setShowOverall={setShowOverall}
+    searchPlayer={searchPlayer}
+    setSearchPlayer={setSearchPlayer}
+    showSearch={showSearch}
+    setShowSearch={setShowSearch}
+    selectedPlayer={selectedPlayer}
+    setSelectedPlayer={setSelectedPlayer}
+    overallLeaders={overallLeaders}
   />
-</div>
-        <button
-         onClick={() => {
-         setShowOverall(false);
-         setSearchPlayer("");
-         setShowSearch(false);
-         setSelectedPlayer(null);
-        }}
-          style={{
-              background:"rgba(255,255,255,0.08)",
-              color:"white",
-              border:"none",
-              width:"28px",
-              height:"28px",
-              fontSize:"12px",
-              borderRadius:"8px",
-              cursor:"pointer",
-               padding:0
-          }}
-        >
-          ❌
-        </button>
 
-      </div>
+</Suspense>
 
-{/* TOP 20 */}
-      {overallLeaders
+  <Suspense fallback={null}>
 
-  .filter(p=>
-    p.playerName
-      ?.toLowerCase()
-      .includes(
-        searchPlayer
-          .toLowerCase()
-      )
-  )
-  .slice(0,20)
-  .map((p,i)=>(
-    <React.Fragment key={p.playerId}>
-    
-    <div
-
-  onClick={() => {
-
-  if(selectedPlayer?.playerId === p.playerId){
-
-    setSelectedPlayer(null);
-
-  } else {
-
-    setSelectedPlayer(p);
-
-  }
-
-}}
-  style={{
-  display:"grid",
-  gridTemplateColumns:"35px 1fr fit-content(70px)",
-  gap:"6px",
-  alignItems:"center",
-  padding:"7px 10px",
-  marginBottom:"8px",
-  borderRadius:"12px",
-
-  position:"relative",
-  zIndex:20,
-  cursor:"pointer",
-
- background:"rgba(255,255,255,0.06)",
-color:"white",
-}}
-        >
-
-          {/* RANK */}
-          <div
-            style={{
-            fontWeight:"bold",
-            fontSize:"12px"
-            }}
-          >
-            #{i+1}
-          </div>
-
-          {/* NAME */}
-          <div
-
-  style={{
-    overflow:"hidden",
-    textOverflow:"ellipsis",
-    whiteSpace:"nowrap",
-    fontSize:"12px",
-    fontWeight:"600",
-    minWidth:0
-  }}
->
-  {p.playerName}
-</div>
-
-    {/* SCORE */}
-         <div
-            style={{
-              textAlign:"right",
-              fontWeight:"bold",
-              fontSize:"12px",
-              whiteSpace:"nowrap",
-            }}
-          >
-            ⭐ {p.totalScore}
-          </div>
-          </div>
-        {selectedPlayer?.playerId === p.playerId && (
-
-          <div
-           onClick={() => setSelectedPlayer(null)}
-           style={{
-             position:"sticky",
-             top:"35%",
-             left:"50%",
-             transform:"translate(-50%,-50%)",
-             width:"55%",
-             zIndex:9999,
-             background:"#0f172a",
-             border:"2px solid #60a5fa",
-             borderRadius:"12px",
-             padding:"10px",
-             maxHeight:"180px",
-             overflowY:"auto",
-             boxShadow:"0 10px 25px rgba(0,0,0,0.35)"
-        }}
-          >
-<div
-  style={{
-    fontWeight:"bold",
-    fontSize:"13px",
-    marginBottom:"8px",
-    textAlign:"center",
-    color:"#93c5fd"
-  }}
->
-  👤 {selectedPlayer.playerName}
-</div>
-            {Object.entries( selectedPlayer.categories
-            ).map(([cat,score]) => (
-
-              <div
-                key={cat}
-                style={{
-                  display:"flex",
-                  justifyContent:"space-between",
-                  padding:"4px 0",
-                  fontSize:"12px"
-                }}
-              >
-                <span>{cat}</span>
-
-                <span>⭐ {score}</span>
-
-              </div>
-
-            ))}
-
-          </div>
-
-        )}
-      </React.Fragment>
-      ))}
-
-      {/* CURRENT PLAYER */}
-      {(() => {
-
-        const currentPlayerId =
-          localStorage.getItem(
-            "playerId"
-          );
-
-        const myRank =
-          overallLeaders.findIndex(
-            p =>
-              p.playerId ===
-              currentPlayerId
-          );
-
-        if(
-          myRank < 0 ||
-          myRank < 10
-        ) return null;
-
-        const me =
-          overallLeaders[myRank];
-
-        return (
-
-          <div
-            style={{
-              marginTop:"18px"
-            }}
-          >
-
-            <div
-              style={{
-                fontSize:"12px",
-                opacity:0.75,
-                marginBottom:"8px"
-              }}
-            >
-              Your Rank
-            </div>
-
-            <div
-              style={{
-                display:"grid",
-                gridTemplateColumns:"35px 1fr fit-content(70px)",
-                gap:"8px",
-                alignItems:"center",
-                padding:"7px 10px",
-                borderRadius:"12px",
-                background:"rgba(34,197,94,0.18)",
-                border:"1px solid rgba(34,197,94,0.35)"
-              }}
-            >
-
-              <div
-                style={{
-                  fontWeight:"bold"
-                }}
-              >
-                #{myRank + 1}
-              </div>
-
-              <div
-                style={{
-                  overflow:"hidden",
-                  textOverflow:"ellipsis",
-                  whiteSpace:"nowrap",
-                  fontWeight:"600"
-                }}
-              >
-                You
-              </div>
-
-              <div
-                style={{
-                  textAlign:"right",
-                  fontWeight:"bold"
-                }}
-              >
-                ⭐ {me.totalScore}
-              </div>
-
-            </div>
-
-          </div>
-
-        );
-
-      })()}
-
-    </div>
-
-  </div>
-
-)}
-
-{showNameModal && (
-
-  <div
-    style={{
-      position:"fixed",
-      top:0,
-      left:0,
-      width:"100%",
-      height:"100%",
-      background:"rgba(0,0,0,0.7)",
-      zIndex:999999,
-      display:"flex",
-      alignItems:"center",
-      justifyContent:"center"
-    }}
-  >
-
-<div
-  style={{
-    background:"white",
-    color:"black",
-    padding:"20px",
-    borderRadius:"12px",
-    width:"90%",
-    maxWidth:"320px",
-    textAlign:"center"
-  }}
->
-
-  <h3>
-    {isRenameMode ? "Edit Your Name" : "Enter Your Name"}
-  </h3>
-
- {!isRenameMode && ( 
-  <div style={{ 
-    fontSize:"13px",
-    opacity:0.7,
-    marginBottom:"10px"
-  }}
-    > Auto name in {nameTimer} seconds... 
-    </div> 
-  )}
-
-  <input
-    maxLength={12}
-    value={nameInput}
-    onChange={(e)=>
-      setNameInput(e.target.value)
-    }
-    placeholder="Your nickname"
-    style={{
-      width:"100%", boxSizing:"border-box", padding:"10px", marginBottom:"12px"
-    }}
+  <EditorModal
+    editorOpen={editorOpen}
+    setEditorOpen={setEditorOpen}
+    week={week}
+    setWeek={setWeek}
+    defaultGroups={defaultGroups}
+    questions={questions}
+    updateQ={updateQ}
+    deleteQuestion={deleteQuestion}
+    addQuestion={addQuestion}
+    saveSingleCategory={saveSingleCategory}
+    data={data}
+    setData={setData}
+    moveQuestions={moveQuestions}
+    savedMsg={savedMsg}
+    setSavedMsg={setSavedMsg}
+    setScreen={setScreen}
   />
-<div style={{
 
-  display:"flex",
+</Suspense>
 
-  gap:"10px",
+ <AppModal
+  modal={modal}
+  setModal={setModal}
+  enteredPassword={enteredPassword}
+  setEnteredPassword={setEnteredPassword}
+  setEditorOpen={setEditorOpen}
+/>
 
-  justifyContent:"center",
+<NameModal
+  showNameModal={showNameModal}
+  isRenameMode={isRenameMode}
+  nameTimer={nameTimer}
+  nameInput={nameInput}
+  setNameInput={setNameInput}
+  renamePlayer={renamePlayer}
+  updatePlayerScores={updatePlayerScores}
+  createPlayer={createPlayer}
+  setPlayerName={setPlayerName}
+  setIsRenameMode={setIsRenameMode}
+  setShowNameModal={setShowNameModal}
+/>
 
-  marginTop:"10px"
-}}>
-
-  <button
-    onClick={async ()=>{
-
-      if(!nameInput.trim()) return;
-
-      // rename existing player
-      if(isRenameMode){
-
-        await renamePlayer(
-  nameInput.trim().slice(0,12)
-);
-        updatePlayerScores(
-  nameInput.trim().slice(0,12)
-);
-        setPlayerName(
-  nameInput.trim().slice(0,12)
-);
-
-        setIsRenameMode(false);
-
-        setShowNameModal(false);
-
-        return;
-      }
-
-      // create new player
-      await createPlayer(
-  nameInput.trim().slice(0,12)
-);
-
-      setPlayerName(
-        nameInput.trim().slice(0,12)
-      );
-
-      setShowNameModal(false);
-    }}
-
-    style={{
-      background:"#2563eb",
-      color:"white",
-      border:"none",
-      padding:"10px 16px",
-      borderRadius:"8px",
-      cursor:"pointer"
-    }}
-  >
-    Continue
-  </button>
-
-  <button
-    onClick={()=>{
-
-      setShowNameModal(false);
-
-      setIsRenameMode(false);
-    }}
-
-    style={{
-      background:"transparent",
-      border:"1px solid #999",
-      color:"black",
-      padding:"10px 16px",
-      borderRadius:"8px",
-      cursor:"pointer"
-    }}
-  >
-    Cancel
-  </button>
-
-</div>
-
-</div>
-
-  </div>
-
-)}
-   {/* footer (bottom bar) */}
-<div style={{
-  position: "fixed",
-  bottom: 0,
-  left: 0,
-  width: "100%",
-  background: "rgba(0,0,0,0.5)",
-backdropFilter: "blur(10px)",
-WebkitBackdropFilter: "blur(10px)",
-borderTop: "1px solid rgba(255,255,255,0.2)",
-  padding: "10px 12px",
-  fontSize: "clamp(12px,3.5vw,16px)",
-  zIndex: 1000
-}}>
-
-  {/* CENTER VIDEO */}
-  <div style={{
-    position: "absolute",
-    left: "50%",
-    transform: "translateX(-50%)",
-     bottom: "10px"
-       }}>
-    <span
-  onClick={()=>{
-    window.open(
-      "https://www.youtube.com/@niza.education",
-      "_blank",
-      "noopener,noreferrer"
-    );
-  }}
-  style={{cursor:"pointer"}}
->
-  🎥 Video
-</span>
-  </div>
-
-  {/* LEFT UPDATE */}
-  <div
-  style={{
-    fontSize:"12px",
-    opacity:0.8
-  }}
->
-  Update: {lastUpdate}
-</div>
-
-  {/* INVITE */}
-<div style={{
-  position: "absolute",
-  right: "25%",
-  transform: "translateX(50%)" ,
-   bottom: "10px",
-    display: "flex",
-    gap: "12px"
-}}>
-  <span onClick={handleInvite} style={{cursor:"pointer"}}>
-    Invite
-  </span>
-</div>
-
-{/* SHARE (right edge) */}
-<div style={{
-   position: "absolute",
-   right: "0%",
-   bottom: "10px",
-  display: "flex",
-  gap: "12px"
-}}>
-  <span onClick={handleShare} style={{cursor:"pointer"}}>
-    Share
-  </span>
-</div>
-
-</div>
+<Footer
+  lastUpdate={lastUpdate}
+  handleInvite={handleInvite}
+  handleShare={handleShare}
+/>
 <Analytics />
 <SpeedInsights />
 </div>
