@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://current-quiz.vercel.app/sitemap.xml
