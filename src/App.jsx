@@ -724,65 +724,52 @@ const finalRank =
     setTotalTimeUsed(0);
     setScreen("playing");
   }
-async function setupPlayer(){
+function setupPlayer(){
 
-  // already exists
-  const existingPlayer =
-    await loadPlayer();
+  // पहिले localStorage मा player छ कि छैन हेर्ने
+  const playerId =
+    localStorage.getItem("playerId");
 
-  if(existingPlayer){
+  const savedName =
+    localStorage.getItem("playerName");
 
-    setPlayerName(
-      existingPlayer.name
+  const savedAvatar =
+    localStorage.getItem("playerAvatar");
+
+
+  // पुरानो player भए
+  if(playerId && savedName){
+
+    setPlayerName(savedName);
+
+    setPlayerAvatar(
+      savedAvatar || "👨‍💻"
     );
 
     return;
   }
 
-  // Facebook name
-  if(
-    typeof window !== "undefined" &&
-    window.FBInstant &&
-    window.FBInstant.player
-  ){
 
-    const fbName =
-      window.FBInstant.player.getName();
+  // नयाँ player भए
+  const newPlayer =
+    generateAutoName();
 
-    if(fbName){
 
-      await createPlayer(fbName);
+  const player =
+    createPlayer(
+      newPlayer.name,
+      newPlayer.avatar
+    );
 
-      setPlayerName(fbName);
 
-      return;
-    }
-  }
+  // तुरुन्त देखाउने
+  setPlayerName(
+    player.name
+  );
 
-  // no FB name
-  setShowNameModal(true);
-
-  // auto create after 30 sec
-  setTimeout(async ()=>{
-
-const autoPlayer =
-  generateAutoName();
-
-await createPlayer(
-  autoPlayer.name
-);
-
-setPlayerName(
-  autoPlayer.name
-);
-
-setPlayerAvatar(
-  autoPlayer.avatar
-);
-
-    setShowNameModal(false);
-
-  },30000);
+  setPlayerAvatar(
+    player.avatar
+  );
 }
 function handleSelect(group){
   start(group);
@@ -963,9 +950,38 @@ useEffect(()=>{
   loadTopScores(week)
     .then(setTopScores);
 },[screen, week]);
+useEffect(() => {
 
-useEffect(()=>{ async function loadUsers(){ const snap = await getDocs( collection(db,"players") );
-setUsers( snap.size * 50 ); } loadUsers(); },[]);
+  async function loadUsers() {
+
+    try {
+
+      const snap = await getDoc(
+        doc(db, "system", "stats")
+      );
+
+      if (snap.exists()) {
+
+        setUsers(
+          (snap.data().playerCount || 0) * 50
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "User count load error:",
+        error
+      );
+
+    }
+
+  }
+
+  loadUsers();
+
+}, []);
 
 useEffect(()=>{
 
