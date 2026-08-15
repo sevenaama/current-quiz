@@ -2,19 +2,21 @@
 
   0%{
     box-shadow:
-      0 0 10px rgba(124,58,237,0.5);
+      0 0 8px rgba(59,130,246,0.20);
   }
 
   50%{
     box-shadow:
-      0 0 28px rgba(37,99,235,0.9);
+      0 0 18px rgba(37,99,235,0.45);
   }
 
   100%{
     box-shadow:
-      0 0 10px rgba(124,58,237,0.5);
+      0 0 8px rgba(59,130,246,0.20);
   }
 }
+
+
 /* 🔽 SPLASH SCREEN ANIMATION */
 
 @keyframes logoPop{
@@ -35,6 +37,7 @@
 
 }
 
+
 @keyframes titleFade{
 
   0%{
@@ -48,6 +51,8 @@
   }
 
 }
+
+
 /* 🔽 START BUTTON */
 
 @keyframes startPulse{
@@ -55,42 +60,53 @@
   0%{
     transform:scale(1);
     box-shadow:
-      0 0 12px rgba(37,99,235,0.5);
+      0 0 8px rgba(37,99,235,0.20);
   }
 
   50%{
-    transform:scale(1.08);
+    transform:scale(1.05);
     box-shadow:
-      0 0 28px rgba(6,182,212,0.95);
+      0 0 18px rgba(20,184,166,0.45);
   }
 
   100%{
     transform:scale(1);
     box-shadow:
-      0 0 12px rgba(37,99,235,0.5);
+      0 0 8px rgba(37,99,235,0.20);
   }
 
 }
+
+
 html, body, #root{
- margin: 0;
-  padding: 0;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  touch-action: manipulation; }
-  * {
-  box-sizing: border-box;
+  margin:0;
+  padding:0;
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+  touch-action:manipulation;
 }
+
+
+* {
+  box-sizing:border-box;
+}
+
+
 @keyframes resultFade{
+
   from{
     opacity:0;
     transform:translateY(18px);
   }
+
   to{
     opacity:1;
     transform:translateY(0);
   }
+
 }
+
 
 @keyframes popCard{
 
@@ -99,7 +115,7 @@ html, body, #root{
     opacity:0.7;
 
     box-shadow:
-      0 0 8px rgba(124,58,237,0.35);
+      0 0 6px rgba(59,130,246,0.15);
   }
 
   50%{
@@ -107,7 +123,7 @@ html, body, #root{
     opacity:1;
 
     box-shadow:
-      0 0 24px rgba(37,99,235,0.9);
+      0 0 16px rgba(37,99,235,0.35);
   }
 
   100%{
@@ -115,10 +131,12 @@ html, body, #root{
     opacity:1;
 
     box-shadow:
-      0 0 8px rgba(124,58,237,0.35);
+      0 0 6px rgba(59,130,246,0.15);
   }
 
 }
+
+
 @keyframes shareBlink{
 
   0%{
@@ -127,16 +145,16 @@ html, body, #root{
       scale(1);
 
     box-shadow:
-      0 0 10px rgba(124,58,237,0.5);
+      0 0 8px rgba(59,130,246,0.20);
   }
 
   50%{
     transform:
       translateX(-50%)
-      scale(1.08);
+      scale(1.05);
 
     box-shadow:
-      0 0 28px rgba(37,99,235,0.95);
+      0 0 18px rgba(37,99,235,0.45);
   }
 
   100%{
@@ -145,7 +163,7 @@ html, body, #root{
       scale(1);
 
     box-shadow:
-      0 0 10px rgba(124,58,237,0.5);
+      0 0 8px rgba(59,130,246,0.20);
   }
 
 }

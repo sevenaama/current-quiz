@@ -33,12 +33,12 @@ flexDirection: "column",
     flexShrink:0
     }}>
       {/* MONTH */}
-      <div 
+      <div
         className="dropdown-btn"
        onClick={(e)=>{
     e.stopPropagation();setOpenCategory(openCategory==="month" ? null : "month");}}
         style={{
-          background:"#7c3aed",
+          background:"#4338ca",
           padding:"8px 12px",
           borderRadius:"6px",
           cursor:"pointer"
@@ -53,7 +53,7 @@ flexDirection: "column",
         onClick={(e)=>{
     e.stopPropagation();setOpenCategory(openCategory==="event" ? null : "event");}}
         style={{
-          background:"#dc2626",
+          background:"#9f1239",
           padding:"8px 12px",
           borderRadius:"6px",
           cursor:"pointer"
@@ -68,7 +68,7 @@ flexDirection: "column",
        onClick={(e)=>{
     e.stopPropagation();setOpenCategory(openCategory==="other" ? null : "other");}}
         style={{
-          background:"#16a34a",
+          background:"#047857",
           padding:"8px 12px",
           borderRadius:"6px",
           cursor:"pointer"
@@ -93,53 +93,53 @@ flexDirection: "column",
     flexDirection:"column",
     gap:"6px",
     padding:"5px",
-    background:"#1e40af",
+    background:"#4338ca",
     borderRadius:"8px",
      cursor:"pointer",
     zIndex:999
       }}>
         {monthGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
-            style={{background:"#a78bfa",padding:"10px",borderRadius:"6px"}}>
+            style={{background:"#4f46e5",padding:"10px",borderRadius:"6px"}}>
             {m}
           </div>
         ))}
       </div>
     )}
 
-  {/* 🔴 EVENT */}
-{openCategory==="event" && (
-  <div
-     className="dropdown"
-    style={{
-      position:"absolute",
-      top:"50px",
-      left:"0",
-      width:"115px",
-      maxHeight:"70vh",
-      overflowY:"auto",
-      display:"flex",
-      flexDirection:"column",
-      gap:"6px",
-      padding:"5px",
-      background:"#1e40af",
-      borderRadius:"8px",
-       cursor:"pointer",
-      zIndex:999
-    }}
-  >
-    {eventGroups.map(m=>(
-      <div key={m} onClick={()=>handleSelect(m)}
-        style={{background:"#f87171",padding:"10px",borderRadius:"6px"}}>
-        {m}
+    {/* 🔴 EVENT */}
+    {openCategory==="event" && (
+      <div
+         className="dropdown"
+        style={{
+          position:"absolute",
+          top:"50px",
+          left:"0",
+          width:"115px",
+          maxHeight:"70vh",
+          overflowY:"auto",
+          display:"flex",
+          flexDirection:"column",
+          gap:"6px",
+          padding:"5px",
+          background:"#1e40af",
+          borderRadius:"8px",
+           cursor:"pointer",
+          zIndex:999
+        }}
+      >
+        {eventGroups.map(m=>(
+          <div key={m} onClick={()=>handleSelect(m)}
+            style={{background:"#be123c",padding:"10px",borderRadius:"6px"}}>
+            {m}
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-)}
+    )}
 
     {/* 🟢 OTHER */}
     {openCategory==="other" && (
-     <div 
+     <div
          className="dropdown"
        style={{
     position:"absolute",
@@ -159,7 +159,7 @@ flexDirection: "column",
       }}>
         {otherGroups.map(m=>(
           <div key={m} onClick={()=>handleSelect(m)}
-            style={{background:"#4ade80",padding:"10px",borderRadius:"6px"}}>
+            style={{background:"#059669",padding:"10px",borderRadius:"6px"}}>
             {m}
           </div>
         ))}
@@ -167,30 +167,30 @@ flexDirection: "column",
     )}
 
     {/* 🟦 MAIN BUTTONS (FIXED POSITION) */}
-  <div style={{
-  display:"grid",
-  gridTemplateRows:"repeat(4, 1fr)",
-  gap:"10px",
-  flex: 1
+    <div style={{
+      display:"grid",
+      gridTemplateRows:"repeat(4, 1fr)",
+      gap:"10px",
+      flex: 1
     }}>
       {mainGroups.map(m=>(
         <div key={m}
           onClick={()=>start(m)}
-         style={{
-  background:"#2563eb",
-  textAlign:"center",
-  borderRadius:"14px",
-  fontWeight:"bold",
-  cursor:"pointer",
-  boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
-  width:"100%",
-  height:"100%",
-  display:"flex",
-  alignItems:"center",
-  justifyContent:"center",
-  fontSize:"clamp(18px, 5vw, 22px)",
-  maxWidth:"none"
-         }}>
+          style={{
+            background:"linear-gradient(135deg, #7c3aed, #2563eb)",
+            textAlign:"center",
+            borderRadius:"14px",
+            fontWeight:"bold",
+            cursor:"pointer",
+            boxShadow:"0 4px 10px rgba(0,0,0,0.3)",
+            width:"100%",
+            height:"100%",
+            display:"flex",
+            alignItems:"center",
+            justifyContent:"center",
+            fontSize:"clamp(18px, 5vw, 22px)",
+            maxWidth:"none"
+          }}>
           {m}
         </div>
       ))}
@@ -198,4 +198,3 @@ flexDirection: "column",
   </div>
   );
 }
-  

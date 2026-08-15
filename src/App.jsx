@@ -489,6 +489,7 @@ async function loadOverallLeaderboard(){
   const [showSharePopup,setShowSharePopup] = useState(false);
   const [lastUpdate, setLastUpdate] = useState("-");
   const [openCategory, setOpenCategory] = useState(null);
+  const [openLevelCategory, setOpenLevelCategory] = useState(null);
   const [week, setWeek] = useState("Today");
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -547,7 +548,7 @@ const eventGroups = ["पुरस्कार","चालु बजेट","स
     defaultGroups.includes(category)
   ){
 
-    start(category);
+    handleSelect(category);
 
   }
 
@@ -687,8 +688,26 @@ Can you beat me? 😎`,
   const emptyQ = { q:{en:""}, options:["","","",""], a:"" };
 
  const [data, setData] = useState({});
+const [activeLevelQuestions, setActiveLevelQuestions] = useState(null);
+const [selectedLevel, setSelectedLevel] = useState(null);
 
-const questions = data[week] || [];
+function createLevels(list, size = 10) {
+  const levels = [];
+
+  for (let i = 0; i < list.length; i += size) {
+    levels.push({
+      level: levels.length + 1,
+      questions: list.slice(i, i + size)
+    });
+  }
+
+  return levels;
+}
+
+const questions =
+  screen === "playing" && activeLevelQuestions
+    ? activeLevelQuestions
+    : (data[week] || []);
 const currentPlayerId =
  localStorage.getItem("playerId");
 
@@ -706,24 +725,34 @@ const finalRank =
     ? playerRank
 
     : "--";
-    
-  async function start(w){
-    const loadedQuestions =
+    async function start(w){
+  const loadedQuestions =
     await loadSingleCategory(w);
 
   setData(prev => ({
     ...prev,
     [w]: loadedQuestions
   }));
-    setWeek(w);
-    setIndex(0);
-    setScore(0);
-    setAttempted(0);
-    setSelected(null);
-    setTime(15);
-    setTotalTimeUsed(0);
-    setScreen("playing");
-  }
+
+  const firstLevelQuestions =
+    loadedQuestions.slice(0, 10);
+
+  setActiveLevelQuestions(firstLevelQuestions);
+
+  setSelectedLevel(
+    firstLevelQuestions.length > 0 ? 1 : null
+  );
+
+  setWeek(w);
+  setIndex(0);
+  setScore(0);
+  setAttempted(0);
+  setSelected(null);
+  setTime(15);
+  setTotalTimeUsed(0);
+
+  setScreen("playing");
+}
 function setupPlayer(){
 
   // पहिले localStorage मा player छ कि छैन हेर्ने
@@ -772,8 +801,45 @@ function setupPlayer(){
   );
 }
 function handleSelect(group){
-  start(group);
   setOpenCategory(null);
+
+  loadSingleCategory(group).then(loadedQuestions => {
+
+    setData(prev => ({
+      ...prev,
+      [group]: loadedQuestions
+    }));
+
+    const firstLevelQuestions =
+      loadedQuestions.slice(0, 10);
+
+    setActiveLevelQuestions(firstLevelQuestions);
+
+    setSelectedLevel(
+      firstLevelQuestions.length > 0 ? 1 : null
+    );
+
+    setWeek(group);
+    setIndex(0);
+    setScore(0);
+    setAttempted(0);
+    setSelected(null);
+    setTime(15);
+    setTotalTimeUsed(0);
+
+    setScreen("playing");
+  });
+}
+function startLevel(level){
+  setActiveLevelQuestions(level.questions);
+  setSelectedLevel(level.level);
+  setIndex(0);
+  setScore(0);
+  setAttempted(0);
+  setSelected(null);
+  setTime(15);
+  setTotalTimeUsed(0);
+  setScreen("playing");
 }
   function next(){
   warningSound.pause();
@@ -1078,6 +1144,11 @@ if(showSplash){
   mainGroups={mainGroups}
   handleSelect={handleSelect}
   start={start}
+  data={data}
+  createLevels={createLevels}
+  openLevelCategory={openLevelCategory}
+  setOpenLevelCategory={setOpenLevelCategory}
+  startLevel={startLevel}
 />
 
 <PlayingScreen
@@ -1090,6 +1161,9 @@ if(showSplash){
   answer={answer}
   setScreen={setScreen}
   next={next}
+ levels={createLevels(data[week] || [], 10)}
+  selectedLevel={selectedLevel}
+  startLevel={startLevel}
 />
 
 <Suspense fallback={null}>
