@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <url>
     <loc>https://current-quiz.vercel.app/</loc>
   </url>
+
+  <url>
+    <loc>https://current-quiz.vercel.app/current-quiz/</loc>
+  </url>
+
+  <url>
+    <loc>https://current-quiz.vercel.app/current-affairs/</loc>
+  </url>
+
+  <url>
+    <loc>https://current-quiz.vercel.app/online-quiz/</loc>
+  </url>
+
+  <url>
+    <loc>https://current-quiz.vercel.app/gk-quiz/</loc>
+  </url>
+
+  <url>
+    <loc>https://current-quiz.vercel.app/loksewa-quiz/</loc>
+  </url>
+
+  <url>
+    <loc>https://current-quiz.vercel.app/today-quiz/</loc>
+  </url>
+
 </urlset>
