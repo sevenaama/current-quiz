@@ -30,7 +30,7 @@ export default function ResultScreen({
     justifyContent: "flex-start",
     textAlign: "center",
     width: "100%",
-    padding: "clamp(16px, 4vw, 24px)",
+    padding: "clamp(12px, 4vw, 24px)",
     paddingTop: "20px",
     paddingBottom: "80px",
     overflowX:"hidden",
@@ -48,7 +48,7 @@ export default function ResultScreen({
 
   backdropFilter:"blur(8px)",
 
-  padding:"6px 8px",
+  padding:"7px 9px",
 
   borderRadius:"10px",
 
@@ -63,18 +63,19 @@ export default function ResultScreen({
 }}>
 
   <div style={{
-    fontSize:"10px",
+    fontSize:"clamp(10px, 2.8vw, 12px)",
     opacity:0.8,
     marginBottom:"2px",
     whiteSpace:"nowrap"
   }}>
     📂 {week}
   </div>
-<div style={{
+
+  <div style={{
     marginTop:"2px",
     color:"#facc15",
     fontWeight:"bold",
-    fontSize:"10px",
+    fontSize:"clamp(10px, 2.8vw, 12px)",
     whiteSpace:"nowrap"
   }}>
     🏆 #{finalRank}
@@ -82,27 +83,28 @@ export default function ResultScreen({
 
   <div style={{
     fontWeight:"bold",
-    fontSize:"12px",
+    fontSize:"clamp(11px, 3vw, 13px)",
     whiteSpace:"nowrap"
   }}>
     ⭐ {score}/{questions.length}
   </div>
 
   <div style={{
-  marginTop:"2px",
-  fontSize:"10px",
-  opacity:0.85,
-  whiteSpace:"nowrap"
-}}>
-  ⏱ {totalTimeUsed}s
-</div>
+    marginTop:"2px",
+    fontSize:"clamp(10px, 2.8vw, 12px)",
+    opacity:0.85,
+    whiteSpace:"nowrap"
+  }}>
+    ⏱ {totalTimeUsed}s
+  </div>
 
 </div>
+
 
     {/* 🧠 Performance Message */}
     <div style={{
-      fontSize: "clamp(15px, 4vw, 18px)",
-      marginBottom: "12px"
+      fontSize:"clamp(17px, 4.5vw, 21px)",
+      marginBottom:"14px"
     }}>
       {score === questions.length
         ? "Perfect 🎯"
@@ -113,21 +115,22 @@ export default function ResultScreen({
         : "Try Again 😅"}
     </div>
 
+
     {/* 📋 Stats Grid */}
     <div style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: "6px",
-      width: "100%",
-      maxWidth: "240px",
-      fontSize: "13px",
-      marginBottom: "16px"
+      display:"grid",
+      gridTemplateColumns:"1fr 1fr",
+      gap:"7px",
+      width:"100%",
+      maxWidth:"360px",
+      fontSize:"14px",
+      marginBottom:"16px"
     }}>
 
       <div style={{
-        background:"#c210b3",
-        padding:"6px",
-        borderRadius:"6px"
+        background:"#334155",
+        padding:"8px",
+        borderRadius:"7px"
       }}>
         <div style={{opacity:0.7}}>Total</div>
         <div style={{fontWeight:"bold"}}>
@@ -136,9 +139,9 @@ export default function ResultScreen({
       </div>
 
       <div style={{
-        background:"#0b2bdd",
-        padding:"6px",
-        borderRadius:"6px"
+        background:"#1e40af",
+        padding:"8px",
+        borderRadius:"7px"
       }}>
         <div style={{opacity:0.7}}>Attempted</div>
         <div style={{fontWeight:"bold"}}>
@@ -147,9 +150,9 @@ export default function ResultScreen({
       </div>
 
       <div style={{
-        background:"#11ee62",
-        padding:"6px",
-        borderRadius:"6px"
+        background:"#047857",
+        padding:"8px",
+        borderRadius:"7px"
       }}>
         <div style={{opacity:0.8}}>Right</div>
         <div style={{fontWeight:"bold"}}>
@@ -158,9 +161,9 @@ export default function ResultScreen({
       </div>
 
       <div style={{
-        background:"#dc2626",
-        padding:"6px",
-        borderRadius:"6px"
+        background:"#9f1239",
+        padding:"8px",
+        borderRadius:"7px"
       }}>
         <div style={{opacity:0.8}}>Wrong</div>
         <div style={{fontWeight:"bold"}}>
@@ -170,11 +173,12 @@ export default function ResultScreen({
 
     </div>
 
+
 {/* 🏆 Leaderboard */}
 <div style={{
 
-  width:"75%",
-  maxWidth:"330px",
+  width:"92%",
+  maxWidth:"420px",
 
   overflow:"hidden",
 
@@ -186,7 +190,7 @@ export default function ResultScreen({
 
   borderRadius:"14px",
 
-  padding:"6px",
+  padding:"7px",
 
   backdropFilter:"blur(10px)",
   animation:"popCard 0.45s ease"
@@ -195,7 +199,7 @@ export default function ResultScreen({
   {/* Title */}
   <div style={{
 
-    fontSize:"17px",
+    fontSize:"clamp(17px, 4.5vw, 20px)",
 
     fontWeight:"bold",
 
@@ -206,10 +210,11 @@ export default function ResultScreen({
     🏆 Top Players
   </div>
 
+
   {/* Scroll Area */}
   <div style={{
 
-    height:"165px",
+    height:"180px",
     overflowY:"auto",
     overflowX:"hidden",
     width:"100%",
@@ -228,13 +233,14 @@ export default function ResultScreen({
         style={{
 
           display:"grid",
-          gridTemplateColumns:"38px 1fr 52px 52px",
+         gridTemplateColumns:"40px minmax(0, 1fr) 45px 55px",
           alignItems:"center",
-          minHeight:"36px",
+          minHeight:"38px",
           gap:"4px",
           width:"100%",
           boxSizing:"border-box",
           overflow:"hidden",
+
           background:
             i===0
               ? "rgba(250,204,21,0.18)"
@@ -250,49 +256,53 @@ export default function ResultScreen({
             i===0
               ? "0 0 10px rgba(250,204,21,0.25)"
               : "none",
-          padding:"6px",
+
+          padding:"7px",
           borderRadius:"10px",
-          fontSize:"10px"
+          fontSize:"11px"
         }}
       >
 
         {/* Rank */}
         <div style={{
           fontWeight:"bold",
-          fontSize:"12px"
+          fontSize:"13px"
         }}>
-          {i===0 ? "🥇" :
-           i===1 ? "🥈" :
-           i===2 ? "🥉" :
+          {i===0 ? "🥇1" :
+           i===1 ? "🥈2" :
+           i===2 ? "🥉3" :
            `#${i+1}`}
         </div>
 
+
         {/* Name */}
         <div style={{
-
           overflow:"hidden",
-
           textOverflow:"ellipsis",
-
           whiteSpace:"nowrap"
         }}>
           {p.playerName}
         </div>
 
+
         {/* Score */}
-        <div style={{
-          background:"#2563eb",
-          padding:"3px 6px",
-          borderRadius:"999px",
-          fontSize:"10px",
-          fontWeight:"bold",
-          textAlign:"center"
-        }}> ⭐{p.score}
-        </div>
+<div style={{
+  background:"#2563eb",
+  padding:"4px 8px",
+  borderRadius:"999px",
+  fontSize:"13px",
+  fontWeight:"bold",
+  textAlign:"center",
+  color:"#ffffff",
+  minWidth:"38px"
+}}>
+ {p.correctAnswers}
+</div>
+
 
         {/* Time */}
         <div style={{
-          fontSize:"10px",
+          fontSize:"11px",
           opacity:0.8,
           textAlign:"right"
         }}>
@@ -304,6 +314,7 @@ export default function ResultScreen({
 
   </div>
 
+
   {/* Sticky Current Player */}
   {!topScores
     .slice(0,10)
@@ -312,16 +323,16 @@ export default function ResultScreen({
     <div style={{
 
       display:"grid",
-      gridTemplateColumns:"38px 1fr 52px 52px",
+      gridTemplateColumns:"40px 1fr 56px 58px",
       alignItems:"center",
       gap:"4px",
       marginTop:"8px",
       width:"100%",
       boxSizing:"border-box",
       background:"rgba(34,197,94,0.18)",
-      padding:"3px 6px",
+      padding:"5px 7px",
       borderRadius:"10px",
-      fontSize:"10px"
+      fontSize:"11px"
     }}>
 
       {/* Rank */}
@@ -330,6 +341,7 @@ export default function ResultScreen({
       }}>
         #{finalRank}
       </div>
+
 
       {/* Name */}
       <div style={{
@@ -340,16 +352,19 @@ export default function ResultScreen({
         You
       </div>
 
+
       {/* Score */}
       <div style={{
         background:"#16a34a",
-        padding:"3px 6px",
+        padding:"4px 6px",
         borderRadius:"999px",
-        fontSize:"10px",
+        fontSize:"11px",
         fontWeight:"bold",
         textAlign:"center"
-      }}> ⭐{score}
+      }}>
+        {score}
       </div>
+
 
       {/* Time */}
       <div style={{
@@ -365,15 +380,16 @@ export default function ResultScreen({
 
 </div>
 
+
  {/* 🔘 Buttons */}
 <div style={{
-  width: "100%",
-  maxWidth: "360px",
-  margin: "28px auto 0 auto", // 👈 तल सारियो
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  gap: "14px",
+  width:"100%",
+  maxWidth:"360px",
+  margin:"28px auto 0 auto",
+  display:"flex",
+  justifyContent:"center",
+  alignItems:"center",
+  gap:"14px",
   flexWrap:"wrap"
 }}>
 
@@ -381,71 +397,76 @@ export default function ResultScreen({
   <button
     onClick={()=>setScreen("home")}
     style={{
-      width: "58px",
-      height: "58px",
-      borderRadius: "50%",
-      border: "none",
-      background: "#facc15",
-      color: "black",
-      fontSize: "12px",
+      width:"58px",
+      height:"58px",
+      borderRadius:"50%",
+      border:"none",
+      background:"#facc15",
+      color:"black",
+      fontSize:"12px",
       fontWeight:"bold",
-      boxShadow: "0 3px 10px rgba(0,0,0,0.28)",
-      transition: "all 0.15s ease"
+      boxShadow:"0 3px 10px rgba(0,0,0,0.28)",
+      transition:"all 0.15s ease"
     }}
   >
     Back
   </button>
 
+
   {/* 🔁 Play */}
   <button
     onClick={()=>start(week)}
     style={{
-      width: "70px",
-      height: "70px",
-      borderRadius: "50%",
-      border: "none",
-      background: "white",
-      color: "black",
-      fontSize: "13px",
-      fontWeight: "700",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.35)",
-      transition: "all 0.15s ease",
-      animation: "startPulse 1.8s infinite",
+      width:"70px",
+      height:"70px",
+      borderRadius:"50%",
+      border:"none",
+      background:"white",
+      color:"black",
+      fontSize:"13px",
+      fontWeight:"700",
+      boxShadow:"0 4px 12px rgba(0,0,0,0.35)",
+      transition:"all 0.15s ease",
+      animation:"startPulse 1.8s infinite",
     }}
   >
     Play Again
   </button>
 
+
   {/* ⏭ Next */}
   <button
     onClick={()=>{
       const idx = defaultGroups.indexOf(week);
-      const nextGroup = defaultGroups[(idx+1) % defaultGroups.length];
+      const nextGroup =
+        defaultGroups[(idx+1) % defaultGroups.length];
+
       start(nextGroup);
     }}
     style={{
-      width: "58px",
-      height: "58px",
-      borderRadius: "50%",
-      border: "none",
-      background: "#22c55e",
-      color: "white",
-      fontSize: "12px",
+      width:"58px",
+      height:"58px",
+      borderRadius:"50%",
+      border:"none",
+      background:"#22c55e",
+      color:"white",
+      fontSize:"12px",
       fontWeight:"bold",
-      boxShadow: "0 3px 10px rgba(0,0,0,0.28)",
-      transition: "all 0.15s ease"
+      boxShadow:"0 3px 10px rgba(0,0,0,0.28)",
+      transition:"all 0.15s ease"
     }}
   >
     NEXT
   </button>
-<SharePopup
 
-  show={showSharePopup}
 
-  onShare={shareCategoryResult}
+  <SharePopup
+    show={showSharePopup}
+    onShare={shareCategoryResult}
+  />
 
-/>
 </div>
-        </div>
-       );
+
+</div>
+ );
 }

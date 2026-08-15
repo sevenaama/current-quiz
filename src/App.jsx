@@ -894,34 +894,38 @@ useEffect(()=>{
   }
 
 },[time]);
+useEffect(() => {
+
+  if(screen !== "result") return;
+
+  setShowSharePopup(true);
+
+  const timer = setTimeout(() => {
+    setShowSharePopup(false);
+  }, 20000);
+
+  return () => clearTimeout(timer);
+
+}, [screen]);
+
 
 useEffect(() => {
 
-  if(screen === "result"){
-    setShowSharePopup(true);
+  if(screen !== "result") return;
 
-setTimeout(()=>{
+  if(score >= questions.length * 0.7){
 
-  setShowSharePopup(false);
+    winSound.currentTime = 0;
+    winSound.play();
 
-},12000);
+  } else {
 
-    if(score >= questions.length * 0.7){
-
-      winSound.currentTime = 0;
-      winSound.play();
-
-    } else {
-
-      loseSound.currentTime = 0;
-      loseSound.play();
-
-    }
+    loseSound.currentTime = 0;
+    loseSound.play();
 
   }
 
 }, [screen]);
-
 
 function answer(opt){
 
