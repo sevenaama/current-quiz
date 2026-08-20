@@ -487,6 +487,7 @@ async function loadOverallLeaderboard(){
   const [screen, setScreen] = useState("home");
   const [showSplash,setShowSplash] = useState(true);
   const [showSharePopup,setShowSharePopup] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [lastUpdate, setLastUpdate] = useState("-");
   const [openCategory, setOpenCategory] = useState(null);
   const [openLevelCategory, setOpenLevelCategory] = useState(null);
@@ -725,33 +726,51 @@ const finalRank =
     ? playerRank
 
     : "--";
-    async function start(w){
-  const loadedQuestions =
-    await loadSingleCategory(w);
+   async function start(w){
 
-  setData(prev => ({
-    ...prev,
-    [w]: loadedQuestions
-  }));
+  setLoading(true);
 
-  const firstLevelQuestions =
-    loadedQuestions.slice(0, 10);
+  try {
 
-  setActiveLevelQuestions(firstLevelQuestions);
+    const loadedQuestions =
+      await loadSingleCategory(w);
 
-  setSelectedLevel(
-    firstLevelQuestions.length > 0 ? 1 : null
-  );
+    setData(prev => ({
+      ...prev,
+      [w]: loadedQuestions
+    }));
 
-  setWeek(w);
-  setIndex(0);
-  setScore(0);
-  setAttempted(0);
-  setSelected(null);
-  setTime(15);
-  setTotalTimeUsed(0);
+    const firstLevelQuestions =
+      loadedQuestions.slice(0, 10);
 
-  setScreen("playing");
+    setActiveLevelQuestions(firstLevelQuestions);
+
+    setSelectedLevel(
+      firstLevelQuestions.length > 0 ? 1 : null
+    );
+
+    setWeek(w);
+    setIndex(0);
+    setScore(0);
+    setAttempted(0);
+    setSelected(null);
+    setTime(15);
+    setTotalTimeUsed(0);
+
+    setScreen("playing");
+
+  } catch(error) {
+
+    console.error(
+      "Category loading error:",
+      error
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
 }
 function setupPlayer(){
 
@@ -800,10 +819,14 @@ function setupPlayer(){
     player.avatar
   );
 }
-function handleSelect(group){
+async function handleSelect(group){
+
   setOpenCategory(null);
 
-  loadSingleCategory(group).then(loadedQuestions => {
+  setLoading(true);
+  try {
+    const loadedQuestions =
+      await loadSingleCategory(group);
 
     setData(prev => ({
       ...prev,
@@ -828,7 +851,19 @@ function handleSelect(group){
     setTotalTimeUsed(0);
 
     setScreen("playing");
-  });
+
+  } catch(error) {
+
+    console.error(
+      "Category loading error:",
+      error
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
 }
 function startLevel(level){
   setActiveLevelQuestions(level.questions);
@@ -1122,6 +1157,21 @@ if(showSplash){
     paddingBottom: "0px"
   }}
 >
+{loading && (
+  <div className="category-loading-overlay">
+    <div className="category-loading-box">
+      <div className="category-loading-spinner"></div>
+
+      <div className="category-loading-title">
+        Loading....
+      </div>
+
+      <div className="category-loading-text">
+        Get ready to answer!
+      </div>
+    </div>
+  </div>
+)}
 <Header
   playerAvatar={playerAvatar}
   playerName={playerName}

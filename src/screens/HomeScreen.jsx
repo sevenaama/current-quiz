@@ -191,7 +191,14 @@ flexDirection: "column",
             fontSize:"clamp(18px, 5vw, 22px)",
             maxWidth:"none"
           }}>
-          {m}
+         {m === "Today" ? (
+  <>
+    Today{" "}
+    <span className="today-star">⭐</span>
+  </>
+) : (
+  m
+)}
         </div>
       ))}
     </div>
